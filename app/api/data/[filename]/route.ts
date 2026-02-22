@@ -7,7 +7,7 @@ const DATA_DIR = "/home/dh_lenovo_ideapad/FlightDataNASA/data/Tail_666_9";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { filename: string } }
+    { params }: { params: Promise<{ filename: string }> }
 ) {
     const { filename } = await params; // Next.js 15+ needs await on params in some cases, let's play safe
     const filePath = path.join(DATA_DIR, filename);
