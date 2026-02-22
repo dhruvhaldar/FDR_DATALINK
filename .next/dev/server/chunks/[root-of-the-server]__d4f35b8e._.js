@@ -98,7 +98,7 @@ var __TURBOPACK__imported__module__$5b$externals$5d2f$fs__$5b$external$5d$__$28$
 ;
 ;
 ;
-const DATA_DIR = "/home/dh_lenovo_ideapad/FlightDataNASA/data/Tail_666_9";
+const DATA_DIR = __TURBOPACK__imported__module__$5b$externals$5d2f$path__$5b$external$5d$__$28$path$2c$__cjs$29$__["default"].join(process.cwd(), "Tail_666_9");
 async function GET(request, { params }) {
     const { filename } = await params; // Next.js 15+ needs await on params in some cases, let's play safe
     const filePath = __TURBOPACK__imported__module__$5b$externals$5d2f$path__$5b$external$5d$__$28$path$2c$__cjs$29$__["default"].join(DATA_DIR, filename);
