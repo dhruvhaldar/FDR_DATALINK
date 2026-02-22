@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000 !important;
+  --foreground: #10b981 !important;
+}
+
+body {
+  color: var(--foreground);
+  background: #000000 !important;
+  font-family: var(--font-b612), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Hardware Terminal Background */
+.bg-airplane-view {
+  background: #000000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.clouds-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://www.transparenttextures.com/patterns/puffy-clouds.png");
+  opacity: 0.05;
+  pointer-events: none;
+}

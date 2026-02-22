@@ -1,0 +1,38 @@
+/* [next]/internal/font/google/b612_14dd0da7.module.css [app-client] (css) */
+@font-face {
+  font-family: B612;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../media/056f32eb5292b13f-s.p.43328bf8.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: B612;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../media/c79d47b624486f92-s.p.0e6682c9.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: B612 Fallback;
+  src: local(Arial);
+  ascent-override: 88.07%;
+  descent-override: 22.81%;
+  line-gap-override: 0.0%;
+  size-adjust: 109.58%;
+}
+
+.b612_14dd0da7-module__J66Lya__className {
+  font-family: B612, B612 Fallback;
+  font-style: normal;
+}
+
+.b612_14dd0da7-module__J66Lya__variable {
+  --font-b612: "B612", "B612 Fallback";
+}
+
+/*# sourceMappingURL=%5Bnext%5D_internal_font_google_b612_14dd0da7_module_css_bad6b30c._.single.css.map*/
