@@ -3,7 +3,7 @@ import { PythonShell } from "python-shell";
 import path from "path";
 import fs from "fs";
 
-const DATA_DIR = "/home/dh_lenovo_ideapad/FlightDataNASA/data/Tail_666_9";
+const DATA_DIR = path.join(process.cwd(), "Tail_666_9");
 
 export async function GET(
     request: NextRequest,

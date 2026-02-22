@@ -8,7 +8,8 @@ app = FastAPI()
 
 # Path to the data directory (relative to the project root or absolute)
 # For local dev, we use the absolute path we found earlier
-DATA_DIR = "/home/dh_lenovo_ideapad/FlightDataNASA/data/Tail_666_9"
+# The api folder is in the root, so its parent is the project root
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Tail_666_9")
 
 @app.get("/api/files")
 def list_files():
