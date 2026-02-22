@@ -139,19 +139,29 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <GlassPanel className="p-1 w-full md:w-auto mt-4 md:mt-0">
-          <select
-            value={selectedFile}
-            onChange={(e) => setSelectedFile(e.target.value)}
-            className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56"
+        <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
+          <GlassPanel className="p-1 w-full md:w-auto">
+            <select
+              value={selectedFile}
+              onChange={(e) => setSelectedFile(e.target.value)}
+              className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors"
+            >
+              {files.map((f) => (
+                <option key={f} value={f} className="bg-black text-emerald-500">
+                  {f}
+                </option>
+              ))}
+            </select>
+          </GlassPanel>
+          <a
+            href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-emerald-400/80 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 text-right mt-1"
           >
-            {files.map((f) => (
-              <option key={f} value={f} className="bg-black text-emerald-500">
-                {f}
-              </option>
-            ))}
-          </select>
-        </GlassPanel>
+            Source: NASA Dashlink
+          </a>
+        </div>
       </header>
 
       <GlassPanel className="mb-6 p-5 border-emerald-500/40 bg-emerald-950/20">
@@ -221,7 +231,7 @@ export default function Dashboard() {
       </main>
 
       <footer className="mt-8 text-center text-[10px] text-emerald-400 font-medium pb-8 uppercase tracking-[0.4em]">
-        FDR_DATALINK_CORE • GPLv3.0 • Dhruv Haldar
+        <a href="https://github.com/dhruvhaldar/FDR_DATALINK" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors">FDR_DATALINK</a> • GPLv3.0 • <a href="https://dhruvhaldar.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors">Dhruv Haldar</a>
       </footer>
     </div>
   );

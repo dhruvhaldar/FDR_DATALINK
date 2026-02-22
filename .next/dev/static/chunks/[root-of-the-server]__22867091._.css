@@ -416,12 +416,12 @@
     inset-inline-start: var(--spacing);
   }
 
-  .z-4 {
-    z-index: 4;
-  }
-
   .mx-auto {
     margin-inline: auto;
+  }
+
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
   }
 
   .mt-4 {
@@ -462,10 +462,6 @@
 
   .h-6 {
     height: calc(var(--spacing) * 6);
-  }
-
-  .h-8 {
-    height: calc(var(--spacing) * 8);
   }
 
   .h-10 {
@@ -512,6 +508,10 @@
     animation: var(--animate-spin);
   }
 
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
@@ -534,6 +534,10 @@
 
   .justify-center {
     justify-content: center;
+  }
+
+  .gap-1 {
+    gap: calc(var(--spacing) * 1);
   }
 
   .gap-1\.5 {
@@ -678,6 +682,10 @@
     padding-inline: calc(var(--spacing) * 1.5);
   }
 
+  .px-2 {
+    padding-inline: calc(var(--spacing) * 2);
+  }
+
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
   }
@@ -696,6 +704,10 @@
 
   .text-justify {
     text-align: justify;
+  }
+
+  .text-right {
+    text-align: right;
   }
 
   .font-mono {
@@ -724,6 +736,10 @@
   .text-xs {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+
+  .text-\[9px\] {
+    font-size: 9px;
   }
 
   .text-\[10px\] {
@@ -769,6 +785,11 @@
     letter-spacing: .4em;
   }
 
+  .tracking-\[0\.10em\] {
+    --tw-tracking: .1em;
+    letter-spacing: .1em;
+  }
+
   .tracking-\[0\.15em\] {
     --tw-tracking: .15em;
     letter-spacing: .15em;
@@ -790,6 +811,16 @@
 
   .text-emerald-400 {
     color: var(--color-emerald-400);
+  }
+
+  .text-emerald-400\/80 {
+    color: #00d294cc;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .text-emerald-400\/80 {
+      color: color-mix(in oklab, var(--color-emerald-400) 80%, transparent);
+    }
   }
 
   .text-emerald-500 {
@@ -941,6 +972,18 @@
   }
 
   @media (hover: hover) {
+    .hover\:text-emerald-300:hover {
+      color: var(--color-emerald-300);
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:text-emerald-400:hover {
+      color: var(--color-emerald-400);
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:text-white:hover {
       color: var(--color-white);
     }
@@ -967,6 +1010,12 @@
   @media (min-width: 48rem) {
     .md\:flex-row {
       flex-direction: row;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .md\:items-end {
+      align-items: flex-end;
     }
   }
 
