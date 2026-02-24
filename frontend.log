@@ -1,0 +1,21 @@
+
+> flight-data-web@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+
+-----
+[1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /tmp/next-panic-42760893841a39b634d53a94c4f83a76.log.
+
+To help make Turbopack better, report this error by clicking here: https://github.com/vercel/next.js/discussions/new?category=turbopack-error-report&title=Turbopack%20Error%3A%20Permission%20denied%20%28os%20error%2013%29&body=Turbopack%20version%3A%20%600c06f068%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0ATurbopack%20Error%3A%20Permission%20denied%20%28os%20error%2013%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace
+-----
+
+Error [TurbopackInternalError]: Permission denied (os error 13)
+    at <unknown> (TurbopackInternalError: Permission denied (os error 13)) {
+  location: undefined
+}
+[?25h
