@@ -100,28 +100,30 @@ export default function Dashboard() {
   const [flightData, setFlightData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
+  const fetchFlightData = (filename: string) => {
+    setLoading(true);
+    fetch(`/api/data/${filename}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setFlightData(data);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     fetch("/api/files")
       .then((res) => res.json())
       .then((data) => {
         if (data.files) {
           setFiles(data.files);
-          if (data.files.length > 0) setSelectedFile(data.files[0]);
+          if (data.files.length > 0) {
+            const initialFile = data.files[0];
+            setSelectedFile(initialFile);
+            fetchFlightData(initialFile);
+          }
         }
       });
   }, []);
-
-  useEffect(() => {
-    if (selectedFile) {
-      setLoading(true);
-      fetch(`/api/data/${selectedFile}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setFlightData(data);
-          setLoading(false);
-        });
-    }
-  }, [selectedFile]);
 
   return (
     <div className="min-h-screen p-4 max-w-7xl mx-auto bg-black text-emerald-500 selection:bg-emerald-500/30 selection:text-white">
@@ -143,7 +145,12 @@ export default function Dashboard() {
           <GlassPanel className="p-1 w-full md:w-auto">
             <select
               value={selectedFile}
-              onChange={(e) => setSelectedFile(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedFile(val);
+                fetchFlightData(val);
+              }}
+              aria-label="Select flight recording"
               className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors"
             >
               {files.map((f) => (
@@ -199,7 +206,12 @@ export default function Dashboard() {
         <GlassPanel title="Telemetry Data Pipeline" className="lg:col-span-3">
           <div className="space-y-4">
             {loading ? (
-              <div className="flex h-[400px] items-center justify-center">
+              <div
+                role="status"
+                aria-live="polite"
+                aria-label="Loading flight data"
+                className="flex h-[400px] items-center justify-center"
+              >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
               </div>
             ) : flightData ? (
