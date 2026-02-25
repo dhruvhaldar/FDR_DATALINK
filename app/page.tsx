@@ -3,10 +3,19 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
-import { Plane, Activity, Wind, Navigation, Gauge } from "lucide-react";
+import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle } from "lucide-react";
 
 // Dynamically import Plotly to avoid SSR issues
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+
+interface FlightDataParam {
+  data: number[];
+  units: string;
+  rate: number;
+  step?: number;
+}
+
+type FlightData = Record<string, FlightDataParam>;
 
 const PARAM_CONFIG = [
   { key: 'ALT', name: 'Pressure Altitude LSP', color: '#06b6d4', icon: Navigation, unit: 'FT' },
@@ -97,15 +106,25 @@ function TelemetryChart({
 export default function Dashboard() {
   const [files, setFiles] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<string>("");
-  const [flightData, setFlightData] = useState<any>(null);
+  const [flightData, setFlightData] = useState<FlightData | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchFlightData = (filename: string) => {
     setLoading(true);
+    setError(null);
     fetch(`/api/data/${filename}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load flight data");
+        return res.json();
+      })
       .then((data) => {
         setFlightData(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
         setLoading(false);
       });
   };
@@ -142,16 +161,17 @@ export default function Dashboard() {
         </div>
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
-          <GlassPanel className="p-1 w-full md:w-auto">
+          <GlassPanel className="p-1 w-full md:w-auto flex items-center pr-2">
             <select
               value={selectedFile}
+              disabled={loading}
               onChange={(e) => {
                 const val = e.target.value;
                 setSelectedFile(val);
                 fetchFlightData(val);
               }}
               aria-label="Select flight recording"
-              className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors"
+              className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {files.map((f) => (
                 <option key={f} value={f} className="bg-black text-emerald-500">
@@ -159,6 +179,7 @@ export default function Dashboard() {
                 </option>
               ))}
             </select>
+            {loading && <Loader2 className="h-3 w-3 animate-spin text-emerald-500" />}
           </GlassPanel>
           <a
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
@@ -213,6 +234,23 @@ export default function Dashboard() {
                 className="flex h-[400px] items-center justify-center"
               >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
+              </div>
+            ) : error ? (
+              <div
+                role="alert"
+                className="flex h-[400px] flex-col items-center justify-center gap-4"
+              >
+                <div className="flex flex-col items-center gap-2 text-center">
+                  <AlertTriangle className="h-10 w-10 text-red-500/80" />
+                  <p className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
+                  <p className="text-[10px] text-emerald-500/60">Please try selecting another file</p>
+                </div>
+                <button
+                  onClick={() => fetchFlightData(selectedFile)}
+                  className="rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-colors hover:bg-emerald-500/20 hover:text-emerald-400"
+                >
+                  Retry Connection
+                </button>
               </div>
             ) : flightData ? (
               PARAM_CONFIG.map((param, idx) => {
