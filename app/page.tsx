@@ -171,7 +171,7 @@ export default function Dashboard() {
                 fetchFlightData(val);
               }}
               aria-label="Select flight recording"
-              className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
             >
               {files.map((f) => (
                 <option key={f} value={f} className="bg-black text-emerald-500">
@@ -185,7 +185,7 @@ export default function Dashboard() {
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-emerald-400/80 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 text-right mt-1"
+            className="text-[10px] text-emerald-400/80 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 text-right mt-1 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none"
           >
             Source: NASA Dashlink
           </a>
@@ -197,7 +197,7 @@ export default function Dashboard() {
           Project Context: Sample Flight Data via NASA Dashlink
         </h2>
         <p className="text-xs leading-relaxed text-emerald-300 font-medium text-justify">
-          This application displays data from the <a href="https://c3.ndc.nasa.gov/dashlink/projects/85/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold underline decoration-emerald-500/50 hover:text-white transition-colors">Sample Flight Data project via NASA Dashlink</a> (A web-based collaboration tool for those interested in data mining and systems health). Through access to de-identified aggregate flight recorded data, researchers have the ability to proactively identify and analyze trends and target resources to reduce operational risks in the National Airspace System (NAS). This valuable data source enables the aviation community to take positive steps in mitigating potential issues in the system and improving the overall safety of the NAS. The posted files contain actual data recorded onboard a single type of regional jet operating in commercial service over a three-year period. While the files contain detailed aircraft dynamics, system performance, and other engineering parameters, they do not provide any information that can be traced to a particular airline or manufacturer. These records are not part of any airline Flight Operational Quality Assurance (FOQA) program.
+          This application displays data from the <a href="https://c3.ndc.nasa.gov/dashlink/projects/85/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold underline decoration-emerald-500/50 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none">Sample Flight Data project via NASA Dashlink</a> (A web-based collaboration tool for those interested in data mining and systems health). Through access to de-identified aggregate flight recorded data, researchers have the ability to proactively identify and analyze trends and target resources to reduce operational risks in the National Airspace System (NAS). This valuable data source enables the aviation community to take positive steps in mitigating potential issues in the system and improving the overall safety of the NAS. The posted files contain actual data recorded onboard a single type of regional jet operating in commercial service over a three-year period. While the files contain detailed aircraft dynamics, system performance, and other engineering parameters, they do not provide any information that can be traced to a particular airline or manufacturer. These records are not part of any airline Flight Operational Quality Assurance (FOQA) program.
         </p>
       </GlassPanel>
 
@@ -247,7 +247,7 @@ export default function Dashboard() {
                 </div>
                 <button
                   onClick={() => fetchFlightData(selectedFile)}
-                  className="rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-colors hover:bg-emerald-500/20 hover:text-emerald-400"
+                  className="rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-colors hover:bg-emerald-500/20 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   Retry Connection
                 </button>
@@ -281,7 +281,7 @@ export default function Dashboard() {
       </main>
 
       <footer className="mt-8 text-center text-[10px] text-emerald-400 font-medium pb-8 uppercase tracking-[0.4em]">
-        <a href="https://github.com/dhruvhaldar/FDR_DATALINK" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors">FDR_DATALINK</a> • GPLv3.0 • <a href="https://dhruvhaldar.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors">Dhruv Haldar</a>
+        <a href="https://github.com/dhruvhaldar/FDR_DATALINK" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none">FDR_DATALINK</a> • GPLv3.0 • <a href="https://dhruvhaldar.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none">Dhruv Haldar</a>
       </footer>
     </div>
   );
