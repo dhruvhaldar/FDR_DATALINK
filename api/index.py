@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from functools import lru_cache
 import scipy.io
 import numpy as np
 import os
@@ -20,6 +21,14 @@ def list_files():
     file_names = [os.path.basename(f) for f in files]
     return {"files": sorted(file_names)}
 
+@lru_cache(maxsize=16)
+def load_mat_file(file_path: str):
+    """
+    Load .mat file with caching to avoid re-reading and re-parsing
+    the same file repeatedly.
+    """
+    return scipy.io.loadmat(file_path)
+
 @app.get("/api/data/{filename}")
 def get_flight_data(filename: str):
     file_path = os.path.join(DATA_DIR, filename)
@@ -27,7 +36,7 @@ def get_flight_data(filename: str):
         raise HTTPException(status_code=404, detail="File not found")
     
     try:
-        data = scipy.io.loadmat(file_path)
+        data = load_mat_file(file_path)
         result = {}
         
         # We'll extract a subset of interesting parameters

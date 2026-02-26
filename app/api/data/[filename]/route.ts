@@ -28,7 +28,8 @@ export async function GET(
 
         const data = JSON.parse(results[0]);
         return NextResponse.json(data);
-    } catch (err: any) {
-        return NextResponse.json({ error: err.message }, { status: 500 });
+    } catch (err: unknown) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }
