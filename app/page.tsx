@@ -146,6 +146,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen p-4 max-w-7xl mx-auto bg-black text-emerald-500 selection:bg-emerald-500/30 selection:text-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-950 focus:text-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-black rounded font-bold uppercase tracking-wider"
+      >
+        Skip to main content
+      </a>
 
       <header className="mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -201,7 +207,7 @@ export default function Dashboard() {
         </p>
       </GlassPanel>
 
-      <main className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+      <main id="main-content" tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none">
         {/* Navigation / KPIs */}
         <div className="space-y-3 lg:col-span-1">
           {PARAM_CONFIG.map((param) => {
