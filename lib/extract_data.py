@@ -9,11 +9,13 @@ def extract_data(file_path):
         return {"error": "File not found"}
     
     try:
-        data = scipy.io.loadmat(file_path)
-        result = {}
         # Parameters requested: Pressure Altitude, Computed Airspeed, Pitch, Roll, Vertical Acceleration
         params = ['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG']
         
+        # Optimize: Only load the specific variables we need, not the entire file
+        data = scipy.io.loadmat(file_path, variable_names=params)
+        result = {}
+
         for p in params:
             if p in data:
                 struct = data[p][0, 0]
