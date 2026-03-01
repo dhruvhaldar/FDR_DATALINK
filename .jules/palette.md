@@ -1,0 +1,3 @@
+## 2024-05-24 - [KPI Card Loading States & Dataset Label]
+**Learning:** Adding a visible label to a select input is better for accessibility than just an `aria-label`, as it explicitly associates the label with the input visually and programmatically. Additionally, adding an `aria-busy` attribute and visual loading indicator (pulse effect) to summary panels prevents users from being confused when data is fetching in the background.
+**Action:** Always prefer explicit `<label>` tags over `aria-label` when possible. When components rely on asynchronous data, ensure they communicate their loading state both visually and programmatically using `aria-busy`.
