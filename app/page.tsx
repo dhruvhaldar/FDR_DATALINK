@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
-import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle } from "lucide-react";
+import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink } from "lucide-react";
 
 // Dynamically import Plotly to avoid SSR issues
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -209,9 +209,11 @@ export default function Dashboard() {
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-emerald-400/80 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 text-right mt-1 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none"
+            className="text-[10px] text-emerald-400/80 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 mt-1 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1 justify-end"
           >
             Source: NASA Dashlink
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
+            <span className="sr-only">(opens in a new tab)</span>
           </a>
         </div>
       </header>
@@ -221,7 +223,7 @@ export default function Dashboard() {
           Project Context: Sample Flight Data via NASA Dashlink
         </h2>
         <p className="text-xs leading-relaxed text-emerald-300 font-medium text-justify">
-          This application displays data from the <a href="https://c3.ndc.nasa.gov/dashlink/projects/85/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold underline decoration-emerald-500/50 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none">Sample Flight Data project via NASA Dashlink</a> (A web-based collaboration tool for those interested in data mining and systems health). Through access to de-identified aggregate flight recorded data, researchers have the ability to proactively identify and analyze trends and target resources to reduce operational risks in the National Airspace System (NAS). This valuable data source enables the aviation community to take positive steps in mitigating potential issues in the system and improving the overall safety of the NAS. The posted files contain actual data recorded onboard a single type of regional jet operating in commercial service over a three-year period. While the files contain detailed aircraft dynamics, system performance, and other engineering parameters, they do not provide any information that can be traced to a particular airline or manufacturer. These records are not part of any airline Flight Operational Quality Assurance (FOQA) program.
+          This application displays data from the <a href="https://c3.ndc.nasa.gov/dashlink/projects/85/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 font-bold underline decoration-emerald-500/50 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-0.5">Sample Flight Data project via NASA Dashlink <ExternalLink className="h-3 w-3" aria-hidden="true" /><span className="sr-only">(opens in a new tab)</span></a> (A web-based collaboration tool for those interested in data mining and systems health). Through access to de-identified aggregate flight recorded data, researchers have the ability to proactively identify and analyze trends and target resources to reduce operational risks in the National Airspace System (NAS). This valuable data source enables the aviation community to take positive steps in mitigating potential issues in the system and improving the overall safety of the NAS. The posted files contain actual data recorded onboard a single type of regional jet operating in commercial service over a three-year period. While the files contain detailed aircraft dynamics, system performance, and other engineering parameters, they do not provide any information that can be traced to a particular airline or manufacturer. These records are not part of any airline Flight Operational Quality Assurance (FOQA) program.
         </p>
       </GlassPanel>
 
@@ -304,8 +306,12 @@ export default function Dashboard() {
         </GlassPanel>
       </main>
 
-      <footer className="mt-8 text-center text-[10px] text-emerald-400 font-medium pb-8 uppercase tracking-[0.4em]">
-        <a href="https://github.com/dhruvhaldar/FDR_DATALINK" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none">FDR_DATALINK</a> • GPLv3.0 • <a href="https://dhruvhaldar.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none">Dhruv Haldar</a>
+      <footer className="mt-8 text-center text-[10px] text-emerald-400 font-medium pb-8 uppercase tracking-[0.4em] flex justify-center items-center flex-wrap gap-2">
+        <a href="https://github.com/dhruvhaldar/FDR_DATALINK" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1">FDR_DATALINK <ExternalLink className="h-2.5 w-2.5" aria-hidden="true" /><span className="sr-only">(opens in a new tab)</span></a>
+        <span>•</span>
+        <span>GPLv3.0</span>
+        <span>•</span>
+        <a href="https://dhruvhaldar.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1">Dhruv Haldar <ExternalLink className="h-2.5 w-2.5" aria-hidden="true" /><span className="sr-only">(opens in a new tab)</span></a>
       </footer>
     </div>
   );
