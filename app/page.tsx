@@ -110,7 +110,20 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // ⚡ Bolt: Client-side cache for fetched datasets.
+  // Prevents re-fetching and the expensive unmount/remount of Plotly charts
+  // when switching between previously viewed datasets.
+  const [dataCache, setDataCache] = useState<Record<string, FlightData>>({});
+
   const fetchFlightData = (filename: string) => {
+    // ⚡ Bolt: Fast-path for cached data.
+    // This synchronous update avoids setting `loading = true`, which would
+    // otherwise cause the heavy WebGL charts to unmount and remount.
+    if (dataCache[filename]) {
+      setFlightData(dataCache[filename]);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     fetch(`/api/data/${filename}`)
@@ -120,6 +133,8 @@ export default function Dashboard() {
       })
       .then((data) => {
         setFlightData(data);
+        // ⚡ Bolt: Store the fetched data in our cache
+        setDataCache(prev => ({ ...prev, [filename]: data }));
         setLoading(false);
       })
       .catch((err) => {
