@@ -9,3 +9,7 @@
 ## 2024-05-22 - External Link Accessibility
 **Learning:** Links that open in a new tab (`target="_blank"`) without visual or screen reader indication can cause disorientation, as users may not realize they have left the original context. The FDR Datalink application uses several of these to link to NASA Dashlink and Github.
 **Action:** Always add an `sr-only` span with text like "(opens in a new tab)" to external links. For prominent UI external links, also include a visual indicator like an `ExternalLink` icon to set proper expectations before clicking.
+
+## 2026-02-26 - Actionable Empty States
+**Learning:** When empty states instruct users to perform an action (like "use the selector"), making the instruction text itself an interactive button that uses `focus()` to guide the user's focus to the required input creates a much smoother experience, especially for keyboard/screen reader users. Hiding decorative characters (like `>`, `•`, `---`) with `aria-hidden="true"` is also crucial to avoid annoying or confusing screen reader announcements.
+**Action:** Always make instructional empty states actionable where possible, using programmatic `focus()` to guide the user's focus. Ensure purely decorative characters are hidden from screen readers.
