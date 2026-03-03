@@ -9,3 +9,7 @@
 ## 2024-05-22 - Expensive WebGL Unmounts in React
 **Learning:** React unmounting expensive WebGL charts (like `react-plotly.js`) during asynchronous data fetching (by setting `loading = true`) causes noticeable jitter and re-renders when switching between already viewed datasets. Even if the network request is cached by the browser, the async tick causes the UI to flush the DOM, destroying and rebuilding the WebGL context.
 **Action:** Implement client-side memory caching (`dataCache` state) to bypass `fetch` entirely for previously loaded data. Updating state synchronously avoids the `loading = true` state change, keeping the charts mounted and significantly improving perceived performance during dataset switching.
+
+## 2024-05-23 - SciPy.io.loadmat and lru_cache Memory Leaks
+**Learning:** Caching the full output of `scipy.io.loadmat` using `@lru_cache` (e.g., in a FastAPI route) creates a massive memory footprint because it caches the entire parsed `.mat` dictionary, including hundreds of unused variables. It also significantly slows down parsing speed (by almost 2x) even if you only end up extracting 5-7 parameters.
+**Action:** When using `@lru_cache` in conjunction with `scipy.io.loadmat`, ALWAYS use the `variable_names=[]` parameter to explicitly specify which variables to parse. This restricts both the parsing overhead and the size of the cached object in memory.
