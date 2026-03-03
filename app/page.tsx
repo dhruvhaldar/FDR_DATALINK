@@ -238,7 +238,9 @@ export default function Dashboard() {
                 <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
                   <div className="flex items-baseline gap-1.5">
                     <span className={`text-2xl font-mono`} style={{ color: param.color }}>
-                      {val !== undefined ? val.toFixed(param.key === 'VRTG' ? 2 : 1) : "---"}
+                      {val !== undefined ? val.toFixed(param.key === 'VRTG' ? 2 : 1) : (
+                        <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
+                      )}
                     </span>
                     <span className="text-[10px] font-bold text-emerald-500/60 uppercase">{flightData?.[param.key]?.units || param.unit}</span>
                   </div>
@@ -299,7 +301,13 @@ export default function Dashboard() {
               })
             ) : (
               <div className="flex h-[400px] items-center justify-center">
-                <p className="text-emerald-500/60 text-sm italic underline decoration-emerald-500/30">Connect to data source via selector</p>
+                <button
+                  onClick={() => document.getElementById('dataset-select')?.focus()}
+                  className="text-emerald-500/60 text-sm italic hover:text-emerald-400 underline decoration-emerald-500/30 hover:decoration-emerald-400 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded px-2 py-1 outline-none cursor-pointer"
+                  aria-label="Focus dataset selector to connect to data source"
+                >
+                  Connect to data source via selector
+                </button>
               </div>
             )}
           </div>
@@ -308,9 +316,9 @@ export default function Dashboard() {
 
       <footer className="mt-8 text-center text-[10px] text-emerald-400 font-medium pb-8 uppercase tracking-[0.4em] flex justify-center items-center flex-wrap gap-2">
         <a href="https://github.com/dhruvhaldar/FDR_DATALINK" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1">FDR_DATALINK <ExternalLink className="h-2.5 w-2.5" aria-hidden="true" /><span className="sr-only">(opens in a new tab)</span></a>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <span>GPLv3.0</span>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <a href="https://dhruvhaldar.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1">Dhruv Haldar <ExternalLink className="h-2.5 w-2.5" aria-hidden="true" /><span className="sr-only">(opens in a new tab)</span></a>
       </footer>
     </div>
