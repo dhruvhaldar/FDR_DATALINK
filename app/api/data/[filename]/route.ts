@@ -7,20 +7,20 @@ const DATA_DIR = path.join(process.cwd(), "Tail_666_9");
 
 // ⚡ Bolt: In-memory cache to prevent re-running expensive Python script
 // for previously processed files (saves ~600ms per request)
-// Using `unknown` instead of `any` for type safety
-const cache = new Map<string, unknown>();
+// ⚡ Bolt: Cache raw JSON string instead of parsed object to avoid expensive JSON.parse/stringify
+const cache = new Map<string, string>();
 
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ filename: string }> }
 ) {
-    const { filename } = await params; // Next.js 15+ needs await on params in some cases, let's play safe
+    const { filename } = await params;
 
     // ⚡ Bolt: Check cache first to avoid expensive Python process spawn and SciPy parsing
     if (cache.has(filename)) {
-        return NextResponse.json(cache.get(filename), {
+        return new NextResponse(cache.get(filename), {
             headers: {
-                // ⚡ Bolt: Also instruct the browser/CDN to cache this static file's response
+                "Content-Type": "application/json",
                 "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
             },
         });
@@ -42,13 +42,14 @@ export async function GET(
             return NextResponse.json({ error: "Failed to extract data" }, { status: 500 });
         }
 
-        const data = JSON.parse(results[0]);
+        const rawJsonString = results[0];
 
-        // ⚡ Bolt: Store the expensive parsed result in memory
-        cache.set(filename, data);
+        // ⚡ Bolt: Store the raw JSON string in memory
+        cache.set(filename, rawJsonString);
 
-        return NextResponse.json(data, {
+        return new NextResponse(rawJsonString, {
             headers: {
+                "Content-Type": "application/json",
                 "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
             },
         });
