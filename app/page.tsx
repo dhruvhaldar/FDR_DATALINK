@@ -109,6 +109,7 @@ export default function Dashboard() {
   const [flightData, setFlightData] = useState<FlightData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isFetchingFiles, setIsFetchingFiles] = useState(true);
 
   // ⚡ Bolt: Client-side cache for fetched datasets.
   // Prevents re-fetching and the expensive unmount/remount of Plotly charts
@@ -156,6 +157,12 @@ export default function Dashboard() {
             fetchFlightData(initialFile);
           }
         }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch files:", err);
+      })
+      .finally(() => {
+        setIsFetchingFiles(false);
       });
   }, []);
 
@@ -189,7 +196,9 @@ export default function Dashboard() {
             <select
               id="dataset-select"
               value={selectedFile}
-              disabled={loading}
+              disabled={loading || isFetchingFiles}
+              title={isFetchingFiles ? "Fetching available datasets" : (files.length === 0 ? "No datasets available" : "Select a dataset")}
+              aria-busy={isFetchingFiles}
               onChange={(e) => {
                 const val = e.target.value;
                 setSelectedFile(val);
@@ -197,6 +206,8 @@ export default function Dashboard() {
               }}
               className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
             >
+              {isFetchingFiles && <option value="" disabled className="bg-black text-emerald-500">Loading datasets...</option>}
+              {!isFetchingFiles && files.length === 0 && <option value="" disabled className="bg-black text-emerald-500">No datasets available</option>}
               {files.map((f) => (
                 <option key={f} value={f} className="bg-black text-emerald-500">
                   {f}
