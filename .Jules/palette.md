@@ -13,3 +13,7 @@
 ## 2026-02-26 - Actionable Empty States
 **Learning:** When empty states instruct users to perform an action (like "use the selector"), making the instruction text itself an interactive button that uses `focus()` to guide the user's focus to the required input creates a much smoother experience, especially for keyboard/screen reader users. Hiding decorative characters (like `>`, `•`, `---`) with `aria-hidden="true"` is also crucial to avoid annoying or confusing screen reader announcements.
 **Action:** Always make instructional empty states actionable where possible, using programmatic `focus()` to guide the user's focus. Ensure purely decorative characters are hidden from screen readers.
+
+## 2026-02-27 - Contextual Empty States in Selectors
+**Learning:** Empty `<select>` dropdowns during an initial data fetch cause confusion, appearing broken or empty without explanation. Simply adding `disabled={true}` is insufficient.
+**Action:** Always provide explicit disabled `<option>` elements for loading ("Loading datasets...") and empty ("No datasets available") states. Complement this with `title` attributes explaining the disabled reason and `aria-busy={true}` during fetching to provide critical context for all users.
