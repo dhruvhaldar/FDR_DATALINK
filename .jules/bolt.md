@@ -13,3 +13,7 @@
 ## 2024-05-23 - SciPy.io.loadmat and lru_cache Memory Leaks
 **Learning:** Caching the full output of `scipy.io.loadmat` using `@lru_cache` (e.g., in a FastAPI route) creates a massive memory footprint because it caches the entire parsed `.mat` dictionary, including hundreds of unused variables. It also significantly slows down parsing speed (by almost 2x) even if you only end up extracting 5-7 parameters.
 **Action:** When using `@lru_cache` in conjunction with `scipy.io.loadmat`, ALWAYS use the `variable_names=[]` parameter to explicitly specify which variables to parse. This restricts both the parsing overhead and the size of the cached object in memory.
+
+## 2024-06-15 - Expensive JSON Serialization on Cached Data
+**Learning:** Storing fully parsed JavaScript objects in memory and serving them via Next.js's `NextResponse.json()` causes expensive `JSON.stringify()` serialization on every request. For large datasets, stringifying thousands of array elements adds measurable latency (4-5ms per request).
+**Action:** Always cache the raw JSON string directly rather than the parsed object when the goal is to serve identical JSON to the client. Return it directly with a `new NextResponse(rawString, { headers: { "Content-Type": "application/json" } })` to bypass the `JSON.parse` + `JSON.stringify` lifecycle entirely.
