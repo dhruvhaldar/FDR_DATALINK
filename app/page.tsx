@@ -178,7 +178,7 @@ export default function Dashboard() {
       <header className="mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-emerald-500/10 p-2 ring-1 ring-emerald-500/30">
-            <Plane className="h-6 w-6 text-emerald-500" />
+            <Plane className="h-6 w-6 text-emerald-500" aria-hidden="true" />
           </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-white leading-tight font-sans">
@@ -197,8 +197,8 @@ export default function Dashboard() {
               id="dataset-select"
               value={selectedFile}
               disabled={loading || isFetchingFiles}
-              title={isFetchingFiles ? "Fetching available datasets" : (files.length === 0 ? "No datasets available" : "Select a dataset")}
-              aria-busy={isFetchingFiles}
+              title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
+              aria-busy={isFetchingFiles || loading}
               onChange={(e) => {
                 const val = e.target.value;
                 setSelectedFile(val);
@@ -214,7 +214,7 @@ export default function Dashboard() {
                 </option>
               ))}
             </select>
-            {loading && <Loader2 className="h-3 w-3 animate-spin text-emerald-500" />}
+            {loading && <Loader2 className="h-3 w-3 animate-spin text-emerald-500" aria-hidden="true" />}
           </GlassPanel>
           <a
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
@@ -255,7 +255,7 @@ export default function Dashboard() {
                     </span>
                     <span className="text-[10px] font-bold text-emerald-500/60 uppercase">{flightData?.[param.key]?.units || param.unit}</span>
                   </div>
-                  <Icon className="h-5 w-5 text-emerald-500/40" />
+                  <Icon className="h-5 w-5 text-emerald-500/40" aria-hidden="true" />
                 </div>
               </GlassPanel>
             );
@@ -269,10 +269,13 @@ export default function Dashboard() {
               <div
                 role="status"
                 aria-live="polite"
-                aria-label="Loading flight data"
-                className="flex h-[400px] items-center justify-center"
+                aria-label={`Loading flight data for ${selectedFile}`}
+                className="flex h-[400px] flex-col items-center justify-center gap-3"
               >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
+                <span className="text-xs font-bold uppercase tracking-widest text-emerald-500/60 animate-pulse">
+                  Processing Telemetry...
+                </span>
               </div>
             ) : error ? (
               <div
@@ -280,7 +283,7 @@ export default function Dashboard() {
                 className="flex h-[400px] flex-col items-center justify-center gap-4"
               >
                 <div className="flex flex-col items-center gap-2 text-center">
-                  <AlertTriangle className="h-10 w-10 text-red-500/80" />
+                  <AlertTriangle className="h-10 w-10 text-red-500/80" aria-hidden="true" />
                   <p className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
                   <p className="text-[10px] text-emerald-500/60">Please try selecting another file</p>
                 </div>

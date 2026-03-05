@@ -17,3 +17,7 @@
 ## 2026-02-27 - Contextual Empty States in Selectors
 **Learning:** Empty `<select>` dropdowns during an initial data fetch cause confusion, appearing broken or empty without explanation. Simply adding `disabled={true}` is insufficient.
 **Action:** Always provide explicit disabled `<option>` elements for loading ("Loading datasets...") and empty ("No datasets available") states. Complement this with `title` attributes explaining the disabled reason and `aria-busy={true}` during fetching to provide critical context for all users.
+
+## 2026-02-28 - Reassuring Empty States and Descriptive Statuses
+**Learning:** During long polling or data fetches (e.g., parsing .mat files), screen readers may repeatedly announce "Loading flight data." In addition to this context, dynamic `<title>` attributes on dropdowns (e.g., "Loading flight data..." when processing the data after selection) prevent the user from feeling the interaction is broken. Decorative UI elements (like Lucide icons) *must* be hidden with `aria-hidden="true"` to stop screen readers from interpreting random visual decorations as content. Finally, visual text such as "Processing Telemetry..." adds a human touch, reassuring sighted users that the system is working on their request.
+**Action:** Explicitly set `aria-hidden="true"` on non-interactive graphical icons. Update dynamic `title` properties on `<select>` options to convey loading status when the application is awaiting data processing. Include contextual visual text alongside loading spinners to reassure users.
