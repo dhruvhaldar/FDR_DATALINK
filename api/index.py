@@ -3,7 +3,6 @@ from functools import lru_cache
 import scipy.io
 import numpy as np
 import os
-import glob
 
 app = FastAPI()
 
@@ -17,8 +16,9 @@ def list_files():
     if not os.path.exists(DATA_DIR):
         return {"error": "Data directory not found", "path": DATA_DIR}
     
-    files = glob.glob(os.path.join(DATA_DIR, "*.mat"))
-    file_names = [os.path.basename(f) for f in files]
+    # ⚡ Bolt: Replace glob with os.listdir to avoid unnecessary path parsing/matching overhead
+    # Native directory listing is much faster than glob pattern matching
+    file_names = [f for f in os.listdir(DATA_DIR) if f.endswith('.mat')]
     return {"files": sorted(file_names)}
 
 @lru_cache(maxsize=16)

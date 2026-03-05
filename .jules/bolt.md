@@ -17,3 +17,7 @@
 ## 2024-06-15 - Expensive JSON Serialization on Cached Data
 **Learning:** Storing fully parsed JavaScript objects in memory and serving them via Next.js's `NextResponse.json()` causes expensive `JSON.stringify()` serialization on every request. For large datasets, stringifying thousands of array elements adds measurable latency (4-5ms per request).
 **Action:** Always cache the raw JSON string directly rather than the parsed object when the goal is to serve identical JSON to the client. Return it directly with a `new NextResponse(rawString, { headers: { "Content-Type": "application/json" } })` to bypass the `JSON.parse` + `JSON.stringify` lifecycle entirely.
+
+## 2024-10-25 - Native os.listdir vs glob in Python Performance
+**Learning:** Using `glob.glob` to list files with specific extensions introduces noticeable overhead in Python APIs compared to native `os.listdir` due to path parsing and regex matching under the hood.
+**Action:** For simple, flat directory file filtering operations (e.g. finding files with a specific extension), use native `os.listdir` combined with a string `.endswith()` check instead of pulling in `glob`.
