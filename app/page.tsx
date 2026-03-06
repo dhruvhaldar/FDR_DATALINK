@@ -145,6 +145,27 @@ export default function Dashboard() {
       });
   };
 
+  // Global keyboard shortcut for focusing the dataset selector
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if user is already typing in an input or text area
+      if (
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
+
+      if (e.key === "/") {
+        e.preventDefault();
+        document.getElementById("dataset-select")?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   useEffect(() => {
     fetch("/api/files")
       .then((res) => res.json())
@@ -190,8 +211,9 @@ export default function Dashboard() {
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
           <GlassPanel className="p-1 w-full md:w-auto flex items-center pr-2">
-            <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-500/70 cursor-pointer whitespace-nowrap">
+            <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-500/70 cursor-pointer whitespace-nowrap flex items-center gap-1.5">
               Dataset:
+              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-500/50" aria-hidden="true">/</kbd>
             </label>
             <select
               id="dataset-select"
@@ -265,7 +287,7 @@ export default function Dashboard() {
         {/* Multi-Graph Visualization Suite */}
         <GlassPanel title="Telemetry Data Pipeline" className="lg:col-span-3">
           <div className="space-y-4">
-            {loading ? (
+            {isFetchingFiles || loading ? (
               <div
                 role="status"
                 aria-live="polite"
