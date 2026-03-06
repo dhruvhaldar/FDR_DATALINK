@@ -21,3 +21,7 @@
 ## 2024-10-25 - Native os.listdir vs glob in Python Performance
 **Learning:** Using `glob.glob` to list files with specific extensions introduces noticeable overhead in Python APIs compared to native `os.listdir` due to path parsing and regex matching under the hood.
 **Action:** For simple, flat directory file filtering operations (e.g. finding files with a specific extension), use native `os.listdir` combined with a string `.endswith()` check instead of pulling in `glob`.
+
+## 2024-10-26 - FastAPI jsonable_encoder Performance with Large Arrays
+**Learning:** FastAPI's default behavior of returning a Python dictionary causes it to implicitly run the result through `jsonable_encoder` to prepare it for JSON serialization. For large payloads (like lists containing thousands of floats), this recursive validation and encoding is extremely slow (e.g., adding ~6-7 seconds of overhead per 500 requests for this flight data).
+**Action:** When an API endpoint returns large arrays of primitives (like floats or integers) that are already JSON-serializable, bypass `jsonable_encoder` by manually serializing the dictionary using `json.dumps()` and returning it inside a custom `Response(content=..., media_type="application/json")`. This yields a massive (~3x) speedup.
