@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, memo } from "react";
 import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
 import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink } from "lucide-react";
@@ -25,10 +25,13 @@ const PARAM_CONFIG = [
   { key: 'VRTG', name: 'Vertical Acceleration', color: '#d946ef', icon: Activity, unit: 'G', unitTitle: 'G-Force' },
 ];
 
-function TelemetryChart({
+// ⚡ Bolt: React.memo prevents expensive re-renders of the TelemetryChart component
+// if the props (which are now primitive or stable references) haven't changed.
+const TelemetryChart = memo(function TelemetryChart({
   title,
   data,
-  x,
+  step,
+  rate,
   color,
   unit,
   unitTitle,
@@ -36,12 +39,72 @@ function TelemetryChart({
 }: {
   title: string,
   data: number[],
-  x: number[],
+  step: number,
+  rate: number,
   color: string,
   unit: string,
   unitTitle: string,
   isLast: boolean
 }) {
+  // ⚡ Bolt: Memoize the X-axis array to avoid re-calculating thousands of points on every render
+  const x = useMemo(() => {
+    return Array.from({ length: data.length }, (_, i) => (i * (step || 1)) / rate);
+  }, [data.length, step, rate]);
+
+  // ⚡ Bolt: react-plotly.js is highly sensitive to prop object identity.
+  // Passing fresh inline objects for data, layout, and config on every render forces
+  // Plotly to perform deep equality checks and potential WebGL redraws.
+  // Memoizing these objects reduces CPU spikes during parent component re-renders.
+  const plotData = useMemo(() => [
+    {
+      x: x,
+      y: data,
+      type: "scatter" as const,
+      mode: "lines" as const,
+      line: { color: color, width: 1.5 },
+      fill: 'tozeroy' as const,
+      fillcolor: `${color}08`,
+      name: title
+    },
+  ], [x, data, color, title]);
+
+  const plotLayout = useMemo(() => ({
+    paper_bgcolor: "#000000",
+    plot_bgcolor: "#000000",
+    font: { color: "#34d399", size: 10, family: 'Monaco, monospace' },
+    margin: { t: 5, b: 35, l: 50, r: 25 },
+    hovermode: "x" as const,
+    xaxis: {
+      gridcolor: "#065f46",
+      gridwidth: 0.8,
+      zeroline: false,
+      title: {
+        text: isLast ? "[ TIME_DOMAIN_SECONDS ]" : "",
+        font: { size: 10, color: "#34d399", weight: 'bold' as const }
+      },
+      showticklabels: true,
+      showline: true,
+      linewidth: 1.5,
+      linecolor: "#059669",
+      mirror: true,
+      tickfont: { size: 9, color: "#34d399", weight: 'bold' as const }
+    },
+    yaxis: {
+      gridcolor: "#065f46",
+      gridwidth: 0.8,
+      zeroline: false,
+      tickfont: { size: 9, color: "#34d399", weight: 'bold' as const },
+      showline: true,
+      linewidth: 1.5,
+      linecolor: "#059669",
+      mirror: true
+    },
+    showlegend: false,
+    autosize: true
+  }), [isLast]);
+
+  const plotConfig = useMemo(() => ({ responsive: true, displayModeBar: false }), []);
+
   return (
     <div className="w-full">
       <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 px-1.5 flex justify-between">
@@ -54,60 +117,16 @@ function TelemetryChart({
       </h4>
       <div className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden">
         <Plot
-          data={[
-            {
-              x: x,
-              y: data,
-              type: "scatter",
-              mode: "lines",
-              line: { color: color, width: 1.5 },
-              fill: 'tozeroy',
-              fillcolor: `${color}08`,
-              name: title
-            },
-          ]}
-          layout={{
-            paper_bgcolor: "#000000",
-            plot_bgcolor: "#000000",
-            font: { color: "#34d399", size: 10, family: 'Monaco, monospace' },
-            margin: { t: 5, b: 35, l: 50, r: 25 },
-            hovermode: "x",
-            xaxis: {
-              gridcolor: "#065f46",
-              gridwidth: 0.8,
-              zeroline: false,
-              title: {
-                text: isLast ? "[ TIME_DOMAIN_SECONDS ]" : "",
-                font: { size: 10, color: "#34d399", weight: 'bold' }
-              },
-              showticklabels: true,
-              showline: true,
-              linewidth: 1.5,
-              linecolor: "#059669",
-              mirror: true,
-              tickfont: { size: 9, color: "#34d399", weight: 'bold' }
-            },
-            yaxis: {
-              gridcolor: "#065f46",
-              gridwidth: 0.8,
-              zeroline: false,
-              tickfont: { size: 9, color: "#34d399", weight: 'bold' },
-              showline: true,
-              linewidth: 1.5,
-              linecolor: "#059669",
-              mirror: true
-            },
-            showlegend: false,
-            autosize: true
-          }}
+          data={plotData}
+          layout={plotLayout}
           useResizeHandler
           className="h-full w-full"
-          config={{ responsive: true, displayModeBar: false }}
+          config={plotConfig}
         />
       </div>
     </div>
   );
-}
+});
 
 export default function Dashboard() {
   const [files, setFiles] = useState<string[]>([]);
@@ -331,14 +350,13 @@ export default function Dashboard() {
                 const pData = flightData?.[param.key];
                 if (!pData) return null;
 
-                const x = Array.from({ length: pData.data.length }, (_, i) => (i * (pData.step || 1)) / pData.rate);
-
                 return (
                   <TelemetryChart
                     key={param.key}
                     title={param.name}
                     data={pData.data}
-                    x={x}
+                    step={pData.step || 1}
+                    rate={pData.rate}
                     color={param.color}
                     unit={pData.units || param.unit}
                     unitTitle={param.unitTitle}
