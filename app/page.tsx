@@ -18,11 +18,11 @@ interface FlightDataParam {
 type FlightData = Record<string, FlightDataParam>;
 
 const PARAM_CONFIG = [
-  { key: 'ALT', name: 'Pressure Altitude LSP', color: '#06b6d4', icon: Navigation, unit: 'FT' },
-  { key: 'CAS', name: 'Computed Airspeed LSP', color: '#f59e0b', icon: Wind, unit: 'KTS' },
-  { key: 'PTCH', name: 'Pitch Angle LSP', color: '#f97316', icon: Gauge, unit: 'DEG' },
-  { key: 'ROLL', name: 'Roll Angle LSP', color: '#3b82f6', icon: Activity, unit: 'DEG' },
-  { key: 'VRTG', name: 'Vertical Acceleration', color: '#d946ef', icon: Activity, unit: 'G' },
+  { key: 'ALT', name: 'Pressure Altitude LSP', color: '#06b6d4', icon: Navigation, unit: 'FT', unitTitle: 'Feet' },
+  { key: 'CAS', name: 'Computed Airspeed LSP', color: '#f59e0b', icon: Wind, unit: 'KTS', unitTitle: 'Knots' },
+  { key: 'PTCH', name: 'Pitch Angle LSP', color: '#f97316', icon: Gauge, unit: 'DEG', unitTitle: 'Degrees' },
+  { key: 'ROLL', name: 'Roll Angle LSP', color: '#3b82f6', icon: Activity, unit: 'DEG', unitTitle: 'Degrees' },
+  { key: 'VRTG', name: 'Vertical Acceleration', color: '#d946ef', icon: Activity, unit: 'G', unitTitle: 'G-Force' },
 ];
 
 function TelemetryChart({
@@ -31,6 +31,7 @@ function TelemetryChart({
   x,
   color,
   unit,
+  unitTitle,
   isLast
 }: {
   title: string,
@@ -38,13 +39,18 @@ function TelemetryChart({
   x: number[],
   color: string,
   unit: string,
+  unitTitle: string,
   isLast: boolean
 }) {
   return (
     <div className="w-full">
       <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 px-1.5 flex justify-between">
         <span>{title}</span>
-        <span className="text-slate-400 text-[10px]">{unit}</span>
+        <span className="text-slate-400 text-[10px]">
+          <abbr title={unitTitle} className="cursor-help decoration-dotted underline decoration-slate-500/50">
+            {unit}
+          </abbr>
+        </span>
       </h4>
       <div className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden">
         <Plot
@@ -275,7 +281,11 @@ export default function Dashboard() {
                         <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
                       )}
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-500/60 uppercase">{flightData?.[param.key]?.units || param.unit}</span>
+                    <span className="text-[10px] font-bold text-emerald-500/60 uppercase">
+                      <abbr title={param.unitTitle} className="cursor-help decoration-dotted underline decoration-emerald-500/50">
+                        {flightData?.[param.key]?.units || param.unit}
+                      </abbr>
+                    </span>
                   </div>
                   <Icon className="h-5 w-5 text-emerald-500/40" aria-hidden="true" />
                 </div>
@@ -331,6 +341,7 @@ export default function Dashboard() {
                     x={x}
                     color={param.color}
                     unit={pData.units || param.unit}
+                    unitTitle={param.unitTitle}
                     isLast={idx === PARAM_CONFIG.length - 1}
                   />
                 );
