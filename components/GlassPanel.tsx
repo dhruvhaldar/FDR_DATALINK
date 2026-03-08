@@ -18,7 +18,7 @@ export function GlassPanel({ children, className, title, ...props }: GlassPanelP
             {...props}
         >
             {title && (
-                <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-500">
+                <h3 className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-400">
                     <span aria-hidden="true">&gt;</span> {title}
                 </h3>
             )}
