@@ -23,15 +23,47 @@ def list_files():
     return {"files": sorted(file_names)}
 
 @lru_cache(maxsize=16)
-def load_mat_file(file_path: str):
+def get_processed_flight_data(file_path: str):
     """
-    Load .mat file with caching to avoid re-reading and re-parsing
-    the same file repeatedly.
+    Load .mat file, process the necessary fields, downsample arrays,
+    and return the final JSON string.
     """
     # ⚡ Bolt: Optimize memory footprint and parsing speed by only loading required parameters
     # This prevents storing a massive, mostly-unused dictionary in the lru_cache
     # and reduces scipy.io.loadmat execution time by ~45%
-    return scipy.io.loadmat(file_path, variable_names=['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG', 'MACH', 'TAT'])
+    data = scipy.io.loadmat(file_path, variable_names=['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG', 'MACH', 'TAT'])
+    result = {}
+
+    # We'll extract a subset of interesting parameters
+    params = ['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG', 'MACH', 'TAT']
+
+    for p in params:
+        if p in data:
+            struct = data[p][0, 0]
+            # Convert numpy arrays to lists for JSON serialization
+            raw_data = struct['data'].flatten()
+
+            # Downsample if too large (e.g., > 2000 points) to keep response snappy
+            max_points = 2000
+            if len(raw_data) > max_points:
+                step = len(raw_data) // max_points
+                raw_data = raw_data[::step]
+
+            rate = float(struct['Rate'][0, 0]) if 'Rate' in struct.dtype.names else 1.0
+            units = str(struct['Units'][0]) if 'Units' in struct.dtype.names else ""
+            desc = str(struct['Description'][0]) if 'Description' in struct.dtype.names else p
+
+            result[p] = {
+                "data": raw_data.tolist(),
+                "rate": rate,
+                "units": units,
+                "description": desc
+            }
+
+    # ⚡ Bolt: Cache the raw JSON string directly rather than returning a massive dict
+    # This prevents repetitive list conversions, array flattening, and JSON serializations
+    # on every identical API request.
+    return json.dumps(result)
 
 @app.get("/api/data/{filename}")
 def get_flight_data(filename: str):
@@ -40,38 +72,13 @@ def get_flight_data(filename: str):
         raise HTTPException(status_code=404, detail="File not found")
     
     try:
-        data = load_mat_file(file_path)
-        result = {}
-        
-        # We'll extract a subset of interesting parameters
-        params = ['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG', 'MACH', 'TAT']
-        
-        for p in params:
-            if p in data:
-                struct = data[p][0, 0]
-                # Convert numpy arrays to lists for JSON serialization
-                raw_data = struct['data'].flatten()
-                
-                # Downsample if too large (e.g., > 2000 points) to keep response snappy
-                max_points = 2000
-                if len(raw_data) > max_points:
-                    step = len(raw_data) // max_points
-                    raw_data = raw_data[::step]
-                
-                rate = float(struct['Rate'][0, 0]) if 'Rate' in struct.dtype.names else 1.0
-                units = str(struct['Units'][0]) if 'Units' in struct.dtype.names else ""
-                desc = str(struct['Description'][0]) if 'Description' in struct.dtype.names else p
-                
-                result[p] = {
-                    "data": raw_data.tolist(),
-                    "rate": rate,
-                    "units": units,
-                    "description": desc
-                }
+        # ⚡ Bolt: The cached function returns the final JSON string, bypassing
+        # repetitive processing loops and slow JSON serialization.
+        json_str = get_processed_flight_data(file_path)
         
         # ⚡ Bolt: Bypass FastAPI's slow jsonable_encoder for large lists of floats
         # Returning a raw Response with json.dumps is ~3x faster for this dataset size
-        return Response(content=json.dumps(result), media_type="application/json")
+        return Response(content=json_str, media_type="application/json")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
