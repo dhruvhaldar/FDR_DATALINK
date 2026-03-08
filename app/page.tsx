@@ -173,6 +173,14 @@ export default function Dashboard() {
   // Global keyboard shortcut for focusing the dataset selector
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        const datasetSelect = document.getElementById("dataset-select");
+        if (document.activeElement === datasetSelect) {
+          datasetSelect?.blur();
+        }
+        return;
+      }
+
       // Ignore if user is already typing in an input or text area
       if (
         document.activeElement?.tagName === "INPUT" ||
@@ -236,9 +244,9 @@ export default function Dashboard() {
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
           <GlassPanel className="p-1 w-full md:w-auto flex items-center pr-2">
-            <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-500/70 cursor-pointer whitespace-nowrap flex items-center gap-1.5">
+            <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5">
               Dataset:
-              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-500/50" aria-hidden="true">/</kbd>
+              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-500/50" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
             </label>
             <select
               id="dataset-select"
@@ -246,6 +254,7 @@ export default function Dashboard() {
               disabled={loading || isFetchingFiles}
               title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
               aria-busy={isFetchingFiles || loading}
+              aria-keyshortcuts="/"
               onChange={(e) => {
                 const val = e.target.value;
                 setSelectedFile(val);
@@ -300,7 +309,7 @@ export default function Dashboard() {
                         <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
                       )}
                     </span>
-                    <span className="text-[10px] font-bold text-emerald-500/60 uppercase">
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase">
                       <abbr title={param.unitTitle} className="cursor-help decoration-dotted underline decoration-emerald-500/50">
                         {flightData?.[param.key]?.units || param.unit}
                       </abbr>
@@ -324,7 +333,7 @@ export default function Dashboard() {
                 className="flex h-[400px] flex-col items-center justify-center gap-3"
               >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
-                <span className="text-xs font-bold uppercase tracking-widest text-emerald-500/60 animate-pulse">
+                <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">
                   Processing Telemetry...
                 </span>
               </div>
@@ -336,7 +345,7 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center gap-2 text-center">
                   <AlertTriangle className="h-10 w-10 text-red-500/80" aria-hidden="true" />
                   <p className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
-                  <p className="text-[10px] text-emerald-500/60">Please try selecting another file</p>
+                  <p className="text-[10px] text-emerald-400">Please try selecting another file</p>
                 </div>
                 <button
                   onClick={() => fetchFlightData(selectedFile)}
@@ -368,7 +377,7 @@ export default function Dashboard() {
               <div className="flex h-[400px] items-center justify-center">
                 <button
                   onClick={() => document.getElementById('dataset-select')?.focus()}
-                  className="text-emerald-500/60 text-sm italic hover:text-emerald-400 underline decoration-emerald-500/30 hover:decoration-emerald-400 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded px-2 py-1 outline-none cursor-pointer"
+                  className="text-emerald-400 text-sm italic hover:text-emerald-300 underline decoration-emerald-500/30 hover:decoration-emerald-400 transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded px-2 py-1 outline-none cursor-pointer"
                   aria-label="Focus dataset selector to connect to data source"
                 >
                   Connect to data source via selector
