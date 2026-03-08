@@ -28,3 +28,7 @@
 ## 2025-03-07 - React Plotly Props Identity and WebGL Redraws
 **Learning:** `react-plotly.js` is highly sensitive to object identity for its `data`, `layout`, and `config` props. Creating inline objects on every render forces Plotly to perform deep equality checks and, in some cases, expensive WebGL redraws which causes massive CPU spikes in parent components. Furthermore, re-calculating identical data structures (like generating x-axis arrays) adds unnecessary load.
 **Action:** When using `react-plotly.js`, always use `React.useMemo()` to wrap the `data`, `layout`, and `config` objects, as well as `React.memo()` on wrapper components like `TelemetryChart`. This ensures stable references unless the underlying data truly changes.
+
+## 2025-03-08 - FastAPI caching final JSON string
+**Learning:** Returning large dictionaries from a cached FastAPI route function causes it to be run through `json.dumps()` (or FastAPI's `jsonable_encoder`) repeatedly on every request. Even if the array processing and data extraction is cached via `@lru_cache`, the list conversions, array downsampling, and JSON serialization can add significant overhead.
+**Action:** Always cache the final, raw JSON string directly rather than the parsed dictionary when serving identical static JSON structures from Python routes. This avoids both repeated array manipulations and slow JSON serializations, bypassing FastAPI's default encoding completely.
