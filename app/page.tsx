@@ -135,6 +135,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isFetchingFiles, setIsFetchingFiles] = useState(true);
+  const [statusMessage, setStatusMessage] = useState("");
 
   // ⚡ Bolt: Client-side cache for fetched datasets.
   // Prevents re-fetching and the expensive unmount/remount of Plotly charts
@@ -147,11 +148,13 @@ export default function Dashboard() {
     // otherwise cause the heavy WebGL charts to unmount and remount.
     if (dataCache[filename]) {
       setFlightData(dataCache[filename]);
+      setStatusMessage(`Restored ${filename} from cache.`);
       return;
     }
 
     setLoading(true);
     setError(null);
+    setStatusMessage(`Loading flight data for ${filename}...`);
     fetch(`/api/data/${filename}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load flight data");
@@ -162,13 +165,24 @@ export default function Dashboard() {
         // ⚡ Bolt: Store the fetched data in our cache
         setDataCache(prev => ({ ...prev, [filename]: data }));
         setLoading(false);
+        setStatusMessage(`Successfully loaded ${filename}.`);
       })
       .catch((err) => {
         console.error(err);
         setError(err instanceof Error ? err.message : "An unknown error occurred");
         setLoading(false);
+        setStatusMessage(`Error loading ${filename}: ${err instanceof Error ? err.message : "An unknown error occurred"}`);
       });
   };
+
+  // Dynamic Document Title
+  useEffect(() => {
+    if (selectedFile) {
+      document.title = `${selectedFile} | FDR DATALINK`;
+    } else {
+      document.title = "FDR DATALINK";
+    }
+  }, [selectedFile]);
 
   // Global keyboard shortcut for focusing the dataset selector
   useEffect(() => {
@@ -218,10 +232,16 @@ export default function Dashboard() {
       .finally(() => {
         setIsFetchingFiles(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div className="min-h-screen p-4 max-w-7xl mx-auto bg-black text-emerald-500 selection:bg-emerald-500/30 selection:text-white">
+      {/* 🎨 Palette: Screen reader status region */}
+      <div aria-live="polite" className="sr-only" role="status">
+        {statusMessage}
+      </div>
+
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-950 focus:text-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-black rounded font-bold uppercase tracking-wider"
@@ -246,7 +266,7 @@ export default function Dashboard() {
           <GlassPanel className="p-1 w-full md:w-auto flex items-center pr-2">
             <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5">
               Dataset:
-              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-500/50" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
             </label>
             <select
               id="dataset-select"
