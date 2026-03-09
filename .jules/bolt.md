@@ -32,3 +32,7 @@
 ## 2025-03-08 - FastAPI caching final JSON string
 **Learning:** Returning large dictionaries from a cached FastAPI route function causes it to be run through `json.dumps()` (or FastAPI's `jsonable_encoder`) repeatedly on every request. Even if the array processing and data extraction is cached via `@lru_cache`, the list conversions, array downsampling, and JSON serialization can add significant overhead.
 **Action:** Always cache the final, raw JSON string directly rather than the parsed dictionary when serving identical static JSON structures from Python routes. This avoids both repeated array manipulations and slow JSON serializations, bypassing FastAPI's default encoding completely.
+
+## 2025-03-09 - Plotly Evenly Spaced Data Performance (x0/dx)
+**Learning:** For time-series or sequential data where the x-axis points are evenly spaced, generating an explicit array of x-values (e.g., `[0, 0.5, 1.0, 1.5, ...]`) in React wastes O(n) memory allocation per chart render and increases React-Plotly data payload, adding unnecessary iteration and garbage collection overhead.
+**Action:** Always use Plotly's `x0` (start point) and `dx` (step size) properties on the trace object instead of generating explicit `x` coordinate arrays when visualizing evenly spaced numeric telemetry data. This drastically improves memory footprint and chart setup time.
