@@ -46,19 +46,17 @@ const TelemetryChart = memo(function TelemetryChart({
   unitTitle: string,
   isLast: boolean
 }) {
-  // ⚡ Bolt: Memoize the X-axis array to avoid re-calculating thousands of points on every render
-  const x = useMemo(() => {
-    return Array.from({ length: data.length }, (_, i) => (i * (step || 1)) / rate);
-  }, [data.length, step, rate]);
-
   // ⚡ Bolt: react-plotly.js is highly sensitive to prop object identity.
   // Passing fresh inline objects for data, layout, and config on every render forces
   // Plotly to perform deep equality checks and potential WebGL redraws.
   // Memoizing these objects reduces CPU spikes during parent component re-renders.
+  // ⚡ Bolt: Using x0 and dx instead of generating an explicit x array avoids O(N) memory
+  // allocation, massive array iteration, and reduces React re-renders memory footprint.
   const plotData = useMemo(() => [
     {
-      x: x,
       y: data,
+      x0: 0,
+      dx: (step || 1) / rate,
       type: "scatter" as const,
       mode: "lines" as const,
       line: { color: color, width: 1.5 },
@@ -66,7 +64,7 @@ const TelemetryChart = memo(function TelemetryChart({
       fillcolor: `${color}08`,
       name: title
     },
-  ], [x, data, color, title]);
+  ], [data, step, rate, color, title]);
 
   const plotLayout = useMemo(() => ({
     paper_bgcolor: "#000000",
