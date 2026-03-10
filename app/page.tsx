@@ -113,7 +113,11 @@ const TelemetryChart = memo(function TelemetryChart({
           </abbr>
         </span>
       </h4>
-      <div className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden">
+      <div
+        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden"
+        role="figure"
+        aria-label={`Interactive telemetry chart displaying ${title} data over time`}
+      >
         <Plot
           data={plotData}
           layout={plotLayout}
@@ -347,12 +351,12 @@ export default function Dashboard() {
               <div
                 role="status"
                 aria-live="polite"
-                aria-label={`Loading flight data for ${selectedFile}`}
+                aria-label={isFetchingFiles ? "Fetching available datasets" : `Loading flight data for ${selectedFile}`}
                 className="flex h-[400px] flex-col items-center justify-center gap-3"
               >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
                 <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">
-                  Processing Telemetry...
+                  {isFetchingFiles ? "Fetching Datasets..." : "Processing Telemetry..."}
                 </span>
               </div>
             ) : error ? (
