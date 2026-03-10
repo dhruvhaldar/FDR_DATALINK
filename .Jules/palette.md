@@ -32,3 +32,7 @@
 ## 2026-03-09 - Accessible Screen Reader Loading Status & Dynamic Document Title
 **Learning:** During dataset loading, screen readers don't always automatically announce completion states when the visual components change. Further, users who open multiple datasets across multiple tabs cannot distinguish which dataset belongs to which tab if the `document.title` remains static.
 **Action:** Update the `document.title` dynamically to reflect the current active dataset. Also, introduce an `aria-live="polite"` hidden region that actively logs load successes, failures, and cache retrievals, communicating async state cleanly without visually cluttering the UI.
+
+## 2026-03-10 - Accurate Loading Contexts & WebGL Landmarks
+**Learning:** During chained async operations (e.g., initial fetch vs. data processing), generic loading text and `aria-label`s can be inaccurate or confusing (like announcing 'Loading data for [empty file]'). Furthermore, WebGL canvas elements (like those used by react-plotly.js) are completely opaque to screen readers, meaning users miss out entirely on the presence of data visualizations unless explicitly marked up.
+**Action:** Conditionally render precise loading messages and `aria-label`s based on the specific async stage (e.g., `isFetchingFiles` vs. `loading`). Always wrap WebGL or opaque interactive elements with a semantic container using `role="figure"` and a descriptive `aria-label`.
