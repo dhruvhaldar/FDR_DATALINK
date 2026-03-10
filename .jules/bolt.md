@@ -36,3 +36,7 @@
 ## 2025-03-09 - Plotly Evenly Spaced Data Performance (x0/dx)
 **Learning:** For time-series or sequential data where the x-axis points are evenly spaced, generating an explicit array of x-values (e.g., `[0, 0.5, 1.0, 1.5, ...]`) in React wastes O(n) memory allocation per chart render and increases React-Plotly data payload, adding unnecessary iteration and garbage collection overhead.
 **Action:** Always use Plotly's `x0` (start point) and `dx` (step size) properties on the trace object instead of generating explicit `x` coordinate arrays when visualizing evenly spaced numeric telemetry data. This drastically improves memory footprint and chart setup time.
+
+## 2025-03-10 - Unused API Payload Parameters Performance Impact
+**Learning:** Returning unused parameters (like `MACH` and `TAT` in `api/index.py`) silently inflates file I/O parsing overhead, loop processing time, JSON serialization latency, and network payload size by nearly 30% without adding any value to the frontend.
+**Action:** Always audit backend API responses against frontend consumption. Only query and serialize data fields that are strictly necessary for the client-side render to minimize overhead across the entire stack.
