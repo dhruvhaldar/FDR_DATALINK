@@ -317,7 +317,9 @@ export default function Dashboard() {
         <div className="space-y-3 lg:col-span-1">
           {PARAM_CONFIG.map((param) => {
             const Icon = param.icon;
-            const val = flightData?.[param.key]?.data?.slice(-1)[0];
+            // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
+            const paramData = flightData?.[param.key]?.data;
+            const val = paramData ? paramData[paramData.length - 1] : undefined;
             return (
               <GlassPanel key={param.key} title={param.name} className="p-3" aria-busy={loading}>
                 <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
