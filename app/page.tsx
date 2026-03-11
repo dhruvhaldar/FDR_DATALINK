@@ -348,17 +348,18 @@ export default function Dashboard() {
 
         {/* Multi-Graph Visualization Suite */}
         <GlassPanel title="Telemetry Data Pipeline" className="lg:col-span-3">
-          <div className="space-y-4">
-            {isFetchingFiles || loading ? (
+          {/* ⚡ Bolt: Adding relative positioning here allows the loading overlay to position correctly without unmounting WebGL charts */}
+          <div className="space-y-4 relative">
+            {isFetchingFiles ? (
               <div
                 role="status"
                 aria-live="polite"
-                aria-label={isFetchingFiles ? "Fetching available datasets" : `Loading flight data for ${selectedFile}`}
+                aria-label="Fetching available datasets"
                 className="flex h-[400px] flex-col items-center justify-center gap-3"
               >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
                 <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">
-                  {isFetchingFiles ? "Fetching Datasets..." : "Processing Telemetry..."}
+                  Fetching Datasets...
                 </span>
               </div>
             ) : error ? (
@@ -379,24 +380,47 @@ export default function Dashboard() {
                 </button>
               </div>
             ) : flightData ? (
-              PARAM_CONFIG.map((param, idx) => {
-                const pData = flightData?.[param.key];
-                if (!pData) return null;
+              <>
+                {/* ⚡ Bolt: Render loading overlay instead of unmounting charts to prevent expensive WebGL context recreation */}
+                {loading && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-lg" aria-hidden="true">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
+                      <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">Processing Telemetry...</span>
+                    </div>
+                  </div>
+                )}
+                {PARAM_CONFIG.map((param, idx) => {
+                  const pData = flightData?.[param.key];
+                  if (!pData) return null;
 
-                return (
-                  <TelemetryChart
-                    key={param.key}
-                    title={param.name}
-                    data={pData.data}
-                    step={pData.step || 1}
-                    rate={pData.rate}
-                    color={param.color}
-                    unit={pData.units || param.unit}
-                    unitTitle={param.unitTitle}
-                    isLast={idx === PARAM_CONFIG.length - 1}
-                  />
-                );
-              })
+                  return (
+                    <TelemetryChart
+                      key={param.key}
+                      title={param.name}
+                      data={pData.data}
+                      step={pData.step || 1}
+                      rate={pData.rate}
+                      color={param.color}
+                      unit={pData.units || param.unit}
+                      unitTitle={param.unitTitle}
+                      isLast={idx === PARAM_CONFIG.length - 1}
+                    />
+                  );
+                })}
+              </>
+            ) : loading ? (
+              <div
+                role="status"
+                aria-live="polite"
+                aria-label={`Loading flight data for ${selectedFile}`}
+                className="flex h-[400px] flex-col items-center justify-center gap-3"
+              >
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
+                <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">
+                  Processing Telemetry...
+                </span>
+              </div>
             ) : (
               <div className="flex h-[400px] items-center justify-center">
                 <button

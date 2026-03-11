@@ -40,3 +40,7 @@
 ## 2025-03-10 - Unused API Payload Parameters Performance Impact
 **Learning:** Returning unused parameters (like `MACH` and `TAT` in `api/index.py`) silently inflates file I/O parsing overhead, loop processing time, JSON serialization latency, and network payload size by nearly 30% without adding any value to the frontend.
 **Action:** Always audit backend API responses against frontend consumption. Only query and serialize data fields that are strictly necessary for the client-side render to minimize overhead across the entire stack.
+
+## 2025-03-11 - WebGL Chart Unmounting During Async Fetches
+**Learning:** Even with client-side caching implemented, fetching a *new* (uncached) dataset sets `loading = true`, which conditionally unmounts the active `TelemetryChart` components to show a spinner. Unmounting and remounting `react-plotly.js` charts destroys and recreates WebGL contexts, causing severe UI jank, CPU spikes, and layout shifts.
+**Action:** Never unmount heavy WebGL components for intermediate loading states. Render the loading spinner as an overlay on top of the existing charts (keeping them mounted) and only update their props once the new data is fully processed.
