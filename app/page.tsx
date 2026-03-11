@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo, memo } from "react";
+import React, { useEffect, useState, useMemo, memo, useRef } from "react";
 import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
 import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink } from "lucide-react";
@@ -144,6 +144,9 @@ export default function Dashboard() {
   // when switching between previously viewed datasets.
   const [dataCache, setDataCache] = useState<Record<string, FlightData>>({});
 
+  // 🎨 Palette: Ref for the main content area to manage focus
+  const mainContentRef = useRef<HTMLElement>(null);
+
   const fetchFlightData = (filename: string) => {
     // ⚡ Bolt: Fast-path for cached data.
     // This synchronous update avoids setting `loading = true`, which would
@@ -281,6 +284,10 @@ export default function Dashboard() {
                 const val = e.target.value;
                 setSelectedFile(val);
                 fetchFlightData(val);
+                // 🎨 Palette: Shift focus to main content when selector becomes disabled
+                // to prevent focus loss (falling back to document.body) and help screen
+                // reader users seamlessly transition to the loading/data area.
+                mainContentRef.current?.focus();
               }}
               className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
             >
@@ -316,7 +323,7 @@ export default function Dashboard() {
         </p>
       </GlassPanel>
 
-      <main id="main-content" tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none">
+      <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none">
         {/* Navigation / KPIs */}
         <div className="space-y-3 lg:col-span-1">
           {PARAM_CONFIG.map((param) => {
