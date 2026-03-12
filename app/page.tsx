@@ -108,7 +108,11 @@ const TelemetryChart = memo(function TelemetryChart({
       <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 px-1.5 flex justify-between">
         <span>{title}</span>
         <span className="text-slate-400 text-[10px]">
-          <abbr title={unitTitle} className="cursor-help decoration-dotted underline decoration-slate-500/50">
+          <abbr
+            title={unitTitle}
+            tabIndex={0}
+            className="cursor-help decoration-dotted underline decoration-slate-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+          >
             {unit}
           </abbr>
         </span>
@@ -341,7 +345,11 @@ export default function Dashboard() {
                       )}
                     </span>
                     <span className="text-[10px] font-bold text-emerald-400 uppercase">
-                      <abbr title={param.unitTitle} className="cursor-help decoration-dotted underline decoration-emerald-500/50">
+                      <abbr
+                        title={param.unitTitle}
+                        tabIndex={0}
+                        className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+                      >
                         {flightData?.[param.key]?.units || param.unit}
                       </abbr>
                     </span>
