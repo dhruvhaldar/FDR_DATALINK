@@ -41,3 +41,7 @@
 ## 2026-03-11 - Focus Management During Async Disablement
 **Learning:** Disabling interactive elements (like `<select>`) when an asynchronous operation starts causes the element to lose focus, which resets the active element to `document.body`. This severely disrupts keyboard navigation and screen reader flow, leaving the user completely unmoored in the UI hierarchy.
 **Action:** Always programmatically manage focus *before* an element becomes disabled. Shift focus (`.focus()`) to an appropriate adjacent semantic container (like `<main tabIndex={-1}>` or an `aria-live` region) to ensure the user's place is maintained and context flows logically.
+
+## 2026-03-12 - Keyboard Accessibility for Abbreviation Tooltips
+**Learning:** Using the native `<abbr>` tag provides a helpful tooltip via the `title` attribute on mouse hover, but this is completely inaccessible to keyboard-only users because `<abbr>` elements are not inherently focusable by browsers.
+**Action:** Always add `tabIndex={0}` and standard `focus-visible` outline styles to `<abbr>` tags so that keyboard users can tab to them and reveal the title tooltip, ensuring domain-specific terminology (like units of measurement) is accessible to everyone.
