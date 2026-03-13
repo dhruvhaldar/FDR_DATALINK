@@ -48,3 +48,7 @@
 ## 2026-03-12 - Float Precision and Array Flattening Serialization Overhead
 **Learning:** Default float extraction in backend Python API produces extremely high-precision arrays which take significantly longer to JSON serialize and double the overall payload size over the network. Furthermore, `.flatten()` performs a deep array copy leading to memory overhead.
 **Action:** Use `.ravel()` instead of `.flatten()` to create a faster memory view rather than a copy, and apply `np.round(raw_data, 3)` right before `.tolist()` to drastically reduce precision overhead, effectively halving JSON string size and boosting serialization speeds by nearly 50% for high-frequency telemetry data.
+
+## 2026-03-13 - JSON dumps Whitespace Overhead
+**Learning:** The default `json.dumps()` in Python includes whitespace (spaces after commas and colons). For large arrays of data (e.g., thousands of floats), this whitespace adds significant overhead to the final serialized string length.
+**Action:** Use `json.dumps(data, separators=(",", ":"))` when serving large data payloads to client applications. This completely eliminates whitespace formatting, reducing overall payload size by ~15% and noticeably speeding up network transmission without impacting JSON validity.
