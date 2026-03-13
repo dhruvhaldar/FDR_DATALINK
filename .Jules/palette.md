@@ -45,3 +45,7 @@
 ## 2026-03-12 - Keyboard Accessibility for Abbreviation Tooltips
 **Learning:** Using the native `<abbr>` tag provides a helpful tooltip via the `title` attribute on mouse hover, but this is completely inaccessible to keyboard-only users because `<abbr>` elements are not inherently focusable by browsers.
 **Action:** Always add `tabIndex={0}` and standard `focus-visible` outline styles to `<abbr>` tags so that keyboard users can tab to them and reveal the title tooltip, ensuring domain-specific terminology (like units of measurement) is accessible to everyone.
+
+## 2026-03-13 - Visual Feedback for Global Keyboard Shortcuts
+**Learning:** When global keyboard shortcuts (e.g., `/` to focus an input) are implemented with a static visual `<kbd>` hint, users lack immediate visual confirmation when the shortcut is activated.
+**Action:** Add visual feedback to shortcut hints when their target element is focused. Use `group` on a common parent container and `group-focus-within` styling on the `<kbd>` element so the hint "lights up" to reinforce the interaction.

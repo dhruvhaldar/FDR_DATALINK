@@ -272,10 +272,10 @@ export default function Dashboard() {
         </div>
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
-          <GlassPanel className="p-1 w-full md:w-auto flex items-center pr-2">
+          <GlassPanel className="group p-1 w-full md:w-auto flex items-center pr-2">
             <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5">
               Dataset:
-              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300 transition-colors" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
             </label>
             <select
               id="dataset-select"
