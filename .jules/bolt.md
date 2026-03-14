@@ -52,3 +52,7 @@
 ## 2026-03-13 - JSON dumps Whitespace Overhead
 **Learning:** The default `json.dumps()` in Python includes whitespace (spaces after commas and colons). For large arrays of data (e.g., thousands of floats), this whitespace adds significant overhead to the final serialized string length.
 **Action:** Use `json.dumps(data, separators=(",", ":"))` when serving large data payloads to client applications. This completely eliminates whitespace formatting, reducing overall payload size by ~15% and noticeably speeding up network transmission without impacting JSON validity.
+
+## 2026-03-14 - Duplicated Python Execution Paths Missing Optimizations
+**Learning:** Optimizations (like `.ravel()` and `np.round()` for JSON serialization) applied to one execution path (e.g., `api/index.py` for FastAPI) were completely missing from the duplicate execution path (`lib/extract_data.py` invoked via `python-shell` in Next.js API). This resulted in inconsistent performance and bloated payloads depending on which server process handled the request.
+**Action:** Always verify that backend performance optimizations are systematically applied across all duplicate execution paths or standalone scripts that perform the same fundamental operations, especially in multi-runtime architectures (Next.js + Python).
