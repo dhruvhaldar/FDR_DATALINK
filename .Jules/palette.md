@@ -49,3 +49,7 @@
 ## 2026-03-13 - Visual Feedback for Global Keyboard Shortcuts
 **Learning:** When global keyboard shortcuts (e.g., `/` to focus an input) are implemented with a static visual `<kbd>` hint, users lack immediate visual confirmation when the shortcut is activated.
 **Action:** Add visual feedback to shortcut hints when their target element is focused. Use `group` on a common parent container and `group-focus-within` styling on the `<kbd>` element so the hint "lights up" to reinforce the interaction.
+
+## 2026-03-14 - Cognitive Accessibility of Text Alignment
+**Learning:** Justified text (`text-justify`) creates uneven, unpredictable whitespace between words ('rivers of white'). This degrades readability for all users and specifically harms cognitive accessibility, making content significantly harder to read for users with dyslexia and violating WCAG guidelines.
+**Action:** Avoid `text-justify` for paragraph text. Prefer standard left-aligned text (`text-left`) to maintain predictable letter and word spacing.
