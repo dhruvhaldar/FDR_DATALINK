@@ -53,3 +53,7 @@
 ## 2026-03-14 - Cognitive Accessibility of Text Alignment
 **Learning:** Justified text (`text-justify`) creates uneven, unpredictable whitespace between words ('rivers of white'). This degrades readability for all users and specifically harms cognitive accessibility, making content significantly harder to read for users with dyslexia and violating WCAG guidelines.
 **Action:** Avoid `text-justify` for paragraph text. Prefer standard left-aligned text (`text-left`) to maintain predictable letter and word spacing.
+
+## 2026-03-15 - Visual Hierarchy in Empty States
+**Learning:** Empty states that rely only on a simple, low-contrast text link can feel unfinished, uninviting, and lack the necessary visual weight to guide the user's next action. Additionally, embedding a global keyboard shortcut hint (`<kbd>`) inside an interactive CTA reinforces discoverability much better than standalone text instructions.
+**Action:** Always enhance purely text-based empty states by implementing a clear visual hierarchy: include a muted thematic icon, a descriptive status title (e.g., "Ready for Telemetry"), high-contrast instructional microcopy, and a prominently styled Call-To-Action (CTA) button containing relevant `<kbd>` shortcut hints.
