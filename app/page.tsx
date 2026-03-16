@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo, memo, useRef } from "react";
 import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
-import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink } from "lucide-react";
+import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink, RefreshCw } from "lucide-react";
 
 // Dynamically import Plotly to avoid SSR issues
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -291,7 +291,12 @@ export default function Dashboard() {
                 // 🎨 Palette: Shift focus to main content when selector becomes disabled
                 // to prevent focus loss (falling back to document.body) and help screen
                 // reader users seamlessly transition to the loading/data area.
-                mainContentRef.current?.focus();
+                // ⚡ Bolt: Only shift focus if we are actually making a network request
+                // and the dropdown will become disabled. If the data is cached, it will
+                // load synchronously and we shouldn't steal focus from the user.
+                if (!dataCache[val]) {
+                  mainContentRef.current?.focus();
+                }
               }}
               className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
             >
@@ -389,8 +394,9 @@ export default function Dashboard() {
                 </div>
                 <button
                   onClick={() => fetchFlightData(selectedFile)}
-                  className="rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-colors hover:bg-emerald-500/20 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                  className="group flex items-center gap-2 rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-colors hover:bg-emerald-500/20 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
                 >
+                  <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 duration-500" aria-hidden="true" />
                   Retry Connection
                 </button>
               </div>
