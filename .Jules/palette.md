@@ -57,3 +57,7 @@
 ## 2026-03-15 - Visual Hierarchy in Empty States
 **Learning:** Empty states that rely only on a simple, low-contrast text link can feel unfinished, uninviting, and lack the necessary visual weight to guide the user's next action. Additionally, embedding a global keyboard shortcut hint (`<kbd>`) inside an interactive CTA reinforces discoverability much better than standalone text instructions.
 **Action:** Always enhance purely text-based empty states by implementing a clear visual hierarchy: include a muted thematic icon, a descriptive status title (e.g., "Ready for Telemetry"), high-contrast instructional microcopy, and a prominently styled Call-To-Action (CTA) button containing relevant `<kbd>` shortcut hints.
+
+## 2026-03-16 - Conditional Focus Management for Cached Data
+**Learning:** Unconditionally shifting focus (e.g., to a main content area) when an input changes works well for preventing focus loss during asynchronous data fetching that disables the input. However, if the data is fetched synchronously from a client-side cache, the input is never disabled, and the focus shift unexpectedly hijacks the user's keyboard navigation.
+**Action:** When implementing programmatic focus shifts to handle async state disablement, always add conditional logic to verify that an actual network request is occurring (e.g., `if (!dataCache[val])`). If the data loads instantly from a cache, do not disrupt the user's focus.
