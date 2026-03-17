@@ -56,3 +56,7 @@
 ## 2026-03-14 - Duplicated Python Execution Paths Missing Optimizations
 **Learning:** Optimizations (like `.ravel()` and `np.round()` for JSON serialization) applied to one execution path (e.g., `api/index.py` for FastAPI) were completely missing from the duplicate execution path (`lib/extract_data.py` invoked via `python-shell` in Next.js API). This resulted in inconsistent performance and bloated payloads depending on which server process handled the request.
 **Action:** Always verify that backend performance optimizations are systematically applied across all duplicate execution paths or standalone scripts that perform the same fundamental operations, especially in multi-runtime architectures (Next.js + Python).
+
+## 2026-03-15 - FastAPI Missing GZIP Compression on Large JSON Responses
+**Learning:** The FastAPI backend returning massive pre-serialized JSON arrays (~62KB per payload) was entirely uncompressed over the network, drastically inflating load times on slower connections. Unlike Next.js (which natively compresses routes), a raw FastAPI app requires explicit middleware to compress responses.
+**Action:** When building Python backend APIs that serve large, highly compressible text/JSON payloads, always import and attach `GZipMiddleware` to the FastAPI instance (`app.add_middleware(GZipMiddleware, minimum_size=1000)`). This yields up to a ~75% reduction in network payload size.
