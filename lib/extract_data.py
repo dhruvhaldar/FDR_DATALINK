@@ -27,7 +27,10 @@ def extract_data(file_path):
                 max_points = 2000
                 step = 1
                 if len(raw_data) > max_points:
-                    step = len(raw_data) // max_points
+                    # ⚡ Bolt: Use ceil division to strictly bound array size to max_points.
+                    # Previously, len // max_points allowed arrays up to 3999 points to pass
+                    # without downsampling, bloating payload size by up to 50%.
+                    step = (len(raw_data) + max_points - 1) // max_points
                     raw_data = raw_data[::step]
                 
                 rate = float(struct['Rate'][0, 0]) if 'Rate' in struct.dtype.names else 1.0
