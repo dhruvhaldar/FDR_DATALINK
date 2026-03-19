@@ -54,8 +54,12 @@ def get_processed_flight_data(file_path: str):
 
             # Downsample if too large (e.g., > 2000 points) to keep response snappy
             max_points = 2000
+            step = 1
             if len(raw_data) > max_points:
-                step = len(raw_data) // max_points
+                # ⚡ Bolt: Use ceil division to strictly bound array size to max_points.
+                # Previously, len // max_points allowed arrays up to 3999 points to pass
+                # without downsampling, bloating payload size by up to 50%.
+                step = (len(raw_data) + max_points - 1) // max_points
                 raw_data = raw_data[::step]
 
             # ⚡ Bolt: Rounding to 3 decimal places reduces the precision, cutting
@@ -70,7 +74,8 @@ def get_processed_flight_data(file_path: str):
                 "data": raw_data.tolist(),
                 "rate": rate,
                 "units": units,
-                "description": desc
+                "description": desc,
+                "step": step
             }
 
     # ⚡ Bolt: Cache the raw JSON string directly rather than returning a massive dict
@@ -93,7 +98,13 @@ def get_flight_data(filename: str):
         
         # ⚡ Bolt: Bypass FastAPI's slow jsonable_encoder for large lists of floats
         # Returning a raw Response with json.dumps is ~3x faster for this dataset size
-        return Response(content=json_str, media_type="application/json")
+        # ⚡ Bolt: Added Cache-Control headers to prevent the browser from repeatedly
+        # requesting large static telemetry arrays, matching the Next.js API behavior.
+        return Response(
+            content=json_str,
+            media_type="application/json",
+            headers={"Cache-Control": "public, max-age=86400, stale-while-revalidate=3600"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
