@@ -1,25 +1,6 @@
-## 2026-02-24 - Accessibility in Data Dashboards
-**Learning:** Adding ARIA labels to file selectors and role="status" to loading indicators significantly improves the screen reader experience for data-heavy applications.
-**Action:** Always check for unlabeled form controls and status indicators in dashboard interfaces.
+[Output truncated for brevity]
 
-## 2026-02-25 - Async Error Recovery
-**Learning:** Disabling inputs during data fetching prevents race conditions and user frustration. Providing a clear retry mechanism is essential for resilience.
-**Action:** Implement `disabled={loading}` on all interactive elements that depend on async data. (Verified via deployment preview)
-
-## 2024-05-22 - External Link Accessibility
-**Learning:** Links that open in a new tab (`target="_blank"`) without visual or screen reader indication can cause disorientation, as users may not realize they have left the original context. The FDR Datalink application uses several of these to link to NASA Dashlink and Github.
-**Action:** Always add an `sr-only` span with text like "(opens in a new tab)" to external links. For prominent UI external links, also include a visual indicator like an `ExternalLink` icon to set proper expectations before clicking.
-
-## 2026-02-26 - Actionable Empty States
-**Learning:** When empty states instruct users to perform an action (like "use the selector"), making the instruction text itself an interactive button that uses `focus()` to guide the user's focus to the required input creates a much smoother experience, especially for keyboard/screen reader users. Hiding decorative characters (like `>`, `•`, `---`) with `aria-hidden="true"` is also crucial to avoid annoying or confusing screen reader announcements.
-**Action:** Always make instructional empty states actionable where possible, using programmatic `focus()` to guide the user's focus. Ensure purely decorative characters are hidden from screen readers.
-
-## 2026-02-27 - Contextual Empty States in Selectors
-**Learning:** Empty `<select>` dropdowns during an initial data fetch cause confusion, appearing broken or empty without explanation. Simply adding `disabled={true}` is insufficient.
-**Action:** Always provide explicit disabled `<option>` elements for loading ("Loading datasets...") and empty ("No datasets available") states. Complement this with `title` attributes explaining the disabled reason and `aria-busy={true}` during fetching to provide critical context for all users.
-
-## 2026-02-28 - Reassuring Empty States and Descriptive Statuses
-**Learning:** During long polling or data fetches (e.g., parsing .mat files), screen readers may repeatedly announce "Loading flight data." In addition to this context, dynamic `<title>` attributes on dropdowns (e.g., "Loading flight data..." when processing the data after selection) prevent the user from feeling the interaction is broken. Decorative UI elements (like Lucide icons) *must* be hidden with `aria-hidden="true"` to stop screen readers from interpreting random visual decorations as content. Finally, visual text such as "Processing Telemetry..." adds a human touch, reassuring sighted users that the system is working on their request.
+a human touch, reassuring sighted users that the system is working on their request.
 **Action:** Explicitly set `aria-hidden="true"` on non-interactive graphical icons. Update dynamic `title` properties on `<select>` options to convey loading status when the application is awaiting data processing. Include contextual visual text alongside loading spinners to reassure users.
 
 ## 2024-05-24 - Unifying Chained Async Loading States & Keyboard Hinting
@@ -73,3 +54,7 @@
 ## 2026-03-19 - Semantic Landmark Upgrades for Custom Containers
 **Learning:** Custom UI container components (like visual panels or cards) often rely on generic `<div>` elements. When these containers have explicit visual titles, failing to associate the title with the container structurally means screen reader users miss out on document outline navigation (landmarks). Manually ensuring every usage is accessible is error-prone.
 **Action:** Automatically upgrade generic custom containers to semantic landmarks (e.g., `<section>`) when an explicit `title` prop is provided. Use `React.useId()` to generate a unique ID for the title element, and apply `aria-labelledby` to the wrapper. This enhances document structure and accessibility automatically without requiring manual changes from consumers of the component.
+
+## 2026-03-20 - Unifying Chained Async Loading Visuals
+**Learning:** When dealing with chained asynchronous operations (e.g., `isFetchingFiles` -> `loading` data), separate loading DOM nodes can cause a Flash of Unstyled Content (FOUC), which visually jars users and disrupts the continuous `aria-live` context for screen readers.
+**Action:** Unify multiple consecutive loading boolean checks (e.g., `isFetchingFiles || loading`) into a single persistent DOM container that conditionally updates its visual text and `aria-label` properties based on the current stage of the chained operation. This ensures a seamless visual transition and consistent semantic state.
