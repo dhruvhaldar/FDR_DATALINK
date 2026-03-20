@@ -370,16 +370,16 @@ export default function Dashboard() {
         <GlassPanel title="Telemetry Data Pipeline" className="lg:col-span-3">
           {/* ⚡ Bolt: Adding relative positioning here allows the loading overlay to position correctly without unmounting WebGL charts */}
           <div className="space-y-4 relative">
-            {isFetchingFiles ? (
+            {isFetchingFiles || (!flightData && loading) ? (
               <div
                 role="status"
                 aria-live="polite"
-                aria-label="Fetching available datasets"
+                aria-label={isFetchingFiles ? "Fetching available datasets" : `Loading flight data for ${selectedFile}`}
                 className="flex h-[400px] flex-col items-center justify-center gap-3"
               >
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
                 <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">
-                  Fetching Datasets...
+                  {isFetchingFiles ? "Fetching Datasets..." : "Processing Telemetry..."}
                 </span>
               </div>
             ) : error ? (
@@ -430,18 +430,6 @@ export default function Dashboard() {
                   );
                 })}
               </>
-            ) : loading ? (
-              <div
-                role="status"
-                aria-live="polite"
-                aria-label={`Loading flight data for ${selectedFile}`}
-                className="flex h-[400px] flex-col items-center justify-center gap-3"
-              >
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
-                <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">
-                  Processing Telemetry...
-                </span>
-              </div>
             ) : (
               <div className="flex h-[400px] flex-col items-center justify-center gap-4">
                 <div className="rounded-full bg-emerald-500/5 p-4 ring-1 ring-emerald-500/20">
