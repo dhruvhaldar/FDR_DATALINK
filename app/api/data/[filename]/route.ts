@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PythonShell } from "python-shell";
 import path from "path";
-import fs from "fs";
+import fsp from "fs/promises";
 
 const DATA_DIR = path.join(process.cwd(), "Tail_666_9");
 
@@ -29,7 +29,11 @@ export async function GET(
     const filePath = path.join(DATA_DIR, filename);
     const scriptPath = path.join(process.cwd(), "lib", "extract_data.py");
 
-    if (!fs.existsSync(filePath)) {
+    try {
+        // ⚡ Bolt: Replace synchronous fs.existsSync with async fsp.access
+        // to prevent blocking the Node.js event loop during concurrent requests.
+        await fsp.access(filePath);
+    } catch {
         return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 

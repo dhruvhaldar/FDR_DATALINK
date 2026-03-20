@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import path from "path";
-import fs from "fs";
 import fsp from "fs/promises";
 
 const DATA_DIR = path.join(process.cwd(), "Tail_666_9");
 
 export async function GET() {
-    if (!fs.existsSync(DATA_DIR)) {
+    try {
+        // ⚡ Bolt: Replace synchronous fs.existsSync with async fsp.access
+        // to prevent blocking the Node.js event loop during high concurrent requests.
+        await fsp.access(DATA_DIR);
+    } catch {
         return NextResponse.json({ error: "Data directory not found", path: DATA_DIR }, { status: 404 });
     }
 
