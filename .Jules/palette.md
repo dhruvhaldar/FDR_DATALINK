@@ -58,3 +58,11 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-20 - Unifying Chained Async Loading Visuals
 **Learning:** When dealing with chained asynchronous operations (e.g., `isFetchingFiles` -> `loading` data), separate loading DOM nodes can cause a Flash of Unstyled Content (FOUC), which visually jars users and disrupts the continuous `aria-live` context for screen readers.
 **Action:** Unify multiple consecutive loading boolean checks (e.g., `isFetchingFiles || loading`) into a single persistent DOM container that conditionally updates its visual text and `aria-label` properties based on the current stage of the chained operation. This ensures a seamless visual transition and consistent semantic state.
+
+## 2026-03-21 - Visual Consistency in Disabled Form Controls
+**Learning:** When an interactive input (like a `<select>`) becomes disabled, native browsers only apply disabled styling to the input element itself. The associated `<label>` remains visually active, which causes a disconnect and can confuse users about whether the entire component block is disabled or just the input.
+**Action:** Always dynamically link the visual styling (e.g., `opacity-50`, `cursor-not-allowed`) of a `<label>` to match the `disabled` state of its corresponding input. Additionally, ensure inputs explicitly handle edge-case disabled states (e.g., `<select>` disabled when options array `length === 0`).
+
+## 2026-03-21 - Cognitive Accessibility of Large Numbers
+**Learning:** Displaying large numbers without thousand separators (e.g., `35000.0` instead of `35,000.0`) significantly reduces cognitive accessibility and scannability, especially in rapid-update data dashboards where users need to process metrics at a glance.
+**Action:** Avoid using `Number.prototype.toFixed()` for large UI numbers. Instead, use `Number.prototype.toLocaleString('en-US', { minimumFractionDigits: X, maximumFractionDigits: X })` to automatically introduce culturally appropriate digit grouping (thousand separators) while maintaining precise decimal formatting.
