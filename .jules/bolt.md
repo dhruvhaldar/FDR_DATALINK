@@ -5,3 +5,6 @@
 ## 2026-03-16 - FastAPI Missing HTTP Caching on Static API Routes
 **Learning:** Caching data in memory on the backend (`@lru_cache`) prevents re-processing, but without setting `Cache-Control` headers on the `Response`, the browser continues to make network requests (and download massive JSON payloads) on every page reload or tab switch.
 **Action:** Always add standard HTTP caching headers (`headers={"Cache-Control": "public, max-age=86400, stale-while-revalidate=3600"}`) to FastAPI responses that serve immutable or static data (like telemetry from static `.mat` files). This pushes the cache to the edge/browser, completely eliminating unnecessary network traffic and backend load.
+## 2026-03-21 - Python Script Lazy Loading
+**Learning:** Top-level imports of heavy scientific libraries like `scipy.io` and `numpy` block script initialization for ~400ms. In multi-runtime architectures (e.g. Next.js spawning Python scripts via `PythonShell`), this causes massive CPU/memory spikes even for invalid or missing files before the script eventually errors out.
+**Action:** When creating CLI scripts or Python helpers spawned by external processes, move expensive imports inside the main execution functions, placing them *after* cheap validation checks (like `os.path.exists()`) to ensure lightning-fast failure paths.
