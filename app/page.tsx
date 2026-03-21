@@ -273,14 +273,14 @@ export default function Dashboard() {
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
           <GlassPanel className="group p-1 w-full md:w-auto flex items-center pr-2">
-            <label htmlFor="dataset-select" className="pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5">
+            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${(loading || isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
               <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300 transition-colors" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
             </label>
             <select
               id="dataset-select"
               value={selectedFile}
-              disabled={loading || isFetchingFiles}
+              disabled={loading || isFetchingFiles || files.length === 0}
               title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
               aria-busy={isFetchingFiles || loading}
               aria-keyshortcuts="/"
@@ -345,7 +345,7 @@ export default function Dashboard() {
                 <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
                   <div className="flex items-baseline gap-1.5">
                     <span className={`text-2xl font-mono`} style={{ color: param.color }}>
-                      {val !== undefined ? val.toFixed(param.key === 'VRTG' ? 2 : 1) : (
+                      {val !== undefined ? val.toLocaleString('en-US', { minimumFractionDigits: param.key === 'VRTG' ? 2 : 1, maximumFractionDigits: param.key === 'VRTG' ? 2 : 1 }) : (
                         <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
                       )}
                     </span>
