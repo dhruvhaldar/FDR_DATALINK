@@ -223,6 +223,13 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    // ⚡ Bolt: Pre-load the massive react-plotly.js chunk immediately on mount.
+    // Waiting for the sequential API requests (/api/files -> /api/data) to resolve
+    // before triggering the dynamic import creates a massive network waterfall,
+    // delaying the First Meaningful Paint. By importing it now, the browser downloads
+    // the ~3MB chart library in parallel with the JSON data.
+    import("react-plotly.js").catch(() => {});
+
     fetch("/api/files")
       .then((res) => res.json())
       .then((data) => {
