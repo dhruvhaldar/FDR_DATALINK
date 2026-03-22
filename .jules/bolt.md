@@ -8,3 +8,11 @@
 ## 2026-03-21 - Python Script Lazy Loading
 **Learning:** Top-level imports of heavy scientific libraries like `scipy.io` and `numpy` block script initialization for ~400ms. In multi-runtime architectures (e.g. Next.js spawning Python scripts via `PythonShell`), this causes massive CPU/memory spikes even for invalid or missing files before the script eventually errors out.
 **Action:** When creating CLI scripts or Python helpers spawned by external processes, move expensive imports inside the main execution functions, placing them *after* cheap validation checks (like `os.path.exists()`) to ensure lightning-fast failure paths.
+
+## 2026-03-22 - Static API Responses Caching Time
+**Learning:** Adding a 24-hour cache (`max-age=86400`) to an endpoint that lists directory contents (`/api/files`) is a functional regression if the directory is dynamic, because new files won't be visible for a full day. The `Cache-Control` header should be applied carefully based on whether the data is truly static. If the file list is dynamic, a much shorter cache or no cache is appropriate.
+**Action:** When adding `Cache-Control` headers, strictly evaluate if the data can change. For directory listings, use short caching (e.g., `max-age=60`) or revalidate frequently, rather than the 86400 seconds used for immutable static files.
+
+## 2026-03-22 - Caching API Files is a Bad Idea
+**Learning:** Adding ANY HTTP caching (`Cache-Control` max-age > 0) to a directory listing endpoint (`/api/files`) fundamentally breaks read-after-write consistency. If a user or background process adds, deletes, or modifies a file, the application will fail to reflect those changes for the duration of the cache. This is a functional regression and breaks the rule that "speed without correctness is useless."
+**Action:** Do NOT apply caching headers to dynamic list endpoints unless the application architecture guarantees that the underlying data is strictly immutable or provides an active cache invalidation mechanism.
