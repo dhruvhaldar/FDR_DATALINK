@@ -283,6 +283,7 @@ export default function Dashboard() {
               disabled={loading || isFetchingFiles || files.length === 0}
               title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
               aria-busy={isFetchingFiles || loading}
+              aria-invalid={!!error}
               aria-keyshortcuts="/"
               onChange={(e) => {
                 const val = e.target.value;
@@ -390,7 +391,13 @@ export default function Dashboard() {
                 <div className="flex flex-col items-center gap-2 text-center">
                   <AlertTriangle className="h-10 w-10 text-red-500/80" aria-hidden="true" />
                   <p className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
-                  <p className="text-[10px] text-emerald-400">Please try selecting another file</p>
+                  <button
+                    onClick={() => document.getElementById('dataset-select')?.focus()}
+                    className="group flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-sm"
+                  >
+                    Please try selecting another file
+                    <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-colors group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-visible:border-emerald-400 group-focus-visible:text-emerald-300" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+                  </button>
                 </div>
                 <button
                   onClick={() => fetchFlightData(selectedFile)}

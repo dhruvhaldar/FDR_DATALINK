@@ -66,3 +66,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-21 - Cognitive Accessibility of Large Numbers
 **Learning:** Displaying large numbers without thousand separators (e.g., `35000.0` instead of `35,000.0`) significantly reduces cognitive accessibility and scannability, especially in rapid-update data dashboards where users need to process metrics at a glance.
 **Action:** Avoid using `Number.prototype.toFixed()` for large UI numbers. Instead, use `Number.prototype.toLocaleString('en-US', { minimumFractionDigits: X, maximumFractionDigits: X })` to automatically introduce culturally appropriate digit grouping (thousand separators) while maintaining precise decimal formatting.
+
+## 2026-03-22 - Actionable Error Instructions and Invalid States
+**Learning:** When a data fetch error occurs, passive instructional text (e.g., "Please try selecting another file") leaves users without an immediate path to recovery. Additionally, screen reader users returning to the selector aren't informed that their current selection caused an error.
+**Action:** Convert passive instructional text in error states into actionable buttons that programmatically focus the necessary input to resolve the issue. Always pair this with `aria-invalid={true}` on the problematic input to ensure semantic state accuracy for assistive technologies.
