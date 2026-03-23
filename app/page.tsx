@@ -187,11 +187,11 @@ export default function Dashboard() {
   // Dynamic Document Title
   useEffect(() => {
     if (selectedFile) {
-      document.title = `${selectedFile} | FDR DATALINK`;
+      document.title = `${loading ? '(Loading...) ' : ''}${selectedFile} | FDR DATALINK`;
     } else {
       document.title = "FDR DATALINK";
     }
-  }, [selectedFile]);
+  }, [selectedFile, loading]);
 
   // Global keyboard shortcut for focusing the dataset selector
   useEffect(() => {
@@ -340,7 +340,7 @@ export default function Dashboard() {
         </p>
       </GlassPanel>
 
-      <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none">
+      <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none" aria-label="Flight Data Dashboard Content">
         {/* Navigation / KPIs */}
         <div className="space-y-3 lg:col-span-1">
           {PARAM_CONFIG.map((param) => {
@@ -392,12 +392,11 @@ export default function Dashboard() {
               </div>
             ) : error ? (
               <div
-                role="alert"
                 className="flex h-[400px] flex-col items-center justify-center gap-4"
               >
                 <div className="flex flex-col items-center gap-2 text-center">
                   <AlertTriangle className="h-10 w-10 text-red-500/80" aria-hidden="true" />
-                  <p className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
+                  <p role="alert" className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
                   <button
                     onClick={() => document.getElementById('dataset-select')?.focus()}
                     className="group flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-sm"

@@ -70,3 +70,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-22 - Actionable Error Instructions and Invalid States
 **Learning:** When a data fetch error occurs, passive instructional text (e.g., "Please try selecting another file") leaves users without an immediate path to recovery. Additionally, screen reader users returning to the selector aren't informed that their current selection caused an error.
 **Action:** Convert passive instructional text in error states into actionable buttons that programmatically focus the necessary input to resolve the issue. Always pair this with `aria-invalid={true}` on the problematic input to ensure semantic state accuracy for assistive technologies.
+
+## 2026-03-23 - Interactive Elements inside Assertive Live Regions
+**Learning:** Placing interactive elements (like focusable buttons) inside an assertive `role="alert"` container is an accessibility anti-pattern. Screen readers may behave unpredictably, dropping out of browse mode or failing to announce the alert text clearly because the structural boundary of the alert contains focusable nodes.
+**Action:** Always scope `role="alert"` strictly to the element containing the static text message (e.g., the `<p>` tag), keeping sibling interactive recovery buttons outside the alert region.
