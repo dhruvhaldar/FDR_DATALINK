@@ -356,7 +356,7 @@ export default function Dashboard() {
             const paramData = flightData?.[param.key]?.data;
             const val = paramData ? paramData[paramData.length - 1] : undefined;
             return (
-              <GlassPanel key={param.key} title={param.name} className="p-3" aria-busy={loading}>
+              <GlassPanel key={param.key} title={param.name} className="p-3 group cursor-default" aria-busy={loading}>
                 <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
                   <div className="flex items-baseline gap-1.5">
                     <span className={`text-2xl font-mono`} style={{ color: param.color }}>
@@ -374,7 +374,7 @@ export default function Dashboard() {
                       </abbr>
                     </span>
                   </div>
-                  <Icon className="h-5 w-5 text-emerald-500/40" aria-hidden="true" />
+                  <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400" aria-hidden="true" />
                 </div>
               </GlassPanel>
             );
