@@ -25,6 +25,13 @@ const PARAM_CONFIG = [
   { key: 'VRTG', name: 'Vertical Acceleration', color: '#d946ef', icon: Activity, unit: 'G', unitTitle: 'G-Force' },
 ];
 
+// ⚡ Bolt: Pre-instantiate Intl.NumberFormat outside the React component render loop.
+// Calling .toLocaleString() inside a tight mapping/render loop creates significant
+// performance overhead because it re-instantiates the formatter on every call.
+// Reusing these formatters avoids CPU cycles and garbage collection overhead.
+const formatOneDigit = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const formatTwoDigits = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 // ⚡ Bolt: React.memo prevents expensive re-renders of the TelemetryChart component
 // if the props (which are now primitive or stable references) haven't changed.
 const TelemetryChart = memo(function TelemetryChart({
@@ -353,7 +360,7 @@ export default function Dashboard() {
                 <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
                   <div className="flex items-baseline gap-1.5">
                     <span className={`text-2xl font-mono`} style={{ color: param.color }}>
-                      {val !== undefined ? val.toLocaleString('en-US', { minimumFractionDigits: param.key === 'VRTG' ? 2 : 1, maximumFractionDigits: param.key === 'VRTG' ? 2 : 1 }) : (
+                      {val !== undefined ? (param.key === 'VRTG' ? formatTwoDigits.format(val) : formatOneDigit.format(val)) : (
                         <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
                       )}
                     </span>

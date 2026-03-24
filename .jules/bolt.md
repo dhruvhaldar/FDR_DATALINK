@@ -16,3 +16,6 @@
 ## 2026-03-22 - Caching API Files is a Bad Idea
 **Learning:** Adding ANY HTTP caching (`Cache-Control` max-age > 0) to a directory listing endpoint (`/api/files`) fundamentally breaks read-after-write consistency. If a user or background process adds, deletes, or modifies a file, the application will fail to reflect those changes for the duration of the cache. This is a functional regression and breaks the rule that "speed without correctness is useless."
 **Action:** Do NOT apply caching headers to dynamic list endpoints unless the application architecture guarantees that the underlying data is strictly immutable or provides an active cache invalidation mechanism.
+## 2024-03-24 - Number.prototype.toLocaleString Performance
+**Learning:** Using `Number.prototype.toLocaleString()` inside tight React rendering loops (e.g. mapping over arrays or large datasets) causes significant performance overhead because it instantiates a new formatter object on every single call. This leads to wasted CPU cycles and garbage collection spikes.
+**Action:** When repeatedly formatting numbers in a render loop, pre-instantiate `Intl.NumberFormat` outside the component (or in a `useMemo`) and reuse its `.format()` method. This provides the same localized formatting with drastically reduced performance overhead.
