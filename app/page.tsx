@@ -289,7 +289,7 @@ export default function Dashboard() {
           <GlassPanel className="group p-1 w-full md:w-auto flex items-center pr-2">
             <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${(loading || isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
-              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300 transition-colors" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300 transition-colors" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
             </label>
             <select
               id="dataset-select"
@@ -329,7 +329,7 @@ export default function Dashboard() {
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
             target="_blank"
             rel="noopener noreferrer"
-            className="group text-[10px] text-emerald-400/80 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 mt-1 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1 justify-end"
+            className="group text-[10px] text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors uppercase tracking-[0.10em] px-2 mt-1 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-1 justify-end"
           >
             Source: NASA Dashlink
             <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-focus-visible:-translate-y-0.5 group-focus-visible:translate-x-0.5" aria-hidden="true" />
@@ -374,7 +374,7 @@ export default function Dashboard() {
                       </abbr>
                     </span>
                   </div>
-                  <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400" aria-hidden="true" />
+                  <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400 group-focus-within:scale-110 group-focus-within:text-emerald-400" aria-hidden="true" />
                 </div>
               </GlassPanel>
             );
