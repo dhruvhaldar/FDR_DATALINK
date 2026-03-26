@@ -19,3 +19,6 @@
 ## 2024-03-24 - Number.prototype.toLocaleString Performance
 **Learning:** Using `Number.prototype.toLocaleString()` inside tight React rendering loops (e.g. mapping over arrays or large datasets) causes significant performance overhead because it instantiates a new formatter object on every single call. This leads to wasted CPU cycles and garbage collection spikes.
 **Action:** When repeatedly formatting numbers in a render loop, pre-instantiate `Intl.NumberFormat` outside the component (or in a `useMemo`) and reuse its `.format()` method. This provides the same localized formatting with drastically reduced performance overhead.
+## 2026-03-26 - AbortController for Stale Fetch Requests
+**Learning:** If a user rapidly triggers new data fetches (e.g., quickly switching datasets), the browser fires multiple concurrent requests. Older requests aren't cancelled, leading to wasted bandwidth downloading massive JSON files, wasted CPU parsing them, and race conditions where older requests overwrite newer ones.
+**Action:** Use an `AbortController` (stored via `useRef`) to explicitly cancel ongoing, heavy `fetch` requests before initiating a new one or when unmounting. This prevents race conditions and avoids expensive JSON parsing and WebGL re-rendering for stale data.
