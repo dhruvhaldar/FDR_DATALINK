@@ -158,6 +158,9 @@ export default function Dashboard() {
   // 🎨 Palette: Ref for the main content area to manage focus
   const mainContentRef = useRef<HTMLElement>(null);
 
+  // ⚡ Bolt: Store the AbortController to cancel ongoing requests
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const fetchFlightData = (filename: string) => {
     // ⚡ Bolt: Fast-path for cached data.
     // This synchronous update avoids setting `loading = true`, which would
@@ -168,10 +171,19 @@ export default function Dashboard() {
       return;
     }
 
+    // ⚡ Bolt: Cancel any ongoing fetch request to prevent race conditions
+    // and save network bandwidth when the user rapidly switches datasets.
+    // This avoids expensive JSON parsing and WebGL chart rendering overhead for stale data.
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setLoading(true);
     setError(null);
     setStatusMessage(`Loading flight data for ${filename}...`);
-    fetch(`/api/data/${filename}`)
+    fetch(`/api/data/${filename}`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load flight data");
         return res.json();
@@ -184,12 +196,25 @@ export default function Dashboard() {
         setStatusMessage(`Successfully loaded ${filename}.`);
       })
       .catch((err) => {
+        if (err.name === 'AbortError') {
+          console.log(`Fetch aborted for ${filename}`);
+          return;
+        }
         console.error(err);
         setError(err instanceof Error ? err.message : "An unknown error occurred");
         setLoading(false);
         setStatusMessage(`Error loading ${filename}: ${err instanceof Error ? err.message : "An unknown error occurred"}`);
       });
   };
+
+  // ⚡ Bolt: Clean up the abort controller on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   // Dynamic Document Title
   useEffect(() => {
