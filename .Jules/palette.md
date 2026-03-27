@@ -74,3 +74,11 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-23 - Interactive Elements inside Assertive Live Regions
 **Learning:** Placing interactive elements (like focusable buttons) inside an assertive `role="alert"` container is an accessibility anti-pattern. Screen readers may behave unpredictably, dropping out of browse mode or failing to announce the alert text clearly because the structural boundary of the alert contains focusable nodes.
 **Action:** Always scope `role="alert"` strictly to the element containing the static text message (e.g., the `<p>` tag), keeping sibling interactive recovery buttons outside the alert region.
+
+## 2026-03-24 - Focus Management on Ephemeral Recovery Actions
+**Learning:** When users interact with ephemeral error recovery buttons (like "Retry Connection"), the action often triggers a network request and immediately unmounts the error UI. Because the button the user just clicked disappears from the DOM, their keyboard focus is unexpectedly dropped to `document.body`, ruining the navigational flow.
+**Action:** Always manually shift keyboard focus (`.focus()`) to an appropriate structural landmark (like the `mainContentRef`) when an `onClick` action conditionally unmounts the button itself. This keeps the user oriented within the application hierarchy during the subsequent loading state.
+
+## 2026-03-25 - WCAG 2.5.3 (Label in Name) Compliance
+**Learning:** Overwriting the visible text of a button with a completely different `aria-label` (e.g., `<button aria-label="Focus dataset selector">Connect Data Source</button>`) violates WCAG 2.5.3 (Label in Name). This breaks voice control software because the user dictates the visible text, but the software only knows the element by its completely different accessible name.
+**Action:** Ensure that any `aria-label` always includes the exact visible text of the element as a substring. Better yet, prefer `aria-describedby` or append clarifying context to the end of the `aria-label` rather than replacing the visible text entirely (e.g., `aria-label="Connect Data Source (Focuses dataset selector)"`).
