@@ -448,6 +448,16 @@ export default function Dashboard() {
                   Retry Connection
                 </button>
               </div>
+            ) : !isFetchingFiles && files.length === 0 ? (
+              <div className="flex h-[400px] flex-col items-center justify-center gap-4">
+                <div className="rounded-full bg-red-500/5 p-4 ring-1 ring-red-500/20">
+                  <AlertTriangle className="h-8 w-8 text-red-500/40" aria-hidden="true" />
+                </div>
+                <div className="flex flex-col items-center gap-1 text-center">
+                  <p className="text-sm font-bold uppercase tracking-widest text-red-500">No Datasets Available</p>
+                  <p className="text-[10px] text-red-400 uppercase tracking-wider">Please add .mat telemetry files to the server</p>
+                </div>
+              </div>
             ) : flightData ? (
               <>
                 {/* ⚡ Bolt: Render loading overlay instead of unmounting charts to prevent expensive WebGL context recreation */}
