@@ -5,9 +5,12 @@ import fsp from "fs/promises";
 
 const DATA_DIR = path.join(process.cwd(), "Tail_666_9");
 
-// ⚡ Bolt: In-memory cache to prevent re-running expensive Python script
-// for previously processed files (saves ~600ms per request)
+// ⚡ Bolt: In-memory LRU cache to prevent re-running expensive Python script
+// for previously processed files (saves ~600ms per request).
+// Bounding the cache to 16 items prevents infinite Node.js heap growth (memory leaks)
+// during prolonged usage, maintaining parity with the Python backend @lru_cache.
 // ⚡ Bolt: Cache raw JSON string instead of parsed object to avoid expensive JSON.parse/stringify
+const MAX_CACHE_SIZE = 16;
 const cache = new Map<string, string>();
 
 export async function GET(
@@ -18,7 +21,12 @@ export async function GET(
 
     // ⚡ Bolt: Check cache first to avoid expensive Python process spawn and SciPy parsing
     if (cache.has(filename)) {
-        return new NextResponse(cache.get(filename), {
+        // Move the accessed item to the end to mark it as recently used (LRU)
+        const cachedData = cache.get(filename)!;
+        cache.delete(filename);
+        cache.set(filename, cachedData);
+
+        return new NextResponse(cachedData, {
             headers: {
                 "Content-Type": "application/json",
                 "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",
@@ -50,6 +58,14 @@ export async function GET(
 
         // ⚡ Bolt: Store the raw JSON string in memory
         cache.set(filename, rawJsonString);
+
+        // ⚡ Bolt: Enforce LRU cache limits to prevent memory leaks
+        if (cache.size > MAX_CACHE_SIZE) {
+            const oldestKey = cache.keys().next().value;
+            if (oldestKey !== undefined) {
+                cache.delete(oldestKey);
+            }
+        }
 
         return new NextResponse(rawJsonString, {
             headers: {

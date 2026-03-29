@@ -19,3 +19,7 @@
 ## 2024-03-24 - Number.prototype.toLocaleString Performance
 **Learning:** Using `Number.prototype.toLocaleString()` inside tight React rendering loops (e.g. mapping over arrays or large datasets) causes significant performance overhead because it instantiates a new formatter object on every single call. This leads to wasted CPU cycles and garbage collection spikes.
 **Action:** When repeatedly formatting numbers in a render loop, pre-instantiate `Intl.NumberFormat` outside the component (or in a `useMemo`) and reuse its `.format()` method. This provides the same localized formatting with drastically reduced performance overhead.
+
+## 2026-03-29 - Unbounded In-Memory Cache Causes Memory Leaks in Next.js
+**Learning:** Using an unbounded `Map` for server-side caching in long-running Node.js processes (like Next.js API routes) causes the V8 heap to grow indefinitely. For large objects (like stringified telemetry arrays), this quickly leads to Garbage Collection thrashing and eventual Out-of-Memory (OOM) crashes during prolonged use or high traffic.
+**Action:** Always bound server-side in-memory caches (e.g., using an LRU cache pattern with a strict maximum size) to protect the Node.js event loop and maintain parity with backend architectures (like Python's `@lru_cache`).
