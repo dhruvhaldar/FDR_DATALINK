@@ -314,7 +314,10 @@ export default function Dashboard() {
           <GlassPanel className="group p-1 w-full md:w-auto flex items-center pr-2">
             <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${(loading || isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
-              <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300 transition-colors" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+              <span className="hidden md:grid items-center justify-items-center relative">
+                <kbd className="col-start-1 row-start-1 rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-all duration-300 group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-within:opacity-0 group-focus-within:scale-75" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+                <kbd className="col-start-1 row-start-1 rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-all duration-300 opacity-0 scale-75 group-focus-within:opacity-100 group-focus-within:scale-100 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300" aria-hidden="true" title="Press 'Escape' to blur">ESC</kbd>
+              </span>
             </label>
             <select
               id="dataset-select"
