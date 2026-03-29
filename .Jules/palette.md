@@ -82,3 +82,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-25 - WCAG 2.5.3 (Label in Name) Compliance
 **Learning:** Overwriting the visible text of a button with a completely different `aria-label` (e.g., `<button aria-label="Focus dataset selector">Connect Data Source</button>`) violates WCAG 2.5.3 (Label in Name). This breaks voice control software because the user dictates the visible text, but the software only knows the element by its completely different accessible name.
 **Action:** Ensure that any `aria-label` always includes the exact visible text of the element as a substring. Better yet, prefer `aria-describedby` or append clarifying context to the end of the `aria-label` rather than replacing the visible text entirely (e.g., `aria-label="Connect Data Source (Focuses dataset selector)"`).
+
+## 2026-03-26 - Context-Aware Keyboard Shortcuts
+**Learning:** Displaying a static global keyboard shortcut hint (e.g., `/` to focus a select element) is helpful for discoverability. However, once the element is actually focused, that original shortcut is no longer actionable or relevant. A static hint misses an opportunity to guide the user on how to *exit* or *blur* the current interaction state.
+**Action:** When a global shortcut triggers focus on an interactive element, dynamically swap the visual hint (e.g., from `/` to `ESC`) while the element has focus (`group-focus-within`). This provides contextual guidance, ensuring the user knows how to safely navigate away without inadvertently changing values.
