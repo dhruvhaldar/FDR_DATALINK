@@ -366,10 +366,7 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <GlassPanel className="mb-6 p-5 border-emerald-500/40 bg-emerald-950/20">
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-emerald-400">
-          Project Context: Sample Flight Data via NASA Dashlink
-        </h2>
+      <GlassPanel title="Project Context: Sample Flight Data via NASA Dashlink" className="mb-6 p-5 border-emerald-500/40 bg-emerald-950/20">
         <p className="text-xs leading-relaxed text-emerald-300 font-medium">
           This application displays data from the <a href="https://c3.ndc.nasa.gov/dashlink/projects/85/" target="_blank" rel="noopener noreferrer" className="group text-emerald-400 font-bold underline decoration-emerald-500/50 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm focus-visible:outline-none inline-flex items-center gap-0.5">Sample Flight Data project via NASA Dashlink <ExternalLink className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-focus-visible:-translate-y-0.5 group-focus-visible:translate-x-0.5" aria-hidden="true" /><span className="sr-only">(opens in a new tab)</span></a> (A web-based collaboration tool for those interested in data mining and systems health). Through access to de-identified aggregate flight recorded data, researchers have the ability to proactively identify and analyze trends and target resources to reduce operational risks in the National Airspace System (NAS). This valuable data source enables the aviation community to take positive steps in mitigating potential issues in the system and improving the overall safety of the NAS. The posted files contain actual data recorded onboard a single type of regional jet operating in commercial service over a three-year period. While the files contain detailed aircraft dynamics, system performance, and other engineering parameters, they do not provide any information that can be traced to a particular airline or manufacturer. These records are not part of any airline Flight Operational Quality Assurance (FOQA) program.
         </p>
@@ -460,6 +457,14 @@ export default function Dashboard() {
                   <p className="text-sm font-bold uppercase tracking-widest text-red-500">No Datasets Available</p>
                   <p className="text-[10px] text-red-400 uppercase tracking-wider">Please add .mat telemetry files to the server</p>
                 </div>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="group mt-2 flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
+                >
+                  <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-visible:rotate-180 duration-500" aria-hidden="true" />
+                  Check Again
+                  <kbd className="hidden md:inline-block rounded border border-red-500/30 bg-red-950/30 px-1 py-0.5 text-[10px] font-mono text-red-400 transition-colors group-hover:border-red-400 group-hover:text-red-300 group-focus-visible:border-red-400 group-focus-visible:text-red-300" aria-hidden="true">F5</kbd>
+                </button>
               </div>
             ) : flightData ? (
               <>
