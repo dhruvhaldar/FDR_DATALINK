@@ -153,6 +153,8 @@ export default function Dashboard() {
   // ⚡ Bolt: Client-side cache for fetched datasets.
   // Prevents re-fetching and the expensive unmount/remount of Plotly charts
   // when switching between previously viewed datasets.
+  // ⚡ Bolt: Define maximum size for client-side cache to prevent memory leaks.
+  const MAX_CLIENT_CACHE_SIZE = 5;
   const [dataCache, setDataCache] = useState<Record<string, FlightData>>({});
 
   // 🎨 Palette: Ref for the main content area to manage focus
@@ -168,6 +170,16 @@ export default function Dashboard() {
     if (dataCache[filename]) {
       setFlightData(dataCache[filename]);
       setStatusMessage(`Restored ${filename} from cache.`);
+
+      // ⚡ Bolt: Move accessed item to the end of the cache object keys
+      // to maintain Least Recently Used (LRU) ordering
+      setDataCache(prev => {
+        const newCache = { ...prev };
+        const data = newCache[filename];
+        delete newCache[filename];
+        newCache[filename] = data;
+        return newCache;
+      });
       return;
     }
 
@@ -190,8 +202,15 @@ export default function Dashboard() {
       })
       .then((data) => {
         setFlightData(data);
-        // ⚡ Bolt: Store the fetched data in our cache
-        setDataCache(prev => ({ ...prev, [filename]: data }));
+        // ⚡ Bolt: Store fetched data in bounded LRU cache
+        setDataCache(prev => {
+          const newCache = { ...prev, [filename]: data };
+          const keys = Object.keys(newCache);
+          if (keys.length > MAX_CLIENT_CACHE_SIZE) {
+            delete newCache[keys[0]]; // Remove oldest key
+          }
+          return newCache;
+        });
         setLoading(false);
         setStatusMessage(`Successfully loaded ${filename}.`);
       })
