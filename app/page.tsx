@@ -6,7 +6,15 @@ import { GlassPanel } from "@/components/GlassPanel";
 import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink, RefreshCw } from "lucide-react";
 
 // Dynamically import Plotly to avoid SSR issues
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const Plot = dynamic(() => import("react-plotly.js"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2" role="status" aria-live="polite">
+      <div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-500" />
+      <span className="text-[8px] font-bold uppercase tracking-widest text-emerald-500/50">Initializing Canvas...</span>
+    </div>
+  )
+});
 
 interface FlightDataParam {
   data: number[];

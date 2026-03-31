@@ -86,3 +86,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-26 - Context-Aware Keyboard Shortcuts
 **Learning:** Displaying a static global keyboard shortcut hint (e.g., `/` to focus a select element) is helpful for discoverability. However, once the element is actually focused, that original shortcut is no longer actionable or relevant. A static hint misses an opportunity to guide the user on how to *exit* or *blur* the current interaction state.
 **Action:** When a global shortcut triggers focus on an interactive element, dynamically swap the visual hint (e.g., from `/` to `ESC`) while the element has focus (`group-focus-within`). This provides contextual guidance, ensuring the user knows how to safely navigate away without inadvertently changing values.
+
+## 2026-03-27 - Dynamic Import Loading Affordances
+**Learning:** When using Next.js `dynamic()` to lazy-load massive UI components (like WebGL charting libraries), omitting a explicit `loading` fallback causes the component wrapper to render as a confusing, empty blank space on slower network connections while the JavaScript chunk downloads. This breaks user trust and interaction continuity.
+**Action:** Always provide a semantic and visually consistent `loading` fallback to `dynamic()` imports for heavy components, ensuring users are informed that the interactive engine is still initializing.
