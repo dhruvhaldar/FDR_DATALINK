@@ -90,3 +90,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-27 - Dynamic Import Loading Affordances
 **Learning:** When using Next.js `dynamic()` to lazy-load massive UI components (like WebGL charting libraries), omitting a explicit `loading` fallback causes the component wrapper to render as a confusing, empty blank space on slower network connections while the JavaScript chunk downloads. This breaks user trust and interaction continuity.
 **Action:** Always provide a semantic and visually consistent `loading` fallback to `dynamic()` imports for heavy components, ensuring users are informed that the interactive engine is still initializing.
+
+## 2026-03-28 - Initializing ARIA Live Regions on App Boot
+**Learning:** If an application relies on a chained data-fetching initialization (e.g., fetch file list -> fetch file data), failure at the *first* step (like returning an empty list) often leaves the `aria-live` status region completely silent because status updates are typically bound to the *second* step's loading handlers. Screen reader users are left unaware that the app has finished loading in an empty state.
+**Action:** Always dispatch explicit status messages to `aria-live` regions at every terminal state of the initialization sequence, including empty or error states during the very first boot-up fetch.

@@ -289,6 +289,7 @@ export default function Dashboard() {
     // the ~3MB chart library in parallel with the JSON data.
     import("react-plotly.js").catch(() => {});
 
+    setStatusMessage("Fetching available datasets...");
     fetch("/api/files")
       .then((res) => res.json())
       .then((data) => {
@@ -298,11 +299,14 @@ export default function Dashboard() {
             const initialFile = data.files[0];
             setSelectedFile(initialFile);
             fetchFlightData(initialFile);
+          } else {
+            setStatusMessage("No datasets available. Please add .mat telemetry files to the server.");
           }
         }
       })
       .catch((err) => {
         console.error("Failed to fetch files:", err);
+        setStatusMessage("Error fetching available datasets.");
       })
       .finally(() => {
         setIsFetchingFiles(false);
@@ -354,6 +358,7 @@ export default function Dashboard() {
               aria-busy={isFetchingFiles || loading}
               aria-invalid={!!error}
               aria-keyshortcuts="/"
+              aria-controls="main-content"
               onChange={(e) => {
                 const val = e.target.value;
                 setSelectedFile(val);
@@ -457,6 +462,7 @@ export default function Dashboard() {
                   <AlertTriangle className="h-10 w-10 text-red-500/80" aria-hidden="true" />
                   <p role="alert" className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
                   <button
+                    type="button"
                     onClick={() => document.getElementById('dataset-select')?.focus()}
                     className="group flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-sm"
                   >
@@ -465,6 +471,7 @@ export default function Dashboard() {
                   </button>
                 </div>
                 <button
+                  type="button"
                   onClick={() => {
                     fetchFlightData(selectedFile);
                     mainContentRef.current?.focus();
@@ -485,6 +492,7 @@ export default function Dashboard() {
                   <p className="text-[10px] text-red-400 uppercase tracking-wider">Please add .mat telemetry files to the server</p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => window.location.reload()}
                   className="group mt-2 flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
                 >
@@ -533,6 +541,7 @@ export default function Dashboard() {
                   <p className="text-[10px] text-emerald-400 uppercase tracking-wider">Select a dataset to begin visualization</p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => document.getElementById('dataset-select')?.focus()}
                   className="group mt-2 flex items-center gap-2 rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-all hover:bg-emerald-500/20 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
                   aria-label="Connect Data Source (Focuses dataset selector)"
