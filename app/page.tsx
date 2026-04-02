@@ -343,7 +343,7 @@ export default function Dashboard() {
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
           <GlassPanel className="group p-1 w-full md:w-auto flex items-center pr-2">
-            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${(loading || isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
               <span className="hidden md:grid items-center justify-items-center relative">
                 <kbd className="col-start-1 row-start-1 rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-all duration-300 group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-within:opacity-0 group-focus-within:scale-75" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
@@ -353,7 +353,7 @@ export default function Dashboard() {
             <select
               id="dataset-select"
               value={selectedFile}
-              disabled={loading || isFetchingFiles || files.length === 0}
+              disabled={isFetchingFiles || files.length === 0}
               title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
               aria-busy={isFetchingFiles || loading}
               aria-invalid={!!error}
@@ -363,15 +363,6 @@ export default function Dashboard() {
                 const val = e.target.value;
                 setSelectedFile(val);
                 fetchFlightData(val);
-                // 🎨 Palette: Shift focus to main content when selector becomes disabled
-                // to prevent focus loss (falling back to document.body) and help screen
-                // reader users seamlessly transition to the loading/data area.
-                // ⚡ Bolt: Only shift focus if we are actually making a network request
-                // and the dropdown will become disabled. If the data is cached, it will
-                // load synchronously and we shouldn't steal focus from the user.
-                if (!dataCache[val]) {
-                  mainContentRef.current?.focus();
-                }
               }}
               className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
             >

@@ -94,3 +94,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-28 - Initializing ARIA Live Regions on App Boot
 **Learning:** If an application relies on a chained data-fetching initialization (e.g., fetch file list -> fetch file data), failure at the *first* step (like returning an empty list) often leaves the `aria-live` status region completely silent because status updates are typically bound to the *second* step's loading handlers. Screen reader users are left unaware that the app has finished loading in an empty state.
 **Action:** Always dispatch explicit status messages to `aria-live` regions at every terminal state of the initialization sequence, including empty or error states during the very first boot-up fetch.
+
+## 2026-03-29 - Keyboard Arrow Navigation vs. Async Disablement
+**Learning:** Disabling a `<select>` dropdown during asynchronous data fetching severely degrades keyboard navigation. When a user presses an arrow key to preview the next option, the `onChange` event fires, the component disables, and focus is instantly stripped away, preventing them from scrolling further down the list.
+**Action:** Avoid disabling `<select>` inputs during data fetches if the application has request cancellation (e.g., `AbortController`). Leave the input enabled so users can rapidly arrow through options, relying on the abort controller to cancel stale requests and maintaining uninterrupted keyboard focus.
