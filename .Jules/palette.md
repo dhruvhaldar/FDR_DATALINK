@@ -98,3 +98,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-29 - Keyboard Arrow Navigation vs. Async Disablement
 **Learning:** Disabling a `<select>` dropdown during asynchronous data fetching severely degrades keyboard navigation. When a user presses an arrow key to preview the next option, the `onChange` event fires, the component disables, and focus is instantly stripped away, preventing them from scrolling further down the list.
 **Action:** Avoid disabling `<select>` inputs during data fetches if the application has request cancellation (e.g., `AbortController`). Leave the input enabled so users can rapidly arrow through options, relying on the abort controller to cancel stale requests and maintaining uninterrupted keyboard focus.
+
+## 2024-04-03 - Focusable Figure Elements for WebGL
+**Learning:** Elements wrapping non-DOM interactive visualizations (like WebGL canvases/plotly charts) need explicit `tabIndex={0}` and focus rings so keyboard users can navigate to them and hear their `aria-label`. Otherwise, the charts are skipped by keyboard navigation.
+**Action:** Always add `tabIndex={0}` and focus outline/ring utility classes to `<div role="figure">` or similar wrappers around canvas-based data visualizations.

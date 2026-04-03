@@ -133,8 +133,9 @@ const TelemetryChart = memo(function TelemetryChart({
         </span>
       </h4>
       <div
-        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden"
+        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         role="figure"
+        tabIndex={0}
         aria-label={`Interactive telemetry chart displaying ${title} data over time`}
       >
         <Plot
@@ -397,7 +398,7 @@ export default function Dashboard() {
 
       <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none" aria-label="Flight Data Dashboard Content">
         {/* Navigation / KPIs */}
-        <div className="space-y-3 lg:col-span-1">
+        <div className="space-y-3 lg:col-span-1" role="group" aria-label="Key Performance Indicators">
           {PARAM_CONFIG.map((param) => {
             const Icon = param.icon;
             // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
