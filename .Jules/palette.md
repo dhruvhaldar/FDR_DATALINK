@@ -98,3 +98,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-29 - Keyboard Arrow Navigation vs. Async Disablement
 **Learning:** Disabling a `<select>` dropdown during asynchronous data fetching severely degrades keyboard navigation. When a user presses an arrow key to preview the next option, the `onChange` event fires, the component disables, and focus is instantly stripped away, preventing them from scrolling further down the list.
 **Action:** Avoid disabling `<select>` inputs during data fetches if the application has request cancellation (e.g., `AbortController`). Leave the input enabled so users can rapidly arrow through options, relying on the abort controller to cancel stale requests and maintaining uninterrupted keyboard focus.
+
+## 2026-03-30 - Grouping Related Metrics
+**Learning:** When grouping related metrics or widgets (like KPI cards), wrapping them in a generic <div> doesn't provide enough context for screen reader users as they navigate through the individual items.
+**Action:** Wrap related widgets in a container with role="group" and a descriptive aria-label to provide better structural context for screen reader users.
