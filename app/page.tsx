@@ -163,7 +163,9 @@ export default function Dashboard() {
   // when switching between previously viewed datasets.
   // ⚡ Bolt: Define maximum size for client-side cache to prevent memory leaks.
   const MAX_CLIENT_CACHE_SIZE = 5;
-  const [dataCache, setDataCache] = useState<Record<string, FlightData>>({});
+  // ⚡ Bolt: Using a native Map inside a useRef prevents unnecessary component
+  // re-renders and avoids O(N) object cloning when updating the LRU cache ordering.
+  const dataCacheRef = useRef<Map<string, FlightData>>(new Map());
 
   // 🎨 Palette: Ref for the main content area to manage focus
   const mainContentRef = useRef<HTMLElement>(null);
@@ -171,23 +173,19 @@ export default function Dashboard() {
   // ⚡ Bolt: Store the AbortController to cancel ongoing requests
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const fetchFlightData = (filename: string) => {
+  const fetchFlightData = React.useCallback((filename: string) => {
     // ⚡ Bolt: Fast-path for cached data.
     // This synchronous update avoids setting `loading = true`, which would
     // otherwise cause the heavy WebGL charts to unmount and remount.
-    if (dataCache[filename]) {
-      setFlightData(dataCache[filename]);
+    if (dataCacheRef.current.has(filename)) {
+      const data = dataCacheRef.current.get(filename)!;
+      setFlightData(data);
       setStatusMessage(`Restored ${filename} from cache.`);
 
-      // ⚡ Bolt: Move accessed item to the end of the cache object keys
-      // to maintain Least Recently Used (LRU) ordering
-      setDataCache(prev => {
-        const newCache = { ...prev };
-        const data = newCache[filename];
-        delete newCache[filename];
-        newCache[filename] = data;
-        return newCache;
-      });
+      // ⚡ Bolt: Move accessed item to the end of the Map keys
+      // to maintain Least Recently Used (LRU) ordering in O(1) time
+      dataCacheRef.current.delete(filename);
+      dataCacheRef.current.set(filename, data);
       return;
     }
 
@@ -211,14 +209,13 @@ export default function Dashboard() {
       .then((data) => {
         setFlightData(data);
         // ⚡ Bolt: Store fetched data in bounded LRU cache
-        setDataCache(prev => {
-          const newCache = { ...prev, [filename]: data };
-          const keys = Object.keys(newCache);
-          if (keys.length > MAX_CLIENT_CACHE_SIZE) {
-            delete newCache[keys[0]]; // Remove oldest key
+        dataCacheRef.current.set(filename, data);
+        if (dataCacheRef.current.size > MAX_CLIENT_CACHE_SIZE) {
+          const oldestKey = dataCacheRef.current.keys().next().value;
+          if (oldestKey !== undefined) {
+            dataCacheRef.current.delete(oldestKey);
           }
-          return newCache;
-        });
+        }
         setLoading(false);
         setStatusMessage(`Successfully loaded ${filename}.`);
       })
@@ -232,7 +229,7 @@ export default function Dashboard() {
         setLoading(false);
         setStatusMessage(`Error loading ${filename}: ${err instanceof Error ? err.message : "An unknown error occurred"}`);
       });
-  };
+  }, []);
 
   // ⚡ Bolt: Clean up the abort controller on unmount
   useEffect(() => {
@@ -311,8 +308,7 @@ export default function Dashboard() {
       .finally(() => {
         setIsFetchingFiles(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchFlightData]);
 
   return (
     <div className="min-h-screen p-4 max-w-7xl mx-auto bg-black text-emerald-500 selection:bg-emerald-500/30 selection:text-white">
