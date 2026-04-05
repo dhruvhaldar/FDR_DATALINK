@@ -163,7 +163,10 @@ export default function Dashboard() {
   // when switching between previously viewed datasets.
   // ⚡ Bolt: Define maximum size for client-side cache to prevent memory leaks.
   const MAX_CLIENT_CACHE_SIZE = 5;
-  const [dataCache, setDataCache] = useState<Record<string, FlightData>>({});
+  // ⚡ Bolt: Use a native Map in a useRef to store the client-side cache.
+  // This prevents unnecessary O(N) React re-renders and allows for true O(1)
+  // LRU evictions (using map.keys().next().value) instead of costly object cloning.
+  const dataCacheRef = useRef<Map<string, FlightData>>(new Map());
 
   // 🎨 Palette: Ref for the main content area to manage focus
   const mainContentRef = useRef<HTMLElement>(null);
@@ -175,19 +178,15 @@ export default function Dashboard() {
     // ⚡ Bolt: Fast-path for cached data.
     // This synchronous update avoids setting `loading = true`, which would
     // otherwise cause the heavy WebGL charts to unmount and remount.
-    if (dataCache[filename]) {
-      setFlightData(dataCache[filename]);
+    const cachedData = dataCacheRef.current.get(filename);
+    if (cachedData) {
+      setFlightData(cachedData);
       setStatusMessage(`Restored ${filename} from cache.`);
 
       // ⚡ Bolt: Move accessed item to the end of the cache object keys
       // to maintain Least Recently Used (LRU) ordering
-      setDataCache(prev => {
-        const newCache = { ...prev };
-        const data = newCache[filename];
-        delete newCache[filename];
-        newCache[filename] = data;
-        return newCache;
-      });
+      dataCacheRef.current.delete(filename);
+      dataCacheRef.current.set(filename, cachedData);
       return;
     }
 
@@ -211,14 +210,13 @@ export default function Dashboard() {
       .then((data) => {
         setFlightData(data);
         // ⚡ Bolt: Store fetched data in bounded LRU cache
-        setDataCache(prev => {
-          const newCache = { ...prev, [filename]: data };
-          const keys = Object.keys(newCache);
-          if (keys.length > MAX_CLIENT_CACHE_SIZE) {
-            delete newCache[keys[0]]; // Remove oldest key
+        dataCacheRef.current.set(filename, data);
+        if (dataCacheRef.current.size > MAX_CLIENT_CACHE_SIZE) {
+          const oldestKey = dataCacheRef.current.keys().next().value;
+          if (oldestKey) {
+            dataCacheRef.current.delete(oldestKey);
           }
-          return newCache;
-        });
+        }
         setLoading(false);
         setStatusMessage(`Successfully loaded ${filename}.`);
       })

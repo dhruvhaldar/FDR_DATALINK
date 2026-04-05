@@ -1,3 +1,6 @@
 ## 2024-03-31 - Bounding React State Caches for Large Payloads
 **Learning:** Storing massive data structures (like WebGL chart datasets from `.mat` files) in an unbounded React state cache (e.g., `useState<Record<string, FlightData>>({})`) creates severe memory leaks on the client as the user browses through more files. Garbage collection is unable to free the unused data.
 **Action:** Always wrap in-memory React state caches that store large payloads with a bounded eviction policy (like Least Recently Used, LRU) with a strict maximum size to protect the browser's heap limit and prevent the app from freezing or crashing.
+## 2024-05-18 - Client-Side Cache Optimization for Large Payloads
+**Learning:** Using `useState` to manage a client-side LRU cache for large payloads (e.g. flight telemetry data) incurs significant performance penalties because updating the cache requires cloning the entire state object `O(N)`, which also triggers unnecessary component re-renders.
+**Action:** Instead of `useState`, use `useRef(new Map())` to manage client-side caches for heavy datasets. This avoids component re-renders on cache operations and enables true `O(1)` LRU evictions via `Map.prototype.keys().next().value`.
