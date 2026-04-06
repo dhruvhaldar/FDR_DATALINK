@@ -397,7 +397,7 @@ export default function Dashboard() {
 
       <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none" aria-label="Flight Data Dashboard Content">
         {/* Navigation / KPIs */}
-        <div className="space-y-3 lg:col-span-1">
+        <div className="space-y-3 lg:col-span-1" role="group" aria-label="Flight Parameters">
           {PARAM_CONFIG.map((param) => {
             const Icon = param.icon;
             // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
