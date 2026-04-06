@@ -5,3 +5,5 @@ __pycache__/
 *.pyc
 venv/
 server.log
+playwright-report/
+test-results/
