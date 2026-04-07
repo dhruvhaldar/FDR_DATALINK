@@ -44,8 +44,11 @@ def extract_data(file_path):
                 
                 # ⚡ Bolt: Rounding to 3 decimal places drastically reduces precision overhead,
                 # effectively halving JSON string size and boosting serialization speeds.
+                # ⚡ Bolt: Using in-place rounding (out=raw_data) avoids O(N) memory allocation
+                # and deep copying of the array.
+                np.round(raw_data, 3, out=raw_data)
                 result[p] = {
-                    "data": np.round(raw_data, 3).tolist(),
+                    "data": raw_data.tolist(),
                     "rate": rate,
                     "units": units,
                     "description": desc,

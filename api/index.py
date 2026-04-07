@@ -64,7 +64,9 @@ def get_processed_flight_data(file_path: str):
 
             # ⚡ Bolt: Rounding to 3 decimal places reduces the precision, cutting
             # JSON payload sizes in half and dramatically reducing JSON serialization time.
-            raw_data = np.round(raw_data, 3)
+            # ⚡ Bolt: Using in-place rounding (out=raw_data) avoids O(N) memory allocation
+            # and deep copying of the array.
+            np.round(raw_data, 3, out=raw_data)
 
             rate = float(struct['Rate'][0, 0]) if 'Rate' in struct.dtype.names else 1.0
             units = str(struct['Units'][0]) if 'Units' in struct.dtype.names else ""
