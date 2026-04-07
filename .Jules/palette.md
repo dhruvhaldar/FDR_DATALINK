@@ -102,3 +102,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-30 - Structural Context for KPI Metric Groupings
 **Learning:** Placing multiple independent KPI widgets or metric cards consecutively without a structural grouping leaves screen reader users without important context. When navigating through a sea of separate panels, users miss out on understanding that these metrics are semantically related as a single collective set of data points.
 **Action:** When grouping related metrics or widgets (like KPI cards), wrap them in a container with `role="group"` and a descriptive `aria-label` (e.g., `aria-label="Flight Parameters"`). This provides structural context for screen reader users as they navigate through the individual items, allowing them to understand the overall purpose of the region.
+
+## 2026-03-31 - WebGL Chart Container Accessibility
+**Learning:** Elements wrapping non-DOM interactive visualizations (like WebGL canvases or `react-plotly.js` charts) are inherently skipped by keyboard navigation. Without an explicit tab index and focus styles, screen reader users cannot focus the chart element to hear its `aria-label`, leaving them unaware of the data being presented.
+**Action:** Always add `tabIndex={0}` and corresponding focus ring utility classes (e.g., `outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black`) to the container wrapper of any non-DOM interactive visualization to ensure equitable access.

@@ -133,8 +133,9 @@ const TelemetryChart = memo(function TelemetryChart({
         </span>
       </h4>
       <div
-        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden"
+        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         role="figure"
+        tabIndex={0}
         aria-label={`Interactive telemetry chart displaying ${title} data over time`}
       >
         <Plot
