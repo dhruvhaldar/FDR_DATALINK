@@ -106,3 +106,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-03-31 - WebGL Chart Container Accessibility
 **Learning:** Elements wrapping non-DOM interactive visualizations (like WebGL canvases or `react-plotly.js` charts) are inherently skipped by keyboard navigation. Without an explicit tab index and focus styles, screen reader users cannot focus the chart element to hear its `aria-label`, leaving them unaware of the data being presented.
 **Action:** Always add `tabIndex={0}` and corresponding focus ring utility classes (e.g., `outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black`) to the container wrapper of any non-DOM interactive visualization to ensure equitable access.
+
+## 2026-04-08 - Exposing Keyboard Shortcuts to Screen Readers
+**Learning:** When using visually hidden `<kbd>` elements to display keyboard shortcuts on interactive controls, screen readers will ignore them if they have `aria-hidden="true"`. This creates an inequitable experience where only sighted users know about the shortcuts.
+**Action:** Always pair visually hidden `<kbd>` elements with an explicit `aria-keyshortcuts` attribute on the parent interactive element (e.g., `<button aria-keyshortcuts="/">`) so that assistive technologies can announce the shortcut.

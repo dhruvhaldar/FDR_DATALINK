@@ -455,6 +455,7 @@ export default function Dashboard() {
                     type="button"
                     onClick={() => document.getElementById('dataset-select')?.focus()}
                     className="group flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-sm"
+                    aria-keyshortcuts="/"
                   >
                     Please try selecting another file
                     <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-colors group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-visible:border-emerald-400 group-focus-visible:text-emerald-300" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
@@ -485,6 +486,7 @@ export default function Dashboard() {
                   type="button"
                   onClick={() => window.location.reload()}
                   className="group mt-2 flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
+                  aria-keyshortcuts="F5"
                 >
                   <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-visible:rotate-180 duration-500" aria-hidden="true" />
                   Check Again
@@ -535,6 +537,7 @@ export default function Dashboard() {
                   onClick={() => document.getElementById('dataset-select')?.focus()}
                   className="group mt-2 flex items-center gap-2 rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-all hover:bg-emerald-500/20 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
                   aria-label="Connect Data Source (Focuses dataset selector)"
+                  aria-keyshortcuts="/"
                 >
                   Connect Data Source
                   <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[10px] font-mono text-emerald-400 transition-colors group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-visible:border-emerald-400 group-focus-visible:text-emerald-300" aria-hidden="true">/</kbd>
