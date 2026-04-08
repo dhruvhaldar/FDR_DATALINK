@@ -72,7 +72,10 @@ const TelemetryChart = memo(function TelemetryChart({
       y: data,
       x0: 0,
       dx: (step || 1) / rate,
-      type: "scatter" as const,
+      // ⚡ Bolt: Use 'scattergl' (WebGL) instead of 'scatter' (SVG) for high-density telemetry data.
+      // This offloads rendering to the GPU, avoiding massive DOM node creation, unblocking
+      // the main thread, and ensuring a smooth 60fps interaction framerate.
+      type: "scattergl" as const,
       mode: "lines" as const,
       line: { color: color, width: 1.5 },
       fill: 'tozeroy' as const,
