@@ -123,7 +123,7 @@ const TelemetryChart = memo(function TelemetryChart({
 
   return (
     <div className="w-full">
-      <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 px-1.5 flex justify-between">
+      <h3 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 px-1.5 flex justify-between">
         <span>{title}</span>
         <span className="text-slate-400 text-[10px]">
           <abbr
@@ -134,7 +134,7 @@ const TelemetryChart = memo(function TelemetryChart({
             {unit}
           </abbr>
         </span>
-      </h4>
+      </h3>
       <div
         className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         role="figure"
@@ -399,14 +399,15 @@ export default function Dashboard() {
 
       <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none" aria-label="Flight Data Dashboard Content">
         {/* Navigation / KPIs */}
-        <div className="space-y-3 lg:col-span-1" role="group" aria-label="Flight Parameters">
+        <section className="space-y-3 lg:col-span-1" aria-labelledby="kpi-heading">
+          <h2 id="kpi-heading" className="sr-only">Flight Parameters</h2>
           {PARAM_CONFIG.map((param) => {
             const Icon = param.icon;
             // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
             const paramData = flightData?.[param.key]?.data;
             const val = paramData ? paramData[paramData.length - 1] : undefined;
             return (
-              <GlassPanel key={param.key} title={param.name} className="p-3 group cursor-default" aria-busy={loading}>
+              <GlassPanel key={param.key} title={param.name} headingLevel="h3" className="p-3 group cursor-default" aria-busy={loading}>
                 <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
                   <div className="flex items-baseline gap-1.5">
                     <span className={`text-2xl font-mono`} style={{ color: param.color }}>
@@ -429,10 +430,10 @@ export default function Dashboard() {
               </GlassPanel>
             );
           })}
-        </div>
+        </section>
 
         {/* Multi-Graph Visualization Suite */}
-        <GlassPanel title="Telemetry Data Pipeline" className="lg:col-span-3">
+        <GlassPanel title="Telemetry Data Pipeline" headingLevel="h2" className="lg:col-span-3">
           {/* ⚡ Bolt: Adding relative positioning here allows the loading overlay to position correctly without unmounting WebGL charts */}
           <div className="space-y-4 relative">
             {isFetchingFiles || (!flightData && loading) ? (

@@ -110,3 +110,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-08 - Exposing Keyboard Shortcuts to Screen Readers
 **Learning:** When using visually hidden `<kbd>` elements to display keyboard shortcuts on interactive controls, screen readers will ignore them if they have `aria-hidden="true"`. This creates an inequitable experience where only sighted users know about the shortcuts.
 **Action:** Always pair visually hidden `<kbd>` elements with an explicit `aria-keyshortcuts` attribute on the parent interactive element (e.g., `<button aria-keyshortcuts="/">`) so that assistive technologies can announce the shortcut.
+
+## 2026-04-09 - Flexible Heading Levels in Reusable Containers
+**Learning:** Hardcoding specific heading levels (e.g., `<h3>`) within generic reusable container components (like panels or cards) inevitably leads to skipped heading levels and WCAG 1.3.1 (Info and Relationships) violations when these components are composed in different parts of an application.
+**Action:** Always parameterize the heading level in reusable container components by accepting a `headingLevel` prop (e.g., `"h2" | "h3"`...) that defaults to the most common use case but allows consumers to semantically slot the container correctly into the document's outline.
