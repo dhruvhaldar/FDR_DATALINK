@@ -5,11 +5,13 @@ interface GlassPanelProps extends React.HTMLAttributes<HTMLElement> {
     children: React.ReactNode;
     className?: string;
     title?: string;
+    headingLevel?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-export function GlassPanel({ children, className, title, ...props }: GlassPanelProps) {
+export function GlassPanel({ children, className, title, headingLevel = "h2", ...props }: GlassPanelProps) {
     const titleId = useId();
     const Component = title ? "section" : "div";
+    const Heading = headingLevel;
 
     return (
         <Component
@@ -22,9 +24,9 @@ export function GlassPanel({ children, className, title, ...props }: GlassPanelP
             {...props}
         >
             {title && (
-                <h3 id={titleId} className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-400">
+                <Heading id={titleId} className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-400">
                     <span aria-hidden="true">&gt;</span> {title}
-                </h3>
+                </Heading>
             )}
             {children}
         </Component>
