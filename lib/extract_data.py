@@ -18,15 +18,16 @@ def extract_data(file_path):
         params = ['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG']
         
         # Optimize: Only load the specific variables we need, not the entire file
-        data = scipy.io.loadmat(file_path, variable_names=params)
+        # ⚡ Bolt: Add squeeze_me=True to loadmat to natively flatten MATLAB 1xN cell arrays
+        # into 1D numpy arrays, bypassing [0, 0] indexing and redundant .ravel() calls.
+        data = scipy.io.loadmat(file_path, variable_names=params, squeeze_me=True)
         result = {}
 
         for p in params:
             if p in data:
-                struct = data[p][0, 0]
+                struct = data[p]
 
-                # ⚡ Bolt: Use .ravel() instead of .flatten() to create a faster memory view rather than a copy.
-                raw_data = struct['data'].ravel()
+                raw_data = struct['data'].item()
                 
                 # Downsample for web performance
                 max_points = 2000
@@ -38,9 +39,9 @@ def extract_data(file_path):
                     step = (len(raw_data) + max_points - 1) // max_points
                     raw_data = raw_data[::step]
                 
-                rate = float(struct['Rate'][0, 0]) if 'Rate' in struct.dtype.names else 1.0
-                units = str(struct['Units'][0]) if 'Units' in struct.dtype.names else ""
-                desc = str(struct['Description'][0]) if 'Description' in struct.dtype.names else p
+                rate = float(struct['Rate'].item()) if 'Rate' in struct.dtype.names else 1.0
+                units = str(struct['Units'].item()) if 'Units' in struct.dtype.names else ""
+                desc = str(struct['Description'].item()) if 'Description' in struct.dtype.names else p
                 
                 # ⚡ Bolt: Rounding to 3 decimal places drastically reduces precision overhead,
                 # effectively halving JSON string size and boosting serialization speeds.

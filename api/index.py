@@ -39,7 +39,9 @@ def get_processed_flight_data(file_path: str):
     # and reduces scipy.io.loadmat execution time by ~45%
     # ⚡ Bolt: Removed unused MACH and TAT parameters to reduce API payload size by ~30%,
     # skip unnecessary array downsampling, and minimize JSON serialization overhead.
-    data = scipy.io.loadmat(file_path, variable_names=['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG'])
+    # ⚡ Bolt: Add squeeze_me=True to loadmat to natively flatten MATLAB 1xN cell arrays
+    # into 1D numpy arrays, bypassing [0, 0] indexing and redundant .ravel() calls.
+    data = scipy.io.loadmat(file_path, variable_names=['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG'], squeeze_me=True)
     result = {}
 
     # We'll extract a subset of interesting parameters
@@ -47,10 +49,9 @@ def get_processed_flight_data(file_path: str):
 
     for p in params:
         if p in data:
-            struct = data[p][0, 0]
-            # ⚡ Bolt: Use .ravel() instead of .flatten() to avoid memory copy.
+            struct = data[p]
             # Convert numpy arrays to lists for JSON serialization
-            raw_data = struct['data'].ravel()
+            raw_data = struct['data'].item()
 
             # Downsample if too large (e.g., > 2000 points) to keep response snappy
             max_points = 2000
@@ -68,9 +69,9 @@ def get_processed_flight_data(file_path: str):
             # and deep copying of the array.
             np.round(raw_data, 3, out=raw_data)
 
-            rate = float(struct['Rate'][0, 0]) if 'Rate' in struct.dtype.names else 1.0
-            units = str(struct['Units'][0]) if 'Units' in struct.dtype.names else ""
-            desc = str(struct['Description'][0]) if 'Description' in struct.dtype.names else p
+            rate = float(struct['Rate'].item()) if 'Rate' in struct.dtype.names else 1.0
+            units = str(struct['Units'].item()) if 'Units' in struct.dtype.names else ""
+            desc = str(struct['Description'].item()) if 'Description' in struct.dtype.names else p
 
             result[p] = {
                 "data": raw_data.tolist(),

@@ -10,3 +10,6 @@
 ## 2026-03-31 - Use WebGL for Heavy Charts
 **Learning:** For high-density telemetry data (like 2000 points per chart across 5 charts), using Plotly's default SVG-based `scatter` mode creates an enormous number of DOM nodes. This bogs down the browser's main thread and can make the UI extremely sluggish or unresponsive during renders and resizes.
 **Action:** When rendering thousands of data points with `react-plotly.js`, always use `type: "scattergl"`. This switches the renderer to WebGL, offloading the work to the GPU and maintaining a smooth, 60fps interaction framerate.
+## 2024-04-20 - Flattening MATLAB Cell Arrays during Load
+**Learning:** By default, `scipy.io.loadmat` parses 1xN MATLAB cell arrays or structs into highly nested structures requiring `[0, 0]` indexing followed by `.ravel()` or `.flatten()` to access the raw 1D numeric data, which bloats extraction logic and adds slight overhead.
+**Action:** Always pass `squeeze_me=True` to `loadmat()` when loading tabular telemetry or numeric arrays from `.mat` files. This instructs SciPy to natively squeeze out singleton dimensions during parsing, yielding flat 1D numpy arrays directly accessible via `.item()` (for scalars or single objects) without verbose unpacking.
