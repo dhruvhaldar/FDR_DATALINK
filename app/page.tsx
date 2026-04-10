@@ -344,12 +344,12 @@ export default function Dashboard() {
         </div>
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
-          <GlassPanel className="group p-1 w-full md:w-auto flex items-center pr-2">
-            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest text-emerald-400 cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+          <GlassPanel className={`group p-1 w-full md:w-auto flex items-center pr-2 transition-colors duration-300 ${error ? 'border-red-500/50 bg-red-950/10' : ''}`}>
+            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer whitespace-nowrap flex items-center gap-1.5 transition-colors duration-300 ${error ? 'text-red-400' : 'text-emerald-400'} ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
               <span className="hidden md:grid items-center justify-items-center relative">
-                <kbd className="col-start-1 row-start-1 rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-all duration-300 group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-within:opacity-0 group-focus-within:scale-75" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
-                <kbd className="col-start-1 row-start-1 rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-all duration-300 opacity-0 scale-75 group-focus-within:opacity-100 group-focus-within:scale-100 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300" aria-hidden="true" title="Press 'Escape' to blur">ESC</kbd>
+                <kbd className={`col-start-1 row-start-1 rounded border px-1 py-0.5 text-[8px] font-mono transition-all duration-300 group-focus-within:opacity-0 group-focus-within:scale-75 ${error ? 'border-red-500/30 bg-red-950/30 text-red-400 group-hover:border-red-400 group-hover:text-red-300' : 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400 group-hover:border-emerald-400 group-hover:text-emerald-300'}`} aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+                <kbd className={`col-start-1 row-start-1 rounded border px-1 py-0.5 text-[8px] font-mono transition-all duration-300 opacity-0 scale-75 group-focus-within:opacity-100 group-focus-within:scale-100 ${error ? 'border-red-500/30 bg-red-950/30 text-red-400 group-focus-within:border-red-400 group-focus-within:text-red-300' : 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300'}`} aria-hidden="true" title="Press 'Escape' to blur">ESC</kbd>
               </span>
             </label>
             <select
@@ -366,7 +366,7 @@ export default function Dashboard() {
                 setSelectedFile(val);
                 fetchFlightData(val);
               }}
-              className="bg-transparent px-3 py-1 text-xs text-emerald-500 outline-none w-full md:w-56 cursor-pointer hover:text-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
+              className={`bg-transparent px-3 py-1 text-xs outline-none w-full md:w-56 cursor-pointer transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded ${error ? 'text-red-500 hover:text-red-400 focus-visible:ring-red-500' : 'text-emerald-500 hover:text-emerald-400 focus-visible:ring-emerald-500'}`}
             >
               {isFetchingFiles && <option value="" disabled className="bg-black text-emerald-500">Loading datasets...</option>}
               {!isFetchingFiles && files.length === 0 && <option value="" disabled className="bg-black text-emerald-500">No datasets available</option>}
@@ -376,7 +376,9 @@ export default function Dashboard() {
                 </option>
               ))}
             </select>
-            {loading && <Loader2 className="h-3 w-3 animate-spin text-emerald-500" aria-hidden="true" />}
+            <div className="w-3 shrink-0 flex items-center justify-center">
+              <Loader2 className={`h-3 w-3 animate-spin transition-opacity duration-300 ${loading ? 'opacity-100' : 'opacity-0'} ${error ? 'text-red-500' : 'text-emerald-500'}`} aria-hidden="true" />
+            </div>
           </GlassPanel>
           <a
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
