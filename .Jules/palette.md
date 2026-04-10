@@ -114,3 +114,11 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-09 - Flexible Heading Levels in Reusable Containers
 **Learning:** Hardcoding specific heading levels (e.g., `<h3>`) within generic reusable container components (like panels or cards) inevitably leads to skipped heading levels and WCAG 1.3.1 (Info and Relationships) violations when these components are composed in different parts of an application.
 **Action:** Always parameterize the heading level in reusable container components by accepting a `headingLevel` prop (e.g., `"h2" | "h3"`...) that defaults to the most common use case but allows consumers to semantically slot the container correctly into the document's outline.
+
+## 2025-05-18 - Reserving Space for Loading Spinners
+**Learning:** Conditionally rendering a loading spinner (like a `Loader2` icon) next to interactive elements (like a dropdown) causes a sudden layout shift when the fetch initiates. This shifting pushes adjacent elements around, making the UI feel jumpy and unpolished.
+**Action:** Instead of conditionally unmounting the spinner from the DOM, reserve its spatial footprint by wrapping it in a fixed-width, non-shrinking container (e.g., `w-3 shrink-0`). Then, toggle the spinner's visibility using opacity (`opacity-0` vs `opacity-100`) combined with a transition duration to ensure the layout remains stable while providing smooth visual feedback.
+
+## 2025-05-18 - Actionable Visual Feedback for Invalid States
+**Learning:** Relying solely on `aria-invalid={true}` is crucial for screen readers, but sighted users also need clear, immediate visual cues when a specific input causes an error. If an error message appears far away from the control that caused it, users may struggle to understand what they need to fix.
+**Action:** Always bind the visual styling of the input, its label, and its surrounding container to the component's `error` state. For example, transition the border, text, and focus ring colors to a thematic error color (like `red-500`) when an error occurs, providing a clear, visually localized indication of the problematic input.
