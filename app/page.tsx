@@ -401,37 +401,39 @@ export default function Dashboard() {
 
       <main id="main-content" ref={mainContentRef} tabIndex={-1} className="grid grid-cols-1 gap-4 lg:grid-cols-4 outline-none" aria-label="Flight Data Dashboard Content">
         {/* Navigation / KPIs */}
-        <section className="space-y-3 lg:col-span-1" aria-labelledby="kpi-heading">
+        <section className="lg:col-span-1" aria-labelledby="kpi-heading">
           <h2 id="kpi-heading" className="sr-only">Flight Parameters</h2>
-          {PARAM_CONFIG.map((param) => {
-            const Icon = param.icon;
-            // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
-            const paramData = flightData?.[param.key]?.data;
-            const val = paramData ? paramData[paramData.length - 1] : undefined;
-            return (
-              <GlassPanel key={param.key} title={param.name} headingLevel="h3" className="p-3 group cursor-default" aria-busy={loading}>
-                <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className={`text-2xl font-mono`} style={{ color: param.color }}>
-                      {val !== undefined ? (param.key === 'VRTG' ? formatTwoDigits.format(val) : formatOneDigit.format(val)) : (
-                        <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
-                      )}
-                    </span>
-                    <span className="text-[10px] font-bold text-emerald-400 uppercase">
-                      <abbr
-                        title={param.unitTitle}
-                        tabIndex={0}
-                        className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
-                      >
-                        {flightData?.[param.key]?.units || param.unit}
-                      </abbr>
-                    </span>
+          <div role="group" aria-label="Key Performance Indicators" className="space-y-3">
+            {PARAM_CONFIG.map((param) => {
+              const Icon = param.icon;
+              // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
+              const paramData = flightData?.[param.key]?.data;
+              const val = paramData ? paramData[paramData.length - 1] : undefined;
+              return (
+                <GlassPanel key={param.key} title={param.name} headingLevel="h3" className="p-3 group cursor-default" aria-busy={loading}>
+                  <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className={`text-2xl font-mono`} style={{ color: param.color }}>
+                        {val !== undefined ? (param.key === 'VRTG' ? formatTwoDigits.format(val) : formatOneDigit.format(val)) : (
+                          <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
+                        )}
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-400 uppercase">
+                        <abbr
+                          title={param.unitTitle}
+                          tabIndex={0}
+                          className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+                        >
+                          {flightData?.[param.key]?.units || param.unit}
+                        </abbr>
+                      </span>
+                    </div>
+                    <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400 group-focus-within:scale-110 group-focus-within:text-emerald-400" aria-hidden="true" />
                   </div>
-                  <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400 group-focus-within:scale-110 group-focus-within:text-emerald-400" aria-hidden="true" />
-                </div>
-              </GlassPanel>
-            );
-          })}
+                </GlassPanel>
+              );
+            })}
+          </div>
         </section>
 
         {/* Multi-Graph Visualization Suite */}

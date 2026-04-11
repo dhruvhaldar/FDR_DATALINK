@@ -122,3 +122,6 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2025-05-18 - Actionable Visual Feedback for Invalid States
 **Learning:** Relying solely on `aria-invalid={true}` is crucial for screen readers, but sighted users also need clear, immediate visual cues when a specific input causes an error. If an error message appears far away from the control that caused it, users may struggle to understand what they need to fix.
 **Action:** Always bind the visual styling of the input, its label, and its surrounding container to the component's `error` state. For example, transition the border, text, and focus ring colors to a thematic error color (like `red-500`) when an error occurs, providing a clear, visually localized indication of the problematic input.
+## 2026-04-11 - Wrap Related Metrics in Semantic Groups
+**Learning:** Screen reader users can lose structural context when navigating through long lists of similar widgets (like KPI cards or metrics). Grouping them inside an explicit `role="group"` with a descriptive `aria-label` helps communicate their relationship and purpose.
+**Action:** When mapping over related metrics or widgets, wrap the output in a container with `role="group"` and a clear `aria-label` to enhance structural navigation.
