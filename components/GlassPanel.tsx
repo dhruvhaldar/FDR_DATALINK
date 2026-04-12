@@ -17,6 +17,7 @@ export function GlassPanel({ children, className, title, headingLevel = "h2", ..
         <Component
             className={cn(
                 "relative overflow-hidden rounded-lg border border-emerald-500/30 bg-black p-4 transition-all hover:bg-emerald-950/20",
+                "focus-within:border-emerald-500/50 focus-within:bg-emerald-950/30 focus-within:shadow-[0_0_20px_rgba(16,185,129,0.1)]",
                 "shadow-[0_0_20px_rgba(16,185,129,0.05)]",
                 className
             )}
