@@ -13,3 +13,6 @@
 ## 2024-04-20 - Flattening MATLAB Cell Arrays during Load
 **Learning:** By default, `scipy.io.loadmat` parses 1xN MATLAB cell arrays or structs into highly nested structures requiring `[0, 0]` indexing followed by `.ravel()` or `.flatten()` to access the raw 1D numeric data, which bloats extraction logic and adds slight overhead.
 **Action:** Always pass `squeeze_me=True` to `loadmat()` when loading tabular telemetry or numeric arrays from `.mat` files. This instructs SciPy to natively squeeze out singleton dimensions during parsing, yielding flat 1D numpy arrays directly accessible via `.item()` (for scalars or single objects) without verbose unpacking.
+## 2026-04-12 - Lazy Loading Heavy Scientific Libraries in API
+**Learning:** Top-level importing of heavy libraries like `scipy.io` and `numpy` in a FastAPI entrypoint (`api/index.py`) causes significant initialization overhead (~350ms) and memory allocation during Vercel cold starts, even when handling simple requests like `/api/files` that don't need them.
+**Action:** Move expensive imports inside the functions that actually use them (lazy loading), drastically reducing the API cold start time and improving overall initial responsiveness.
