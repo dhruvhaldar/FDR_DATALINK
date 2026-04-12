@@ -125,3 +125,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-11 - Wrap Related Metrics in Semantic Groups
 **Learning:** Screen reader users can lose structural context when navigating through long lists of similar widgets (like KPI cards or metrics). Grouping them inside an explicit `role="group"` with a descriptive `aria-label` helps communicate their relationship and purpose.
 **Action:** When mapping over related metrics or widgets, wrap the output in a container with `role="group"` and a clear `aria-label` to enhance structural navigation.
+
+## 2026-04-12 - Focus-Within Visual Feedback on Structural Containers
+**Learning:** When using components like `GlassPanel` to semantically group content (like KPI elements or links), keyboard users can lose spatial context of where their focus lies if the container itself doesn't visually react when its children are focused.
+**Action:** Use `focus-within:border-[color] focus-within:bg-[color] focus-within:shadow-[color]` on structural containers (like panels or cards) to highlight the panel's boundaries when any interactive child receives focus, improving keyboard navigation orientation.
