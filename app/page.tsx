@@ -344,7 +344,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
-          <GlassPanel className={`group p-1 w-full md:w-auto flex items-center pr-2 transition-colors duration-300 ${error ? 'border-red-500/50 bg-red-950/10' : ''}`}>
+          <GlassPanel className={`group p-1 w-full md:w-auto flex items-center pr-2 transition-colors duration-300 ${error ? 'border-red-500/50 bg-red-950/10 hover:bg-red-950/20 focus-within:border-red-500/50 focus-within:bg-red-950/30 focus-within:shadow-[0_0_20px_rgba(239,68,68,0.1)]' : ''}`}>
             <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer whitespace-nowrap flex items-center gap-1.5 transition-colors duration-300 ${error ? 'text-red-400' : 'text-emerald-400'} ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
               <div className="w-3 shrink-0 flex items-center justify-center">
@@ -465,11 +465,11 @@ export default function Dashboard() {
                   <button
                     type="button"
                     onClick={() => document.getElementById('dataset-select')?.focus()}
-                    className="group flex items-center gap-1 text-[10px] text-emerald-400 hover:text-emerald-300 underline decoration-emerald-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-sm"
+                    className="group flex items-center gap-1 text-[10px] text-red-400 hover:text-red-300 underline decoration-red-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-sm"
                     aria-keyshortcuts="/"
                   >
                     Please try selecting another file
-                    <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[8px] font-mono text-emerald-400 transition-colors group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-visible:border-emerald-400 group-focus-visible:text-emerald-300" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
+                    <kbd className="hidden md:inline-block rounded border border-red-500/30 bg-red-950/30 px-1 py-0.5 text-[8px] font-mono text-red-400 transition-colors group-hover:border-red-400 group-hover:text-red-300 group-focus-visible:border-red-400 group-focus-visible:text-red-300" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
                   </button>
                 </div>
                 <button
@@ -478,7 +478,7 @@ export default function Dashboard() {
                     fetchFlightData(selectedFile);
                     mainContentRef.current?.focus();
                   }}
-                  className="group flex items-center gap-2 rounded border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-emerald-500 transition-colors hover:bg-emerald-500/20 hover:text-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
+                  className="group flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
                 >
                   <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-visible:rotate-180 duration-500" aria-hidden="true" />
                   Retry Connection
