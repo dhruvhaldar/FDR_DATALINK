@@ -129,3 +129,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-12 - Focus-Within Visual Feedback on Structural Containers
 **Learning:** When using components like `GlassPanel` to semantically group content (like KPI elements or links), keyboard users can lose spatial context of where their focus lies if the container itself doesn't visually react when its children are focused.
 **Action:** Use `focus-within:border-[color] focus-within:bg-[color] focus-within:shadow-[color]` on structural containers (like panels or cards) to highlight the panel's boundaries when any interactive child receives focus, improving keyboard navigation orientation.
+
+## 2024-05-24 - Fix Error State Interactions
+**Learning:** Component interaction states (hover/focus) must be dynamically bound to error states to prevent confusing color reversions.
+**Action:** Always check the styling of interactive elements inside error containers to ensure they use error-themed classes for hover, focus, and focus-within states.
