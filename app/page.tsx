@@ -345,7 +345,7 @@ export default function Dashboard() {
 
         <div className="flex flex-col md:items-end mt-4 md:mt-0 gap-1">
           <GlassPanel className={`group p-1 w-full md:w-auto flex items-center pr-2 transition-colors duration-300 ${error ? 'border-red-500/50 bg-red-950/10 hover:bg-red-950/20 focus-within:border-red-500/50 focus-within:bg-red-950/30 focus-within:shadow-[0_0_20px_rgba(239,68,68,0.1)]' : ''}`}>
-            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer whitespace-nowrap flex items-center gap-1.5 transition-colors duration-300 ${error ? 'text-red-400' : 'text-emerald-400'} ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer whitespace-nowrap flex items-center gap-1.5 transition-colors duration-300 ${error ? 'text-red-400 group-hover:text-red-300 group-focus-within:text-red-300' : 'text-emerald-400 group-hover:text-emerald-300 group-focus-within:text-emerald-300'} ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
               <div className="w-3 shrink-0 flex items-center justify-center">
                 <Loader2 aria-hidden="true" className={`w-3 h-3 animate-spin transition-opacity duration-300 ${loading ? 'opacity-100' : 'opacity-0'}`} />
@@ -379,9 +379,6 @@ export default function Dashboard() {
                 </option>
               ))}
             </select>
-            <div className="w-3 shrink-0 flex items-center justify-center">
-              <Loader2 className={`h-3 w-3 animate-spin transition-opacity duration-300 ${loading ? 'opacity-100' : 'opacity-0'} ${error ? 'text-red-500' : 'text-emerald-500'}`} aria-hidden="true" />
-            </div>
           </GlassPanel>
           <a
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"
