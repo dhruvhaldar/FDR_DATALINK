@@ -133,3 +133,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2024-05-24 - Fix Error State Interactions
 **Learning:** Component interaction states (hover/focus) must be dynamically bound to error states to prevent confusing color reversions.
 **Action:** Always check the styling of interactive elements inside error containers to ensure they use error-themed classes for hover, focus, and focus-within states.
+
+## 2026-04-13 - Interactive Container Label Binding
+**Learning:** When creating a unified interactive control (like a GlassPanel wrapping a label and a `<select>` input) using `group` classes, the label text feels disconnected if it doesn't visually react when the user hovers or focuses the adjacent input. Sighted users benefit from a subtle indication that the entire container acts together.
+**Action:** Always bind the text color of the `<label>` to the interaction state of the unified container using `group-hover:text-[color]` and `group-focus-within:text-[color]` utility classes, matching both normal and error states.
