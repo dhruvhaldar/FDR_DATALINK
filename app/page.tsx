@@ -363,7 +363,7 @@ export default function Dashboard() {
               aria-busy={isFetchingFiles || loading}
               aria-invalid={!!error}
               aria-keyshortcuts="/"
-              aria-controls="main-content"
+              aria-controls="telemetry-pipeline"
               onChange={(e) => {
                 const val = e.target.value;
                 setSelectedFile(val);
@@ -409,9 +409,20 @@ export default function Dashboard() {
               // ⚡ Bolt: Avoids O(1) array allocation via slice(-1) per render per param
               const paramData = flightData?.[param.key]?.data;
               const val = paramData ? paramData[paramData.length - 1] : undefined;
+              const formattedVal = val !== undefined ? (param.key === 'VRTG' ? formatTwoDigits.format(val) : formatOneDigit.format(val)) : 'No data';
+              const unitLabel = flightData?.[param.key]?.units || param.unitTitle;
+
               return (
-                <GlassPanel key={param.key} title={param.name} headingLevel="h3" className="p-3 group cursor-default" aria-busy={loading}>
-                  <div className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
+                <GlassPanel
+                  key={param.key}
+                  title={param.name}
+                  headingLevel="h3"
+                  className="p-3 group cursor-default focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black outline-none"
+                  aria-busy={loading}
+                  tabIndex={0}
+                  aria-label={`${param.name}: ${formattedVal} ${unitLabel}`}
+                >
+                  <div aria-hidden="true" className={`flex items-center justify-between transition-opacity duration-300 ${loading ? 'opacity-50 animate-pulse' : 'opacity-100'}`}>
                     <div className="flex items-baseline gap-1.5">
                       <span className={`text-2xl font-mono`} style={{ color: param.color }}>
                         {val !== undefined ? (param.key === 'VRTG' ? formatTwoDigits.format(val) : formatOneDigit.format(val)) : (
@@ -437,7 +448,7 @@ export default function Dashboard() {
         </section>
 
         {/* Multi-Graph Visualization Suite */}
-        <GlassPanel title="Telemetry Data Pipeline" headingLevel="h2" className="lg:col-span-3">
+        <GlassPanel id="telemetry-pipeline" title="Telemetry Data Pipeline" headingLevel="h2" className="lg:col-span-3">
           {/* ⚡ Bolt: Adding relative positioning here allows the loading overlay to position correctly without unmounting WebGL charts */}
           <div className="space-y-4 relative">
             {isFetchingFiles || (!flightData && loading) ? (
