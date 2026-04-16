@@ -90,7 +90,10 @@ def get_processed_flight_data(file_path: str):
     # on every identical API request.
     # ⚡ Bolt: Use separators=(',', ':') to eliminate whitespace in the JSON output,
     # reducing the payload size by ~15% and speeding up transmission.
-    return json.dumps(result, separators=(',', ':'))
+    # ⚡ Bolt: Pre-encode the JSON string to UTF-8 bytes before caching.
+    # This prevents FastAPI from allocating memory and spending CPU cycles re-encoding
+    # the massive payload to bytes on every single cache hit.
+    return json.dumps(result, separators=(',', ':')).encode('utf-8')
 
 @app.get("/api/data/{filename}")
 def get_flight_data(filename: str):
@@ -99,16 +102,16 @@ def get_flight_data(filename: str):
         raise HTTPException(status_code=404, detail="File not found")
     
     try:
-        # ⚡ Bolt: The cached function returns the final JSON string, bypassing
-        # repetitive processing loops and slow JSON serialization.
-        json_str = get_processed_flight_data(file_path)
+        # ⚡ Bolt: The cached function returns the final JSON bytes, bypassing
+        # repetitive processing loops, slow JSON serialization, and UTF-8 encoding.
+        json_bytes = get_processed_flight_data(file_path)
         
         # ⚡ Bolt: Bypass FastAPI's slow jsonable_encoder for large lists of floats
-        # Returning a raw Response with json.dumps is ~3x faster for this dataset size
+        # Returning a raw Response with pre-encoded bytes is significantly faster.
         # ⚡ Bolt: Added Cache-Control headers to prevent the browser from repeatedly
         # requesting large static telemetry arrays, matching the Next.js API behavior.
         return Response(
-            content=json_str,
+            content=json_bytes,
             media_type="application/json",
             headers={"Cache-Control": "public, max-age=86400, stale-while-revalidate=3600"}
         )

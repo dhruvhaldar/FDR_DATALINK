@@ -16,3 +16,6 @@
 ## 2026-04-12 - Lazy Loading Heavy Scientific Libraries in API
 **Learning:** Top-level importing of heavy libraries like `scipy.io` and `numpy` in a FastAPI entrypoint (`api/index.py`) causes significant initialization overhead (~350ms) and memory allocation during Vercel cold starts, even when handling simple requests like `/api/files` that don't need them.
 **Action:** Move expensive imports inside the functions that actually use them (lazy loading), drastically reducing the API cold start time and improving overall initial responsiveness.
+## 2024-04-25 - Caching Encoded Bytes in FastAPI
+**Learning:** Returning a string from a cached function and passing it to a FastAPI `Response` forces the framework to encode the string to UTF-8 bytes on every single cache hit. For large JSON payloads (like telemetry arrays), this repetitive string encoding creates unnecessary CPU overhead and memory allocation in the event loop.
+**Action:** When caching complete API responses in memory using `@lru_cache`, pre-encode the JSON string to bytes (e.g., `.encode('utf-8')`) before returning it. Passing bytes directly to FastAPI's `Response` bypasses the encoding step entirely, serving the payload significantly faster.
