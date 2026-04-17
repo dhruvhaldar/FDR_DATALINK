@@ -21,7 +21,7 @@ export function GlassPanel({ children, className, title, headingLevel = "h2", ..
                 "shadow-[0_0_20px_rgba(16,185,129,0.05)]",
                 className
             )}
-            aria-labelledby={title ? titleId : undefined}
+            aria-labelledby={title && !props["aria-label"] ? titleId : undefined}
             {...props}
         >
             {title && (

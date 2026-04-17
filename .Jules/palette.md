@@ -141,3 +141,11 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2024-05-18 - KPI Card Accessibility Pattern
 **Learning:** For complex multi-element data widgets (like KPI cards), using separate DOM nodes for titles, values, and units causes fragmented and confusing readouts for screen reader users, while lacking standard `tabIndex` prevents keyboard navigation altogether.
 **Action:** Always make interactive or complex display containers focusable with `tabIndex={0}` and apply a comprehensive, formatted `aria-label` to the container itself, while hiding the inner complex DOM structure from screen readers using `aria-hidden="true"`.
+
+## 2026-04-14 - ARIA Label Precedence Overrides
+**Learning:** When creating reusable components (like `GlassPanel` wrapping a section), if the component uses `aria-labelledby` by default to link to its visible title, it will completely override any explicitly passed `aria-label`. This can break accessibility patterns, like KPI cards where the parent needs a comprehensive `aria-label` describing the full metric, not just the title.
+**Action:** In generic UI container components, conditionally apply `aria-labelledby`. Only set it to the visible title's ID if the consumer did not explicitly pass an `aria-label` prop.
+
+## 2026-04-14 - Focus Traps in aria-hidden Regions
+**Learning:** If an interactive or focusable element (like `<abbr tabIndex={0}>`) is placed inside a container with `aria-hidden="true"`, it creates an invisible focus trap. Screen readers will ignore the focused element because of its hidden parent, leaving keyboard users with an unannounced, dead focus state.
+**Action:** Ensure that any element placed inside an `aria-hidden="true"` container does not have a `tabIndex` or focus ring styles. Remove interactive semantics from visually hidden areas, and rely on the parent wrapper's comprehensive `aria-label` instead.
