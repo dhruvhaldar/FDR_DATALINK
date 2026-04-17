@@ -426,14 +426,13 @@ export default function Dashboard() {
                     <div className="flex items-baseline gap-1.5">
                       <span className={`text-2xl font-mono`} style={{ color: param.color }}>
                         {val !== undefined ? (param.key === 'VRTG' ? formatTwoDigits.format(val) : formatOneDigit.format(val)) : (
-                          <><span aria-hidden="true">---</span><span className="sr-only">No data</span></>
+                          <>---</>
                         )}
                       </span>
                       <span className="text-[10px] font-bold text-emerald-400 uppercase">
                         <abbr
                           title={param.unitTitle}
-                          tabIndex={0}
-                          className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+                          className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none"
                         >
                           {flightData?.[param.key]?.units || param.unit}
                         </abbr>
