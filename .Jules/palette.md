@@ -149,3 +149,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-14 - Focus Traps in aria-hidden Regions
 **Learning:** If an interactive or focusable element (like `<abbr tabIndex={0}>`) is placed inside a container with `aria-hidden="true"`, it creates an invisible focus trap. Screen readers will ignore the focused element because of its hidden parent, leaving keyboard users with an unannounced, dead focus state.
 **Action:** Ensure that any element placed inside an `aria-hidden="true"` container does not have a `tabIndex` or focus ring styles. Remove interactive semantics from visually hidden areas, and rely on the parent wrapper's comprehensive `aria-label` instead.
+
+## 2024-05-18 - Unified Loading States for Sequential Fetches
+**Learning:** In applications with sequential data initializations (e.g., fetching a list of options, then fetching the default option's data), using separate loading state variables without unifying them in UI indicators creates visual gaps. For example, if a spinner only activates during the second step, the application appears visually stalled during the first step, breaking the illusion of a continuous loading process.
+**Action:** Always combine sequential initialization flags (e.g., `loading || isFetchingFiles`) for global UI loading indicators (like document titles and container spinners) to ensure continuous visual feedback from the start of the process until the final data is rendered.
