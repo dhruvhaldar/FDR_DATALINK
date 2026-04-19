@@ -247,12 +247,13 @@ export default function Dashboard() {
 
   // Dynamic Document Title
   useEffect(() => {
+    const isLoading = loading || isFetchingFiles;
     if (selectedFile) {
-      document.title = `${loading ? '(Loading...) ' : ''}${selectedFile} | FDR DATALINK`;
+      document.title = `${isLoading ? '(Loading...) ' : ''}${selectedFile} | FDR DATALINK`;
     } else {
-      document.title = "FDR DATALINK";
+      document.title = `${isLoading ? '(Loading...) ' : ''}FDR DATALINK`;
     }
-  }, [selectedFile, loading]);
+  }, [selectedFile, loading, isFetchingFiles]);
 
   // Global keyboard shortcut for focusing the dataset selector
   useEffect(() => {

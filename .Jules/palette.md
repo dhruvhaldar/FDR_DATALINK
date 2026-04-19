@@ -149,3 +149,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-14 - Focus Traps in aria-hidden Regions
 **Learning:** If an interactive or focusable element (like `<abbr tabIndex={0}>`) is placed inside a container with `aria-hidden="true"`, it creates an invisible focus trap. Screen readers will ignore the focused element because of its hidden parent, leaving keyboard users with an unannounced, dead focus state.
 **Action:** Ensure that any element placed inside an `aria-hidden="true"` container does not have a `tabIndex` or focus ring styles. Remove interactive semantics from visually hidden areas, and rely on the parent wrapper's comprehensive `aria-label` instead.
+
+## 2026-04-19 - Document Title Feedback on App Boot
+**Learning:** In applications with sequential data initializations (e.g., fetching a list of options, then fetching the data for the selected option), relying solely on the second step's loading state for global UI indicators (like the document title) leaves the app looking stalled during the first step.
+**Action:** Combine the loading state flags (e.g., `loading || isFetchingFiles`) for global UI loading indicators to ensure continuous visual feedback and prevent the application from appearing stalled during intermediate initial boot steps.
