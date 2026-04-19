@@ -5,8 +5,18 @@ import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
 import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink, RefreshCw } from "lucide-react";
 
-// Dynamically import Plotly to avoid SSR issues
-const Plot = dynamic(() => import("react-plotly.js"), {
+// ⚡ Bolt: Dynamically import Plotly factory and specifically the gl2d bundle (which includes scattergl).
+// Using the default react-plotly.js imports the entire 4.7MB plotly.js library.
+// By loading only plotly-gl2d (1.6MB), we reduce the bundle size by ~65% while keeping WebGL functionality.
+const Plot = dynamic(() =>
+  Promise.all([
+    import("react-plotly.js/factory"),
+    import("plotly.js/dist/plotly-gl2d")
+  ]).then(([factory, Plotly]) => {
+    const plotlyInstance = Plotly.default ?? Plotly;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return factory.default(plotlyInstance as any);
+  }), {
   ssr: false,
   loading: () => (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2" role="status" aria-live="polite">
@@ -284,12 +294,13 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    // ⚡ Bolt: Pre-load the massive react-plotly.js chunk immediately on mount.
+    // ⚡ Bolt: Pre-load the optimized plotly-gl2d chunk and factory immediately on mount.
     // Waiting for the sequential API requests (/api/files -> /api/data) to resolve
     // before triggering the dynamic import creates a massive network waterfall,
     // delaying the First Meaningful Paint. By importing it now, the browser downloads
-    // the ~3MB chart library in parallel with the JSON data.
-    import("react-plotly.js").catch(() => {});
+    // the ~1.6MB chart library in parallel with the JSON data.
+    import("react-plotly.js/factory").catch(() => {});
+    import("plotly.js/dist/plotly-gl2d").catch(() => {});
 
     setStatusMessage("Fetching available datasets...");
     fetch("/api/files")
@@ -313,7 +324,6 @@ export default function Dashboard() {
       .finally(() => {
         setIsFetchingFiles(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
