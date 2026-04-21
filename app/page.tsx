@@ -492,7 +492,7 @@ export default function Dashboard() {
                 </button>
               </div>
             ) : !isFetchingFiles && files.length === 0 ? (
-              <div className="flex h-[400px] flex-col items-center justify-center gap-4">
+              <div role="status" className="flex h-[400px] flex-col items-center justify-center gap-4">
                 <div className="rounded-full bg-red-500/5 p-4 ring-1 ring-red-500/20">
                   <AlertTriangle className="h-8 w-8 text-red-500/40" aria-hidden="true" />
                 </div>
@@ -542,7 +542,7 @@ export default function Dashboard() {
                 })}
               </>
             ) : (
-              <div className="flex h-[400px] flex-col items-center justify-center gap-4">
+              <div role="status" className="flex h-[400px] flex-col items-center justify-center gap-4">
                 <div className="rounded-full bg-emerald-500/5 p-4 ring-1 ring-emerald-500/20">
                   <Activity className="h-8 w-8 text-emerald-500/40" aria-hidden="true" />
                 </div>
