@@ -19,3 +19,6 @@
 ## 2024-04-25 - Caching Encoded Bytes in FastAPI
 **Learning:** Returning a string from a cached function and passing it to a FastAPI `Response` forces the framework to encode the string to UTF-8 bytes on every single cache hit. For large JSON payloads (like telemetry arrays), this repetitive string encoding creates unnecessary CPU overhead and memory allocation in the event loop.
 **Action:** When caching complete API responses in memory using `@lru_cache`, pre-encode the JSON string to bytes (e.g., `.encode('utf-8')`) before returning it. Passing bytes directly to FastAPI's `Response` bypasses the encoding step entirely, serving the payload significantly faster.
+## 2026-04-20 - Reducing react-plotly bundle size
+**Learning:** The default `react-plotly.js` library includes all Plotly renderers, creating a massive bundle (~4.7MB) that impacts page load times.
+**Action:** Use Next.js dynamic import to lazily load `react-plotly.js/factory` and a specific `plotly.js` dist file (like `plotly.js/dist/plotly-gl2d`), drastically reducing bundle size to ~1.6MB.
