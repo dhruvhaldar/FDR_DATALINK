@@ -149,3 +149,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-14 - Focus Traps in aria-hidden Regions
 **Learning:** If an interactive or focusable element (like `<abbr tabIndex={0}>`) is placed inside a container with `aria-hidden="true"`, it creates an invisible focus trap. Screen readers will ignore the focused element because of its hidden parent, leaving keyboard users with an unannounced, dead focus state.
 **Action:** Ensure that any element placed inside an `aria-hidden="true"` container does not have a `tabIndex` or focus ring styles. Remove interactive semantics from visually hidden areas, and rely on the parent wrapper's comprehensive `aria-label` instead.
+
+## 2026-04-21 - Added role=status to empty state containers
+**Learning:** When displaying static empty states (e.g., 'No Datasets Available' or 'Ready for Telemetry') that result from data fetching or initialization, the lack of ARIA roles makes them completely silent to screen readers despite being visually prominent.
+**Action:** Add `role="status"` directly to the empty state's outer structural container. This ensures screen readers announce the state upon rendering.
