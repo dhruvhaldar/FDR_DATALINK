@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo, memo, useRef } from "react";
 import dynamic from "next/dynamic";
 import { GlassPanel } from "@/components/GlassPanel";
-import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink, RefreshCw } from "lucide-react";
+import { Plane, Activity, Wind, Navigation, Gauge, Loader2, AlertTriangle, ExternalLink, RefreshCw, ChevronDown } from "lucide-react";
 
 // ⚡ Bolt: Dynamically import Plotly using the factory with a specific gl2d subset.
 // This drastically reduces the react-plotly.js bundle size from ~4.7MB to ~1.6MB,
@@ -337,6 +337,14 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen p-4 max-w-7xl mx-auto bg-black text-emerald-500 selection:bg-emerald-500/30 selection:text-white">
+      {/* 🎨 Palette: Skip to main content link for keyboard navigation */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:bg-emerald-950 focus:text-emerald-400 focus:px-4 focus:py-2 focus:rounded focus:border focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-black font-bold uppercase tracking-widest text-xs"
+      >
+        Skip to main content
+      </a>
+
       {/* 🎨 Palette: Screen reader status region */}
       <div aria-live="polite" className="sr-only" role="status">
         {statusMessage}
@@ -374,30 +382,35 @@ export default function Dashboard() {
                 <kbd className={`col-start-1 row-start-1 rounded border px-1 py-0.5 text-[8px] font-mono transition-all duration-300 opacity-0 scale-75 group-focus-within:opacity-100 group-focus-within:scale-100 ${error ? 'border-red-500/30 bg-red-950/30 text-red-400 group-focus-within:border-red-400 group-focus-within:text-red-300' : 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400 group-focus-within:border-emerald-400 group-focus-within:text-emerald-300'}`} aria-hidden="true" title="Press 'Escape' to blur">ESC</kbd>
               </span>
             </label>
-            <select
-              id="dataset-select"
-              value={selectedFile}
-              disabled={isFetchingFiles || files.length === 0}
-              title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
-              aria-busy={isFetchingFiles || loading}
-              aria-invalid={!!error}
-              aria-keyshortcuts="/"
-              aria-controls="telemetry-pipeline"
-              onChange={(e) => {
-                const val = e.target.value;
-                setSelectedFile(val);
-                fetchFlightData(val);
-              }}
-              className={`bg-transparent px-3 py-1 text-xs outline-none w-full md:w-56 cursor-pointer transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded ${error ? 'text-red-500 hover:text-red-400 focus-visible:ring-red-500' : 'text-emerald-500 hover:text-emerald-400 focus-visible:ring-emerald-500'}`}
-            >
-              {isFetchingFiles && <option value="" disabled className="bg-black text-emerald-500">Loading datasets...</option>}
-              {!isFetchingFiles && files.length === 0 && <option value="" disabled className="bg-black text-emerald-500">No datasets available</option>}
-              {files.map((f) => (
-                <option key={f} value={f} className="bg-black text-emerald-500">
-                  {f}
-                </option>
-              ))}
-            </select>
+            <div className="relative w-full md:w-56">
+              <select
+                id="dataset-select"
+                value={selectedFile}
+                disabled={isFetchingFiles || files.length === 0}
+                title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
+                aria-busy={isFetchingFiles || loading}
+                aria-invalid={!!error}
+                aria-keyshortcuts="/"
+                aria-controls="telemetry-pipeline"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedFile(val);
+                  fetchFlightData(val);
+                }}
+                className={`appearance-none bg-transparent px-3 py-1 text-xs outline-none w-full cursor-pointer transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded ${error ? 'text-red-500 hover:text-red-400 focus-visible:ring-red-500' : 'text-emerald-500 hover:text-emerald-400 focus-visible:ring-emerald-500'}`}
+              >
+                {isFetchingFiles && <option value="" disabled className="bg-black text-emerald-500">Loading datasets...</option>}
+                {!isFetchingFiles && files.length === 0 && <option value="" disabled className="bg-black text-emerald-500">No datasets available</option>}
+                {files.map((f) => (
+                  <option key={f} value={f} className="bg-black text-emerald-500">
+                    {f}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <ChevronDown className={`h-4 w-4 ${error ? 'text-red-500 group-hover:text-red-400' : 'text-emerald-500 group-hover:text-emerald-400'} transition-colors duration-300 opacity-70`} aria-hidden="true" />
+              </div>
+            </div>
           </GlassPanel>
           <a
             href="https://c3.ndc.nasa.gov/dashlink/projects/85/"

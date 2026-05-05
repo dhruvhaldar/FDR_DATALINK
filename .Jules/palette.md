@@ -153,3 +153,11 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-21 - Added role=status to empty state containers
 **Learning:** When displaying static empty states (e.g., 'No Datasets Available' or 'Ready for Telemetry') that result from data fetching or initialization, the lack of ARIA roles makes them completely silent to screen readers despite being visually prominent.
 **Action:** Add `role="status"` directly to the empty state's outer structural container. This ensures screen readers announce the state upon rendering.
+
+## 2026-04-22 - Restoring Visual Dropdown Indicators
+**Learning:** When applying custom styling (like `bg-transparent` or other Tailwind resets) to a native `<select>` element, the default OS dropdown arrow is often removed. This strips the element of its primary visual affordance as a dropdown, making it less recognizable as an interactive menu for sighted users.
+**Action:** When customizing `<select>` elements, always explicitly apply `appearance-none` to fully clear native styles consistently across browsers, and then manually inject a custom SVG icon (like `ChevronDown`) positioned absolutely within a relative wrapper to restore the critical visual cue.
+
+## 2026-04-22 - Skip to Main Content Links
+**Learning:** Complex pages with heavy top-level navigation, charts, or controls force keyboard and screen-reader users to tab through numerous non-primary elements before reaching the actual content they want to interact with.
+**Action:** Always include a visually-hidden "Skip to main content" link as the very first focusable element in the DOM. Use `sr-only focus:not-sr-only` utility classes to ensure it remains invisible until a keyboard user focuses it, at which point it should become highly visible and actionable, targeting the `id` of the main `<main>` container.
