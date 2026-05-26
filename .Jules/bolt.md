@@ -22,3 +22,6 @@
 ## 2026-04-20 - Reducing react-plotly bundle size
 **Learning:** The default `react-plotly.js` library includes all Plotly renderers, creating a massive bundle (~4.7MB) that impacts page load times.
 **Action:** Use Next.js dynamic import to lazily load `react-plotly.js/factory` and a specific `plotly.js` dist file (like `plotly.js/dist/plotly-gl2d`), drastically reducing bundle size to ~1.6MB.
+## 2024-05-15 - Mismatched Pre-Loads Defeat Dynamic Imports
+**Learning:** If you use dynamic imports (e.g., `dynamic(() => import('react-plotly.js/factory'))`) to split code and reduce bundle size, but accidentally have an eager parallel pre-load elsewhere in the component (e.g., `import('react-plotly.js').catch(...)`), the browser will still eagerly download the entire unoptimized bundle, completely defeating the purpose of the dynamic import and delaying First Contentful Paint.
+**Action:** Always ensure that parallel eager pre-loads (used to avoid network waterfalls) import the *exact same* optimized subset paths (like `plotly.js/dist/plotly-gl2d`) as the dynamic imports.
