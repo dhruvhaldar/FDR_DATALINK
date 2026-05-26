@@ -304,12 +304,16 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    // ⚡ Bolt: Pre-load the massive react-plotly.js chunk immediately on mount.
+    // ⚡ Bolt: Pre-load the optimized plotly gl2d chunk immediately on mount.
     // Waiting for the sequential API requests (/api/files -> /api/data) to resolve
     // before triggering the dynamic import creates a massive network waterfall,
-    // delaying the First Meaningful Paint. By importing it now, the browser downloads
-    // the ~3MB chart library in parallel with the JSON data.
-    import("react-plotly.js").catch(() => {});
+    // delaying the First Meaningful Paint. By importing the correct factory and subset now,
+    // the browser downloads the ~1.6MB chart library in parallel with the JSON data.
+    // WARNING: Do not import("react-plotly.js") directly here, as it will eagerly
+    // download the full unoptimized ~4.7MB bundle, defeating the dynamic import optimization.
+    import("react-plotly.js/factory").catch(() => {});
+    // @ts-expect-error - plotly.js dist modules don't have types
+    import("plotly.js/dist/plotly-gl2d").catch(() => {});
 
     setStatusMessage("Fetching available datasets...");
     fetch("/api/files")
