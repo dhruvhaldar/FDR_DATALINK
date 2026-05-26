@@ -2,6 +2,24 @@ import json
 import sys
 import os
 
+
+def _trim_trailing_zeros(values, epsilon=1e-9):
+    """Trim trailing zero-padding while preserving intentional all-zero signals."""
+    if len(values) == 0:
+        return values
+
+    last_non_zero_idx = None
+    for i in range(len(values) - 1, -1, -1):
+        if abs(float(values[i])) > epsilon:
+            last_non_zero_idx = i
+            break
+
+    # If every value is zero, preserve the original array.
+    if last_non_zero_idx is None:
+        return values
+
+    return values[: last_non_zero_idx + 1]
+
 def extract_data(file_path):
     if not os.path.exists(file_path):
         return {"error": "File not found"}
@@ -38,6 +56,12 @@ def extract_data(file_path):
                     # without downsampling, bloating payload size by up to 50%.
                     step = (len(raw_data) + max_points - 1) // max_points
                     raw_data = raw_data[::step]
+
+                # Some parameters contain trailing zero-padding in this dataset,
+                # which caused KPIs to always show 0.0 when taking the latest sample.
+                # Trim only the trailing padded zeros while preserving legitimate all-zero arrays.
+                if p in {'CAS', 'PTCH', 'ROLL'}:
+                    raw_data = np.array(_trim_trailing_zeros(raw_data), dtype=raw_data.dtype)
                 
                 rate = float(struct['Rate'].item()) if 'Rate' in struct.dtype.names else 1.0
                 units = str(struct['Units'].item()) if 'Units' in struct.dtype.names else ""
