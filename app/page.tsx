@@ -267,12 +267,13 @@ export default function Dashboard() {
 
   // Dynamic Document Title
   useEffect(() => {
+    const isLoading = loading || isFetchingFiles;
     if (selectedFile) {
-      document.title = `${loading ? '(Loading...) ' : ''}${selectedFile} | FDR DATALINK`;
+      document.title = `${isLoading ? '(Loading...) ' : ''}${selectedFile} | FDR DATALINK`;
     } else {
-      document.title = "FDR DATALINK";
+      document.title = `${isLoading ? '(Loading...) ' : ''}FDR DATALINK`;
     }
-  }, [selectedFile, loading]);
+  }, [selectedFile, loading, isFetchingFiles]);
 
   // Global keyboard shortcut for focusing the dataset selector
   useEffect(() => {
@@ -280,7 +281,7 @@ export default function Dashboard() {
       if (e.key === "Escape") {
         const datasetSelect = document.getElementById("dataset-select");
         if (document.activeElement === datasetSelect) {
-          datasetSelect?.blur();
+          document.getElementById('main-content')?.focus();
         }
         return;
       }
@@ -354,13 +355,6 @@ export default function Dashboard() {
         {statusMessage}
       </div>
 
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-950 focus:text-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-black rounded font-bold uppercase tracking-wider"
-      >
-        Skip to main content
-      </a>
-
       <header className="mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="rounded-lg bg-emerald-500/10 p-2 ring-1 ring-emerald-500/30">
@@ -379,7 +373,7 @@ export default function Dashboard() {
             <label htmlFor="dataset-select" className={`pl-3 pr-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer whitespace-nowrap flex items-center gap-1.5 transition-colors duration-300 ${error ? 'text-red-400 group-hover:text-red-300 group-focus-within:text-red-300' : 'text-emerald-400 group-hover:text-emerald-300 group-focus-within:text-emerald-300'} ${(isFetchingFiles || files.length === 0) ? 'opacity-50 cursor-not-allowed' : ''}`}>
               Dataset:
               <div className="w-3 shrink-0 flex items-center justify-center">
-                <Loader2 aria-hidden="true" className={`w-3 h-3 animate-spin transition-opacity duration-300 ${loading ? 'opacity-100' : 'opacity-0'}`} />
+                <Loader2 aria-hidden="true" className={`w-3 h-3 animate-spin transition-opacity duration-300 ${loading || isFetchingFiles ? 'opacity-100' : 'opacity-0'}`} />
               </div>
               <span className="hidden md:grid items-center justify-items-center relative">
                 <kbd className={`col-start-1 row-start-1 rounded border px-1 py-0.5 text-[8px] font-mono transition-all duration-300 group-focus-within:opacity-0 group-focus-within:scale-75 ${error ? 'border-red-500/30 bg-red-950/30 text-red-400 group-hover:border-red-400 group-hover:text-red-300' : 'border-emerald-500/30 bg-emerald-950/30 text-emerald-400 group-hover:border-emerald-400 group-hover:text-emerald-300'}`} aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
