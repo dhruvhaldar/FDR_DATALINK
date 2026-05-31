@@ -161,3 +161,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-04-22 - Skip to Main Content Links
 **Learning:** Complex pages with heavy top-level navigation, charts, or controls force keyboard and screen-reader users to tab through numerous non-primary elements before reaching the actual content they want to interact with.
 **Action:** Always include a visually-hidden "Skip to main content" link as the very first focusable element in the DOM. Use `sr-only focus:not-sr-only` utility classes to ensure it remains invisible until a keyboard user focuses it, at which point it should become highly visible and actionable, targeting the `id` of the main `<main>` container.
+
+## 2026-04-23 - Continuous Feedback in Sequential Initializations
+**Learning:** In applications with sequential data initializations (e.g., fetching a list of options, then fetching the data for the selected option), relying solely on the second step's loading flag leaves the application appearing stalled during the initial step.
+**Action:** Always combine the loading state flags (e.g., `loading || isFetchingFiles`) for global UI loading indicators (like `document.title` and inline spinners) to ensure continuous visual feedback and prevent the user from thinking the app has frozen.
