@@ -142,8 +142,8 @@ const TelemetryChart = memo(function TelemetryChart({
   const plotConfig = useMemo(() => ({ responsive: true, displayModeBar: false }), []);
 
   return (
-    <div className="w-full">
-      <h3 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 px-1.5 flex justify-between">
+    <div className="w-full group/chart">
+      <h3 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 group-hover/chart:text-emerald-400 group-focus-within/chart:text-emerald-400 transition-colors duration-300 px-1.5 flex justify-between">
         <span>{title}</span>
         <span className="text-slate-400 text-[10px]">
           <abbr
@@ -156,7 +156,7 @@ const TelemetryChart = memo(function TelemetryChart({
         </span>
       </h3>
       <div
-        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 group-hover/chart:border-emerald-500/30 group-focus-within/chart:border-emerald-500/50 group-focus-within/chart:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         role="figure"
         tabIndex={0}
         aria-label={`Interactive telemetry chart displaying ${title} data over time`}
