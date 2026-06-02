@@ -503,6 +503,7 @@ export default function Dashboard() {
                     type="button"
                     onClick={() => document.getElementById('dataset-select')?.focus()}
                     className="group flex items-center gap-1 text-[10px] text-red-400 hover:text-red-300 underline decoration-red-500/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-sm"
+                    aria-label="Please try selecting another file (Focuses dataset selector)"
                     aria-keyshortcuts="/"
                   >
                     Please try selecting another file
@@ -516,6 +517,7 @@ export default function Dashboard() {
                     mainContentRef.current?.focus();
                   }}
                   className="group flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
+                  aria-label="Retry Connection (Fetches selected dataset)"
                 >
                   <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-visible:rotate-180 duration-500" aria-hidden="true" />
                   Retry Connection
@@ -534,6 +536,7 @@ export default function Dashboard() {
                   type="button"
                   onClick={() => window.location.reload()}
                   className="group mt-2 flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95"
+                  aria-label="Check Again (Reloads page)"
                   aria-keyshortcuts="F5"
                 >
                   <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-visible:rotate-180 duration-500" aria-hidden="true" />

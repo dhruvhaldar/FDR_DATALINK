@@ -168,3 +168,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2024-03-24 - Contextual Grouping for Dense Visualizations
 **Learning:** In dense data dashboards with multiple separate visualizations (like Plotly canvases), users can lose track of which chart they are interacting with if the canvas itself doesn't explicitly link back to its title or container during interaction. Standard focus outlines on the canvas element alone leave the descriptive context (the title) visually unlinked.
 **Action:** Use named Tailwind groups (e.g., `group/chart`) on the parent container wrapping both the title and the interactive canvas. Apply `group-hover/chart` and `group-focus-within/chart` utilities to the title and border elements to explicitly illuminate the relationship when the user interacts with the canvas.
+
+## 2024-05-30 - Contextual ARIA Labels for Action Buttons
+**Learning:** Buttons with brief, functional text (e.g., "Check Again", "Retry Connection", "Please try selecting another file") can lack critical context for screen reader users when removed from their immediate visual surroundings.
+**Action:** Always provide comprehensive `aria-label`s for action buttons that clarify their precise effect (e.g., `aria-label="Check Again (Reloads page)"`). Ensure these labels begin with the exact visible text of the button to comply with WCAG 2.5.3 (Label in Name).
