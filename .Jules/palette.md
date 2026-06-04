@@ -172,3 +172,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2024-05-30 - Contextual ARIA Labels for Action Buttons
 **Learning:** Buttons with brief, functional text (e.g., "Check Again", "Retry Connection", "Please try selecting another file") can lack critical context for screen reader users when removed from their immediate visual surroundings.
 **Action:** Always provide comprehensive `aria-label`s for action buttons that clarify their precise effect (e.g., `aria-label="Check Again (Reloads page)"`). Ensure these labels begin with the exact visible text of the button to comply with WCAG 2.5.3 (Label in Name).
+
+## 2026-06-04 - Equitable Visual Feedback for Custom Select Icons
+**Learning:** When using custom icons (like an SVG) to replace the native styling of a select element, applying hover state utility classes (e.g., `group-hover:text-emerald-400`) to the wrapper leaves keyboard navigators without visual feedback when the element receives focus.
+**Action:** Always pair `group-hover` with `group-focus-within` on custom interactive elements or wrappers so that keyboard users navigating via Tab receive the same visual cues as mouse users.
