@@ -406,7 +406,7 @@ export default function Dashboard() {
                 ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronDown className={`h-4 w-4 ${error ? 'text-red-500 group-hover:text-red-400' : 'text-emerald-500 group-hover:text-emerald-400'} transition-colors duration-300 opacity-70`} aria-hidden="true" />
+                <ChevronDown className={`h-4 w-4 ${error ? 'text-red-500 group-hover:text-red-400 group-focus-within:text-red-400' : 'text-emerald-500 group-hover:text-emerald-400 group-focus-within:text-emerald-400'} transition-colors duration-300 opacity-70`} aria-hidden="true" />
               </div>
             </div>
           </GlassPanel>
