@@ -25,3 +25,6 @@
 ## 2024-05-15 - Mismatched Pre-Loads Defeat Dynamic Imports
 **Learning:** If you use dynamic imports (e.g., `dynamic(() => import('react-plotly.js/factory'))`) to split code and reduce bundle size, but accidentally have an eager parallel pre-load elsewhere in the component (e.g., `import('react-plotly.js').catch(...)`), the browser will still eagerly download the entire unoptimized bundle, completely defeating the purpose of the dynamic import and delaying First Contentful Paint.
 **Action:** Always ensure that parallel eager pre-loads (used to avoid network waterfalls) import the *exact same* optimized subset paths (like `plotly.js/dist/plotly-gl2d`) as the dynamic imports.
+## 2024-05-18 - Avoiding redundant NumPy deep copies
+**Learning:** When passing a NumPy array to a function that returns a slice (e.g., `values[:index]`), the result is already a memory view of the original array. Wrapping this view in `np.array(..., dtype=...)` forces a full O(N) memory allocation and deep copy, which is inefficient.
+**Action:** Remove redundant `np.array()` wrappers around operations that already return NumPy arrays or views, unless a deep copy is explicitly required to prevent unintended side effects from in-place mutations elsewhere.
