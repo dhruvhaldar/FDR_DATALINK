@@ -60,8 +60,11 @@ def extract_data(file_path):
                 # Some parameters contain trailing zero-padding in this dataset,
                 # which caused KPIs to always show 0.0 when taking the latest sample.
                 # Trim only the trailing padded zeros while preserving legitimate all-zero arrays.
+                # ⚡ Bolt: Avoid redundant np.array() deep-copies. _trim_trailing_zeros returns
+                # a slice (view) of the original array. Copying it via np.array() adds O(N)
+                # memory allocation overhead.
                 if p in {'CAS', 'PTCH', 'ROLL'}:
-                    raw_data = np.array(_trim_trailing_zeros(raw_data), dtype=raw_data.dtype)
+                    raw_data = _trim_trailing_zeros(raw_data)
                 
                 rate = float(struct['Rate'].item()) if 'Rate' in struct.dtype.names else 1.0
                 units = str(struct['Units'].item()) if 'Units' in struct.dtype.names else ""
