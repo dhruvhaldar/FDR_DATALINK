@@ -462,7 +462,8 @@ export default function Dashboard() {
                       <span className="text-[10px] font-bold text-emerald-400 uppercase">
                         <abbr
                           title={param.unitTitle}
-                          className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none"
+                          tabIndex={0}
+                          className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
                         >
                           {flightData?.[param.key]?.units || param.unit}
                         </abbr>
@@ -541,7 +542,7 @@ export default function Dashboard() {
                 >
                   <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-visible:rotate-180 duration-500" aria-hidden="true" />
                   Check Again
-                  <kbd className="hidden md:inline-block rounded border border-red-500/30 bg-red-950/30 px-1 py-0.5 text-[10px] font-mono text-red-400 transition-colors group-hover:border-red-400 group-hover:text-red-300 group-focus-visible:border-red-400 group-focus-visible:text-red-300" aria-hidden="true">F5</kbd>
+                  <kbd className="hidden md:inline-block rounded border border-red-500/30 bg-red-950/30 px-1 py-0.5 text-[10px] font-mono text-red-400 transition-colors group-hover:border-red-400 group-hover:text-red-300 group-focus-visible:border-red-400 group-focus-visible:text-red-300" aria-hidden="true" title="Press 'F5' to reload page">F5</kbd>
                 </button>
               </div>
             ) : flightData ? (
@@ -591,7 +592,7 @@ export default function Dashboard() {
                   aria-keyshortcuts="/"
                 >
                   Connect Data Source
-                  <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[10px] font-mono text-emerald-400 transition-colors group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-visible:border-emerald-400 group-focus-visible:text-emerald-300" aria-hidden="true">/</kbd>
+                  <kbd className="hidden md:inline-block rounded border border-emerald-500/30 bg-emerald-950/30 px-1 py-0.5 text-[10px] font-mono text-emerald-400 transition-colors group-hover:border-emerald-400 group-hover:text-emerald-300 group-focus-visible:border-emerald-400 group-focus-visible:text-emerald-300" aria-hidden="true" title="Press '/' to focus dataset selector">/</kbd>
                 </button>
               </div>
             )}
