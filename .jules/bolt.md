@@ -23,3 +23,6 @@
 ## 2026-03-29 - Unbounded In-Memory Cache Causes Memory Leaks in Next.js
 **Learning:** Using an unbounded `Map` for server-side caching in long-running Node.js processes (like Next.js API routes) causes the V8 heap to grow indefinitely. For large objects (like stringified telemetry arrays), this quickly leads to Garbage Collection thrashing and eventual Out-of-Memory (OOM) crashes during prolonged use or high traffic.
 **Action:** Always bound server-side in-memory caches (e.g., using an LRU cache pattern with a strict maximum size) to protect the Node.js event loop and maintain parity with backend architectures (like Python's `@lru_cache`).
+## 2026-03-31 - Trailing Zeros Payload Bloat
+**Learning:** Returning un-trimmed telemetry arrays with padding zeros from the API backend inflates the JSON payload size, increasing network transmission time and causing KPIs to incorrectly read 0.0.
+**Action:** Trim trailing padding zeros in time-series telemetry arrays (e.g., CAS, PTCH, ROLL) prior to JSON serialization. Use a manual O(1) early-break loop to trim the views efficiently.
