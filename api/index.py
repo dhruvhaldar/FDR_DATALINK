@@ -4,6 +4,23 @@ from functools import lru_cache
 import os
 import json
 
+def _trim_trailing_zeros(values, epsilon=1e-9):
+    """Trim trailing zero-padding while preserving intentional all-zero signals."""
+    if len(values) == 0:
+        return values
+
+    last_non_zero_idx = None
+    for i in range(len(values) - 1, -1, -1):
+        if abs(float(values[i])) > epsilon:
+            last_non_zero_idx = i
+            break
+
+    # If every value is zero, preserve the original array.
+    if last_non_zero_idx is None:
+        return values
+
+    return values[: last_non_zero_idx + 1]
+
 app = FastAPI()
 
 # ⚡ Bolt: Add GZipMiddleware to drastically reduce the network payload size
@@ -66,6 +83,12 @@ def get_processed_flight_data(file_path: str):
                 # without downsampling, bloating payload size by up to 50%.
                 step = (len(raw_data) + max_points - 1) // max_points
                 raw_data = raw_data[::step]
+
+            # ⚡ Bolt: Trim trailing padding zeros in time-series telemetry arrays to
+            # prevent bloating the JSON payload and causing KPIs to incorrectly read 0.0.
+            # Using a manual O(1) early-break loop avoids O(N) numpy mask allocations.
+            if p in {'CAS', 'PTCH', 'ROLL'}:
+                raw_data = _trim_trailing_zeros(raw_data)
 
             # ⚡ Bolt: Rounding to 3 decimal places reduces the precision, cutting
             # JSON payload sizes in half and dramatically reducing JSON serialization time.
