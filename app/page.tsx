@@ -462,8 +462,7 @@ export default function Dashboard() {
                       <span className="text-[10px] font-bold text-emerald-400 uppercase">
                         <abbr
                           title={param.unitTitle}
-                          tabIndex={0}
-                          className="cursor-help decoration-dotted underline decoration-emerald-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+                          className="cursor-help decoration-dotted underline decoration-emerald-500/50"
                         >
                           {flightData?.[param.key]?.units || param.unit}
                         </abbr>
