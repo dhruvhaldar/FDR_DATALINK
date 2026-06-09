@@ -549,8 +549,10 @@ export default function Dashboard() {
             ) : flightData ? (
               <>
                 {/* ⚡ Bolt: Render loading overlay instead of unmounting charts to prevent expensive WebGL context recreation */}
+                {/* ⚡ Bolt: Removed backdrop-blur-sm because CSS backdrop filters over WebGL canvases force the
+                    browser to read back the GPU framebuffer to the CPU for compositing, causing severe main-thread lockups and jank. */}
                 {loading && (
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-lg" aria-hidden="true">
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/80 rounded-lg" aria-hidden="true">
                     <div className="flex flex-col items-center gap-3">
                       <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500/20 border-t-emerald-500" />
                       <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 animate-pulse">Processing Telemetry...</span>
