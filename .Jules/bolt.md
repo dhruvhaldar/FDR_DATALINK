@@ -28,3 +28,6 @@
 ## 2024-05-18 - Avoiding redundant NumPy deep copies
 **Learning:** When passing a NumPy array to a function that returns a slice (e.g., `values[:index]`), the result is already a memory view of the original array. Wrapping this view in `np.array(..., dtype=...)` forces a full O(N) memory allocation and deep copy, which is inefficient.
 **Action:** Remove redundant `np.array()` wrappers around operations that already return NumPy arrays or views, unless a deep copy is explicitly required to prevent unintended side effects from in-place mutations elsewhere.
+## 2024-05-19 - Avoiding backdrop-filter over WebGL
+**Learning:** Using CSS `backdrop-filter: blur()` (e.g., Tailwind's `backdrop-blur-sm`) in an overlay directly above heavy WebGL canvases (like Plotly `scattergl` charts) forces the browser to continuously read back the WebGL framebuffer to the CPU/GPU for compositing. This causes severe main-thread lockups and drops the frame rate to near-zero during loading states.
+**Action:** Avoid `backdrop-filter` over WebGL components. Use opaque or semi-transparent solid backgrounds (e.g., `bg-black/80`) to provide loading overlays without triggering expensive framebuffer readbacks.
