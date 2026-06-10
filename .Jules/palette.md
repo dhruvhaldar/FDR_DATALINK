@@ -183,3 +183,6 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-09 - Ensure Equitability for All KPI Units
 **Learning:** We previously identified that `<abbr>` elements need `tabIndex={0}` to allow keyboard users to access unit tooltips, but missed applying this equitably across all dynamically generated KPI elements where abbreviations were wrapped differently. A partial accessibility implementation can leave users confused when similar UI elements behave differently.
 **Action:** When auditing custom accessible patterns (like focusable `<abbr>` tags), use `grep` or similar search tools across the codebase to ensure the pattern is applied universally to all instances of the element, not just the first or most prominent one.
+## 2024-06-25 - Prevent Focus Traps in aria-hidden regions while preserving Tab Index
+**Learning:** If an interactive or focusable element (like `<abbr tabIndex={0}>`) is placed inside a container with `aria-hidden="true"`, it creates an invisible focus trap. Removing the `tabIndex={0}` breaks keyboard accessibility.
+**Action:** Remove `aria-hidden="true"` from the parent wrapper and apply it specifically to non-interactive sibling nodes to preserve structural accessibility.
