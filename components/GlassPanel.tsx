@@ -25,7 +25,7 @@ export function GlassPanel({ children, className, title, headingLevel = "h2", ..
             {...props}
         >
             {title && (
-                <Heading id={titleId} className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-400">
+                <Heading id={titleId} className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-emerald-400" aria-hidden={props["aria-label"] ? "true" : undefined}>
                     <span aria-hidden="true">&gt;</span> {title}
                 </Heading>
             )}

@@ -159,7 +159,7 @@ const TelemetryChart = memo(function TelemetryChart({
         className="h-[160px] w-full bg-black rounded-lg border border-emerald-500/10 group-hover/chart:border-emerald-500/30 group-focus-within/chart:border-emerald-500/50 group-focus-within/chart:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         role="figure"
         tabIndex={0}
-        aria-label={`Interactive telemetry chart displaying ${title} data over time`}
+        aria-label={`Interactive telemetry chart displaying ${title} data over time in ${unitTitle}`}
       >
         <Plot
           data={plotData}
@@ -395,7 +395,7 @@ export default function Dashboard() {
                   setSelectedFile(val);
                   fetchFlightData(val);
                 }}
-                className={`appearance-none bg-transparent px-3 py-1 text-xs outline-none w-full cursor-pointer transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded ${error ? 'text-red-500 hover:text-red-400 focus-visible:ring-red-500' : 'text-emerald-500 hover:text-emerald-400 focus-visible:ring-emerald-500'}`}
+                className={`appearance-none bg-transparent pl-3 pr-8 py-1 text-xs outline-none w-full cursor-pointer transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded ${error ? 'text-red-500 hover:text-red-400 focus-visible:ring-red-500' : 'text-emerald-500 hover:text-emerald-400 focus-visible:ring-emerald-500'}`}
               >
                 {isFetchingFiles && <option value="" disabled className="bg-black text-emerald-500">Loading datasets...</option>}
                 {!isFetchingFiles && files.length === 0 && <option value="" disabled className="bg-black text-emerald-500">No datasets available</option>}

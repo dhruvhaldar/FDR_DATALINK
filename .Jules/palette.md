@@ -189,3 +189,14 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2024-05-23 - Universal Keyboard Accessibility for Abbreviations
 **Learning:** We previously identified that `<abbr>` elements need `tabIndex={0}` to allow keyboard users to access unit tooltips, but missed applying this equitably across all dynamically generated KPI elements where abbreviations were wrapped differently. A partial accessibility implementation can leave users confused when similar UI elements behave differently.
 **Action:** When auditing custom accessible patterns (like focusable `<abbr>` tags), use `grep` or similar search tools across the codebase to ensure the pattern is applied universally to all instances of the element, not just the first or most prominent one.
+## 2026-06-15 - Redundant Screen Reader Announcements in Structural Containers
+**Learning:** Structural container components (like `GlassPanel` when used for KPI cards) that accept an `aria-label` but also render a visible heading inside them can cause screen readers to read the same information twice (once for the container, and again when navigating into the container).
+**Action:** When a reusable container component accepts an explicit `aria-label`, conditionally add `aria-hidden="true"` to its internal, purely visual heading element to prevent fragmented and redundant announcements.
+
+## 2026-06-15 - Prevent Custom Select Option Text Overlap
+**Learning:** Customizing a `<select>` element by setting it to `appearance-none` and absolutely positioning a custom SVG icon (like `ChevronDown`) over the right side can cause long option text to overflow and render underneath the icon, obscuring readability.
+**Action:** Always apply asymmetrical horizontal padding to customized `<select>` elements (e.g., `pl-3 pr-8`) to reserve sufficient space on the right side, ensuring text cleanly truncates or avoids the custom absolute-positioned icon.
+
+## 2026-06-15 - Contextual Accessibility in Data Visualizations
+**Learning:** Opaque graphical visualizations like WebGL charts must be assigned `role="figure"`, `tabIndex={0}`, and an `aria-label`. However, generic labels like "Interactive telemetry chart displaying [X] over time" leave screen reader users without immediate knowledge of the measurement units (e.g., Feet vs. Degrees), which sighted users can see on the Y-axis.
+**Action:** Always include the primary measurement units in the `aria-label` string for interactive charts to provide complete contextual parity for assistive technologies.
