@@ -481,7 +481,7 @@ export default function Dashboard() {
         <GlassPanel id="telemetry-pipeline" title="Telemetry Data Pipeline" headingLevel="h2" className="lg:col-span-3">
           {/* ⚡ Bolt: Adding relative positioning here allows the loading overlay to position correctly without unmounting WebGL charts */}
           <div className="space-y-4 relative">
-            {isFetchingFiles || (!flightData && loading) ? (
+            {(isFetchingFiles && files.length === 0) || (!flightData && loading) ? (
               <div
                 role="status"
                 aria-live="polite"
