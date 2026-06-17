@@ -518,6 +518,7 @@ export default function Dashboard() {
                     mainContentRef.current?.focus();
                   }}
                   disabled={loading}
+                  title={loading ? "Loading flight data..." : ""}
                   className={`group flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-red-500 transition-colors hover:bg-red-500/20 hover:text-red-400 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-black active:scale-95 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   aria-label="Retry Connection (Fetches selected dataset)"
                 >
