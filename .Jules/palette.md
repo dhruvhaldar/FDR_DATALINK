@@ -204,3 +204,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-16 - Continuous UI State Mapping for Sequential Async Operations
 **Learning:** When dealing with sequential asynchronous states (e.g., fetching a list of items, followed by fetching the data for an initially selected item), using simplistic condition checks like `loading || !data` without explicitly handling the transition between requests can cause the UI to "flash" irrelevant fallback or empty states (e.g., "Ready for Data"). Also, nesting a ternary like `isStep1 ? "Loading 1" : "Loading 2"` inside an outer condition that requires `isStep1` to be true makes the false branch totally unreachable.
 **Action:** Always map your UI rendering paths continuously across all async states. Combine conditions explicitly: `(isStep1Loading && noInitialData) || (isStep2Loading && !targetData) ? (...)` and ensure the internal copy or state correctly addresses the full gamut of those conditions without unreachable branches.
+
+## 2026-06-17 - Clarifying Disabled Button States
+**Learning:** Interactive elements like the 'Retry Connection' button that are conditionally disabled (e.g., during a loading state) can leave users wondering why they are unclickable, especially if they rely heavily on visual cues.
+**Action:** Always add a `title` attribute to buttons when they are disabled (e.g., `title={loading ? "Loading flight data..." : ""}`) to provide an explicit tooltip explaining the system state, improving clarity for sighted users who might hover or focus the element.
