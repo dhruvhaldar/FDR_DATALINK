@@ -208,3 +208,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-17 - Clarifying Disabled Button States
 **Learning:** Interactive elements like the 'Retry Connection' button that are conditionally disabled (e.g., during a loading state) can leave users wondering why they are unclickable, especially if they rely heavily on visual cues.
 **Action:** Always add a `title` attribute to buttons when they are disabled (e.g., `title={loading ? "Loading flight data..." : ""}`) to provide an explicit tooltip explaining the system state, improving clarity for sighted users who might hover or focus the element.
+
+## 2026-06-18 - Placeholder Options for Controlled Selects
+**Learning:** When a controlled `<select>` is initialized with an empty value (`""`) but lacks a corresponding empty `<option>`, the browser visually defaults to the first available option. However, the application state remains empty. This creates a severe UX bug: if the user tries to select that first option, the browser fires no `change` event (since it believes the option is already selected), leaving the user unable to load the first item in the list without selecting a different item first.
+**Action:** Always provide a default disabled `<option value="">` (e.g., "Select a dataset...") in controlled `<select>` elements to align the browser's visual state with the application's empty state, ensuring the first actual data option remains selectable and triggers an `onChange` event.

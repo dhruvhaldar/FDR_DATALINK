@@ -399,6 +399,7 @@ export default function Dashboard() {
               >
                 {isFetchingFiles && <option value="" disabled className="bg-black text-emerald-500">Loading datasets...</option>}
                 {!isFetchingFiles && files.length === 0 && <option value="" disabled className="bg-black text-emerald-500">No datasets available</option>}
+                {!isFetchingFiles && files.length > 0 && <option value="" disabled className="bg-black text-emerald-500">Select a dataset...</option>}
                 {files.map((f) => (
                   <option key={f} value={f} className="bg-black text-emerald-500">
                     {f}
