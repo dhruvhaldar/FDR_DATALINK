@@ -30,7 +30,7 @@ const Plot = dynamic<PlotParams>(
     loading: () => (
       <div className="flex h-full w-full flex-col items-center justify-center gap-2" role="status" aria-live="polite">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500/20 border-t-emerald-500" />
-        <span className="text-[8px] font-bold uppercase tracking-widest text-emerald-500/50">Initializing Canvas...</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 animate-pulse">Initializing Canvas...</span>
       </div>
     )
   }
@@ -268,12 +268,14 @@ export default function Dashboard() {
   // Dynamic Document Title
   useEffect(() => {
     const isLoading = loading || isFetchingFiles;
+    const isError = !!error;
+    const prefix = isError ? '(Error) ' : (isLoading ? '(Loading...) ' : '');
     if (selectedFile) {
-      document.title = `${isLoading ? '(Loading...) ' : ''}${selectedFile} | FDR DATALINK`;
+      document.title = `${prefix}${selectedFile} | FDR DATALINK`;
     } else {
-      document.title = `${isLoading ? '(Loading...) ' : ''}FDR DATALINK`;
+      document.title = `${prefix}FDR DATALINK`;
     }
-  }, [selectedFile, loading, isFetchingFiles]);
+  }, [selectedFile, loading, isFetchingFiles, error]);
 
   // Global keyboard shortcut for focusing the dataset selector
   useEffect(() => {
