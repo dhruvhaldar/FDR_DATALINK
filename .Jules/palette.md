@@ -212,3 +212,11 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-18 - Placeholder Options for Controlled Selects
 **Learning:** When a controlled `<select>` is initialized with an empty value (`""`) but lacks a corresponding empty `<option>`, the browser visually defaults to the first available option. However, the application state remains empty. This creates a severe UX bug: if the user tries to select that first option, the browser fires no `change` event (since it believes the option is already selected), leaving the user unable to load the first item in the list without selecting a different item first.
 **Action:** Always provide a default disabled `<option value="">` (e.g., "Select a dataset...") in controlled `<select>` elements to align the browser's visual state with the application's empty state, ensuring the first actual data option remains selectable and triggers an `onChange` event.
+
+## 2026-06-20 - Error State Visibility in Document Title
+**Learning:** For applications with long asynchronous loading operations, users might switch browser tabs while waiting. If the fetch fails, standard in-app visual error states (like icons or toasts) remain hidden in the background tab. Providing no indication in the tab title leaves the user unaware of the failure until they manually check.
+**Action:** Extend dynamic `document.title` updates beyond just `(Loading...)` to include an `(Error)` prefix when an asynchronous fetch results in a failure. This provides passive, continuous feedback to the user regardless of their current tab focus.
+
+## 2026-06-20 - Consistency in Async Fallback Typographic Hierarchy
+**Learning:** When using dynamic imports with loading fallbacks (e.g., `next/dynamic` or `React.Suspense`), developers often hastily style the fallback component differently from the main application's primary loading overlays. This leads to inconsistent typography (e.g., extremely small `text-[8px]` text with low-contrast `text-emerald-500/50`) that breaks visual harmony and violates WCAG contrast guidelines.
+**Action:** Always verify that loading fallbacks within dynamic imports utilize the exact same typography, sizing, contrast, and animation utilities (e.g., `animate-pulse`, `text-[10px]`, `text-emerald-400`) as the application's primary loading overlays to maintain a cohesive user experience.
