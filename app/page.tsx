@@ -481,7 +481,7 @@ export default function Dashboard() {
         </section>
 
         {/* Multi-Graph Visualization Suite */}
-        <GlassPanel id="telemetry-pipeline" title="Telemetry Data Pipeline" headingLevel="h2" className="lg:col-span-3">
+        <GlassPanel id="telemetry-pipeline" title="Telemetry Data Pipeline" headingLevel="h2" className="lg:col-span-3" aria-busy={loading}>
           {/* ⚡ Bolt: Adding relative positioning here allows the loading overlay to position correctly without unmounting WebGL charts */}
           <div className="space-y-4 relative">
             {(isFetchingFiles && files.length === 0) || (!flightData && loading) ? (
@@ -563,24 +563,29 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
-                {PARAM_CONFIG.map((param, idx) => {
-                  const pData = flightData?.[param.key];
-                  if (!pData) return null;
+                {/* 🎨 Palette: Wrap the stale WebGL charts in an inert container during loading.
+                    Because the absolute loading overlay above does not remove elements from the DOM,
+                    leaving the charts interactive creates an invisible focus trap for keyboard users. */}
+                <div inert={loading ? true : undefined} className="space-y-4 w-full">
+                  {PARAM_CONFIG.map((param, idx) => {
+                    const pData = flightData?.[param.key];
+                    if (!pData) return null;
 
-                  return (
-                    <TelemetryChart
-                      key={param.key}
-                      title={param.name}
-                      data={pData.data}
-                      step={pData.step || 1}
-                      rate={pData.rate}
-                      color={param.color}
-                      unit={pData.units || param.unit}
-                      unitTitle={param.unitTitle}
-                      isLast={idx === PARAM_CONFIG.length - 1}
-                    />
-                  );
-                })}
+                    return (
+                      <TelemetryChart
+                        key={param.key}
+                        title={param.name}
+                        data={pData.data}
+                        step={pData.step || 1}
+                        rate={pData.rate}
+                        color={param.color}
+                        unit={pData.units || param.unit}
+                        unitTitle={param.unitTitle}
+                        isLast={idx === PARAM_CONFIG.length - 1}
+                      />
+                    );
+                  })}
+                </div>
               </>
             ) : (
               <div role="status" className="flex h-[400px] flex-col items-center justify-center gap-4">

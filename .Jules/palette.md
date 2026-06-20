@@ -220,3 +220,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-20 - Consistency in Async Fallback Typographic Hierarchy
 **Learning:** When using dynamic imports with loading fallbacks (e.g., `next/dynamic` or `React.Suspense`), developers often hastily style the fallback component differently from the main application's primary loading overlays. This leads to inconsistent typography (e.g., extremely small `text-[8px]` text with low-contrast `text-emerald-500/50`) that breaks visual harmony and violates WCAG contrast guidelines.
 **Action:** Always verify that loading fallbacks within dynamic imports utilize the exact same typography, sizing, contrast, and animation utilities (e.g., `animate-pulse`, `text-[10px]`, `text-emerald-400`) as the application's primary loading overlays to maintain a cohesive user experience.
+
+## 2026-06-25 - Prevent Focus Traps Underneath Absolute Overlays
+**Learning:** When using an `absolute` loading overlay to visually obscure elements without unmounting them from the DOM (e.g. to preserve WebGL context), keyboard users can still Tab into the obscured interactive elements. This creates a confusing invisible focus trap because the elements remain visually hidden but structurally accessible.
+**Action:** Always wrap the obscured interactive elements in a container with the HTML `inert` attribute (e.g. `inert={loading ? true : undefined}`) while the visual overlay is active. This natively prevents focus and removes the elements from the accessibility tree until the loading state is resolved.
