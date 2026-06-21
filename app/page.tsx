@@ -390,6 +390,7 @@ export default function Dashboard() {
                 title={isFetchingFiles ? "Fetching available datasets" : (loading ? "Loading flight data..." : (files.length === 0 ? "No datasets available" : "Select a dataset"))}
                 aria-busy={isFetchingFiles || loading}
                 aria-invalid={!!error}
+                aria-errormessage={error ? "dataset-error" : undefined}
                 aria-keyshortcuts="/"
                 aria-controls="telemetry-pipeline"
                 onChange={(e) => {
@@ -502,7 +503,7 @@ export default function Dashboard() {
               >
                 <div className="flex flex-col items-center gap-2 text-center">
                   <AlertTriangle className="h-10 w-10 text-red-500/80" aria-hidden="true" />
-                  <p role="alert" className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
+                  <p id="dataset-error" role="alert" className="text-sm font-bold uppercase tracking-wider text-red-500">{error}</p>
                   <button
                     type="button"
                     onClick={() => document.getElementById('dataset-select')?.focus()}
