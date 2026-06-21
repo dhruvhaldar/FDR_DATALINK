@@ -224,3 +224,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-25 - Prevent Focus Traps Underneath Absolute Overlays
 **Learning:** When using an `absolute` loading overlay to visually obscure elements without unmounting them from the DOM (e.g. to preserve WebGL context), keyboard users can still Tab into the obscured interactive elements. This creates a confusing invisible focus trap because the elements remain visually hidden but structurally accessible.
 **Action:** Always wrap the obscured interactive elements in a container with the HTML `inert` attribute (e.g. `inert={loading ? true : undefined}`) while the visual overlay is active. This natively prevents focus and removes the elements from the accessibility tree until the loading state is resolved.
+
+## 2026-06-25 - Explicitly Link Error Messages to Invalid Inputs
+**Learning:** While `aria-invalid="true"` alerts screen reader users that a form field has an error, it doesn't tell them *what* the error is. If the error message is rendered elsewhere in the DOM, users must manually search for it, degrading the UX.
+**Action:** Always pair `aria-invalid` with `aria-errormessage="[id]"` on the input element, and add a matching `id` to the visible error message element (e.g., `<p id="[id]" role="alert">`). This programmatically links the specific error text directly to the control.
