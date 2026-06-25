@@ -473,7 +473,7 @@ export default function Dashboard() {
                         </abbr>
                       </span>
                     </div>
-                    <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400 group-focus-within:scale-110 group-focus-within:text-emerald-400" aria-hidden="true" />
+                    <Icon className="h-5 w-5 text-emerald-500/40 transition-all duration-500 group-hover:scale-110 group-hover:text-emerald-400 group-focus-within:scale-110 group-focus-within:text-emerald-400 group-focus-visible:scale-110 group-focus-visible:text-emerald-400" aria-hidden="true" />
                   </div>
                 </GlassPanel>
               );
