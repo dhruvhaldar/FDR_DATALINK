@@ -228,3 +228,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-06-25 - Explicitly Link Error Messages to Invalid Inputs
 **Learning:** While `aria-invalid="true"` alerts screen reader users that a form field has an error, it doesn't tell them *what* the error is. If the error message is rendered elsewhere in the DOM, users must manually search for it, degrading the UX.
 **Action:** Always pair `aria-invalid` with `aria-errormessage="[id]"` on the input element, and add a matching `id` to the visible error message element (e.g., `<p id="[id]" role="alert">`). This programmatically links the specific error text directly to the control.
+
+## 2026-07-09 - Cohesive Interactive Grouping for Secondary Visual Elements
+**Learning:** When a grouped interactive visualization (like a chart container) highlights its primary title on hover or focus, leaving secondary textual elements (like unit abbreviations) in their default static colors breaks visual harmony and creates a fragmented experience for sighted users.
+**Action:** Always ensure all sub-elements within a contextual visualization header (including units, badges, and secondary text) share corresponding interaction state classes (e.g., `group-hover` and `group-focus-within`) to behave as a single cohesive unit.

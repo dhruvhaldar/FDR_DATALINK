@@ -145,11 +145,11 @@ const TelemetryChart = memo(function TelemetryChart({
     <div className="w-full group/chart">
       <h3 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-200 group-hover/chart:text-emerald-400 group-focus-within/chart:text-emerald-400 transition-colors duration-300 px-1.5 flex justify-between">
         <span>{title}</span>
-        <span className="text-slate-400 text-[10px]">
+        <span className="text-slate-400 group-hover/chart:text-emerald-400 group-focus-within/chart:text-emerald-400 transition-colors duration-300 text-[10px]">
           <abbr
             title={unitTitle}
             tabIndex={0}
-            className="cursor-help decoration-dotted underline decoration-slate-500/50 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
+            className="cursor-help decoration-dotted underline decoration-slate-500/50 group-hover/chart:decoration-emerald-500/50 group-focus-within/chart:decoration-emerald-500/50 transition-colors duration-300 rounded-[2px] outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-1 focus-visible:ring-offset-black"
           >
             {unit}
           </abbr>
