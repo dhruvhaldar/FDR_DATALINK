@@ -31,3 +31,7 @@
 ## 2024-05-19 - Avoiding backdrop-filter over WebGL
 **Learning:** Using CSS `backdrop-filter: blur()` (e.g., Tailwind's `backdrop-blur-sm`) in an overlay directly above heavy WebGL canvases (like Plotly `scattergl` charts) forces the browser to continuously read back the WebGL framebuffer to the CPU/GPU for compositing. This causes severe main-thread lockups and drops the frame rate to near-zero during loading states.
 **Action:** Avoid `backdrop-filter` over WebGL components. Use opaque or semi-transparent solid backgrounds (e.g., `bg-black/80`) to provide loading overlays without triggering expensive framebuffer readbacks.
+
+## 2026-06-26 - Pre-encoding String Responses as Buffers in Next.js Route Handlers
+**Learning:** Returning a large cached JSON string inside a `NextResponse` forces Next.js to repetitively encode the string to UTF-8 bytes on every cache hit. For heavy payloads like time-series arrays, this burns CPU cycles unnecessarily.
+**Action:** Pre-encode the string to bytes via `Buffer.from(string, 'utf-8')` before storing it in the in-memory cache. Passing a `Buffer` instead of a string to `NextResponse` bypasses the framework's internal encoding overhead, improving throughput.
