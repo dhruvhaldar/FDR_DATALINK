@@ -161,13 +161,15 @@ const TelemetryChart = memo(function TelemetryChart({
         tabIndex={0}
         aria-label={`Interactive telemetry chart displaying ${title} data over time in ${unitTitle}`}
       >
-        <Plot
-          data={plotData}
-          layout={plotLayout}
-          useResizeHandler
-          className="h-full w-full"
-          config={plotConfig}
-        />
+        <div aria-hidden="true" className="h-full w-full">
+          <Plot
+            data={plotData}
+            layout={plotLayout}
+            useResizeHandler
+            className="h-full w-full"
+            config={plotConfig}
+          />
+        </div>
       </div>
     </div>
   );

@@ -232,3 +232,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-07-09 - Cohesive Interactive Grouping for Secondary Visual Elements
 **Learning:** When a grouped interactive visualization (like a chart container) highlights its primary title on hover or focus, leaving secondary textual elements (like unit abbreviations) in their default static colors breaks visual harmony and creates a fragmented experience for sighted users.
 **Action:** Always ensure all sub-elements within a contextual visualization header (including units, badges, and secondary text) share corresponding interaction state classes (e.g., `group-hover` and `group-focus-within`) to behave as a single cohesive unit.
+
+## 2026-07-28 - Hiding Noisy Third-Party Component DOMs
+**Learning:** Complex third-party UI widgets (like `react-plotly.js` charts or advanced maps) often render hundreds of nested SVG or WebGL DOM nodes that are irrelevant or highly confusing to screen readers. If these elements are not hidden, they cause fragmented, non-semantic readout spam when a user tabs into the container.
+**Action:** When using complex third-party widgets, apply a comprehensive, formatted `aria-label` to a parent focusable container (e.g., `role="figure" tabIndex={0}`) while wrapping the actual third-party widget in a `<div aria-hidden="true">` to ensure a single, coherent announcement and prevent structural readouts.
