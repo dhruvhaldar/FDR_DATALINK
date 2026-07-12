@@ -10,8 +10,9 @@ const DATA_DIR = path.join(process.cwd(), "Tail_666_9");
 // Bounding the cache to 16 items prevents infinite Node.js heap growth (memory leaks)
 // during prolonged usage, maintaining parity with the Python backend @lru_cache.
 // ⚡ Bolt: Cache raw JSON string instead of parsed object to avoid expensive JSON.parse/stringify
+// ⚡ Bolt: Store as a Buffer to avoid repetitive UTF-8 string encoding overhead in NextResponse.
 const MAX_CACHE_SIZE = 16;
-const cache = new Map<string, string>();
+const cache = new Map<string, Buffer>();
 
 export async function GET(
     request: NextRequest,
@@ -56,8 +57,13 @@ export async function GET(
 
         const rawJsonString = results[0];
 
-        // ⚡ Bolt: Store the raw JSON string in memory
-        cache.set(filename, rawJsonString);
+        // ⚡ Bolt: Pre-encode the JSON string to UTF-8 Buffer before caching.
+        // This prevents Next.js from spending CPU cycles re-encoding the massive
+        // string payload to bytes on every cache hit.
+        const bufferData = Buffer.from(rawJsonString, 'utf-8');
+
+        // ⚡ Bolt: Store the pre-encoded Buffer in memory
+        cache.set(filename, bufferData);
 
         // ⚡ Bolt: Enforce LRU cache limits to prevent memory leaks
         if (cache.size > MAX_CACHE_SIZE) {
@@ -67,7 +73,7 @@ export async function GET(
             }
         }
 
-        return new NextResponse(rawJsonString, {
+        return new NextResponse(bufferData, {
             headers: {
                 "Content-Type": "application/json",
                 "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600",

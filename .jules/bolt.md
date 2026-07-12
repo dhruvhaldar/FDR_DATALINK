@@ -26,3 +26,7 @@
 ## 2026-03-31 - Trailing Zeros Payload Bloat
 **Learning:** Returning un-trimmed telemetry arrays with padding zeros from the API backend inflates the JSON payload size, increasing network transmission time and causing KPIs to incorrectly read 0.0.
 **Action:** Trim trailing padding zeros in time-series telemetry arrays (e.g., CAS, PTCH, ROLL) prior to JSON serialization. Use a manual O(1) early-break loop to trim the views efficiently.
+
+## 2026-03-31 - Pre-encoding cached JSON to Buffer in Next.js
+**Learning:** Storing massive raw JSON strings (like flight telemetry) in an in-memory cache and directly passing them to `new NextResponse(string)` forces Next.js to repetitively spend CPU cycles and memory re-encoding the string to UTF-8 bytes on every single cache hit.
+**Action:** When caching large textual payloads in a Node.js/Next.js environment, pre-encode the string to bytes once using `Buffer.from(string, 'utf-8')` before storing it in the cache map (`Map<string, Buffer>`). Passing a `Buffer` to `NextResponse` bypasses the framework's encoding step entirely, directly mirroring the FastAPI `Response(content=bytes)` optimization.
