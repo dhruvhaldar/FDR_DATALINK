@@ -31,3 +31,9 @@
 ## 2024-05-19 - Avoiding backdrop-filter over WebGL
 **Learning:** Using CSS `backdrop-filter: blur()` (e.g., Tailwind's `backdrop-blur-sm`) in an overlay directly above heavy WebGL canvases (like Plotly `scattergl` charts) forces the browser to continuously read back the WebGL framebuffer to the CPU/GPU for compositing. This causes severe main-thread lockups and drops the frame rate to near-zero during loading states.
 **Action:** Avoid `backdrop-filter` over WebGL components. Use opaque or semi-transparent solid backgrounds (e.g., `bg-black/80`) to provide loading overlays without triggering expensive framebuffer readbacks.
+## 2024-06-25 - Bypassing GZipMiddleware with pre-compressed cached responses
+**Learning:** `GZipMiddleware` in FastAPI dynamically compresses responses on the fly. When returning cached large payloads (like JSON strings), compressing the identical data repeatedly on every cache hit adds significant CPU overhead and response latency.
+**Action:** When using `@lru_cache` to store large string responses in an API route with `GZipMiddleware`, pre-compress the string once using `gzip.compress()` inside the cached function. Then, check the `accept-encoding` header in the route handler, and return the pre-compressed bytes with `Content-Encoding: gzip` to entirely bypass the middleware on cache hits, reducing response times significantly.
+## 2024-06-25 - Using Vary: Accept-Encoding for Pre-Compressed Responses
+**Learning:** When bypassing standard middleware (like FastAPI's `GZipMiddleware`) to serve pre-compressed data directly, you must manually add the `Vary: Accept-Encoding` HTTP header. Without this, intermediate caches (like CDNs or proxies) might incorrectly cache the gzipped response and serve it to a client that does not support gzip, breaking the application.
+**Action:** Always ensure `Vary: Accept-Encoding` is present when implementing manual content negotiation and returning `Content-Encoding: gzip`.

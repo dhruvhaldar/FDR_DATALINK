@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.middleware.gzip import GZipMiddleware
 from functools import lru_cache
 import os
 import json
+import gzip
 
 def _trim_trailing_zeros(values, epsilon=1e-9):
     """Trim trailing zero-padding while preserving intentional all-zero signals."""
@@ -26,6 +27,8 @@ app = FastAPI()
 # ⚡ Bolt: Add GZipMiddleware to drastically reduce the network payload size
 # of our JSON telemetry responses (e.g., ~62KB uncompressed down to ~16KB compressed).
 # This provides ~75% reduction in bandwidth for large data arrays.
+# NOTE: We keep this for other routes, but /api/data/{filename} bypasses it
+# via direct Content-Encoding response.
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Path to the data directory (relative to the project root or absolute)
@@ -48,6 +51,7 @@ def get_processed_flight_data(file_path: str):
     """
     Load .mat file, process the necessary fields, downsample arrays,
     and return the final JSON string.
+    Returns a tuple of (json_bytes, gzipped_bytes)
     """
     # ⚡ Bolt: Lazy load expensive scientific libraries (scipy, numpy).
     # This prevents significant initialization overhead (~350ms) and memory allocation
@@ -116,10 +120,15 @@ def get_processed_flight_data(file_path: str):
     # ⚡ Bolt: Pre-encode the JSON string to UTF-8 bytes before caching.
     # This prevents FastAPI from allocating memory and spending CPU cycles re-encoding
     # the massive payload to bytes on every single cache hit.
-    return json.dumps(result, separators=(',', ':')).encode('utf-8')
+    json_bytes = json.dumps(result, separators=(',', ':')).encode('utf-8')
+
+    # ⚡ Bolt: Pre-compress the JSON payload so that we don't have to compress it on the fly
+    # for every cache hit. This speeds up responses by bypassing GZipMiddleware.
+    gzipped_bytes = gzip.compress(json_bytes)
+    return json_bytes, gzipped_bytes
 
 @app.get("/api/data/{filename}")
-def get_flight_data(filename: str):
+def get_flight_data(filename: str, request: Request):
     file_path = os.path.join(DATA_DIR, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
@@ -127,8 +136,25 @@ def get_flight_data(filename: str):
     try:
         # ⚡ Bolt: The cached function returns the final JSON bytes, bypassing
         # repetitive processing loops, slow JSON serialization, and UTF-8 encoding.
-        json_bytes = get_processed_flight_data(file_path)
+        json_bytes, gzipped_bytes = get_processed_flight_data(file_path)
+
+        # ⚡ Bolt: Add Vary: Accept-Encoding so that CDNs and intermediate caches
+        # know to differentiate between the gzipped and non-gzipped versions.
+        headers = {
+            "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+            "Vary": "Accept-Encoding"
+        }
         
+        # ⚡ Bolt: Serve the pre-compressed payload directly if the client supports gzip.
+        # Bypassing GZipMiddleware on the fly compression significantly speeds up cache hits.
+        if "gzip" in request.headers.get("accept-encoding", ""):
+            headers["Content-Encoding"] = "gzip"
+            return Response(
+                content=gzipped_bytes,
+                media_type="application/json",
+                headers=headers
+            )
+
         # ⚡ Bolt: Bypass FastAPI's slow jsonable_encoder for large lists of floats
         # Returning a raw Response with pre-encoded bytes is significantly faster.
         # ⚡ Bolt: Added Cache-Control headers to prevent the browser from repeatedly
@@ -136,7 +162,7 @@ def get_flight_data(filename: str):
         return Response(
             content=json_bytes,
             media_type="application/json",
-            headers={"Cache-Control": "public, max-age=86400, stale-while-revalidate=3600"}
+            headers=headers
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
