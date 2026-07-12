@@ -236,3 +236,7 @@ a human touch, reassuring sighted users that the system is working on their requ
 ## 2026-07-28 - Hiding Noisy Third-Party Component DOMs
 **Learning:** Complex third-party UI widgets (like `react-plotly.js` charts or advanced maps) often render hundreds of nested SVG or WebGL DOM nodes that are irrelevant or highly confusing to screen readers. If these elements are not hidden, they cause fragmented, non-semantic readout spam when a user tabs into the container.
 **Action:** When using complex third-party widgets, apply a comprehensive, formatted `aria-label` to a parent focusable container (e.g., `role="figure" tabIndex={0}`) while wrapping the actual third-party widget in a `<div aria-hidden="true">` to ensure a single, coherent announcement and prevent structural readouts.
+
+## 2026-08-05 - Explicit Tooltips for Visual External Links
+**Learning:** While using a visual icon (like `ExternalLink`) and `<span className="sr-only">(opens in a new tab)</span>` provides good context for sighted users and screen readers respectively, sighted mouse users lack explicit textual confirmation of the link's behavior before clicking, as icons can sometimes be ambiguous.
+**Action:** Always add a native `title="Opens in a new tab"` attribute to `target="_blank"` links. This provides an equitable, explicit hover tooltip for mouse users that aligns with the context provided to screen reader users via `sr-only` text.
