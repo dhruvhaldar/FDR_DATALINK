@@ -1,0 +1,6 @@
+# Raw authoring inputs and local tooling are not needed by the static deployment.
+Tail_666_9/
+scripts/
+tests/
+test-results/
+*.orig

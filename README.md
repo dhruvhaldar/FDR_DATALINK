@@ -1,8 +1,7 @@
 # FDR_DATALINK ✈️
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Next.js](https://img.shields.io/badge/Next.js-15.x-black?logo=next.js)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.x-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.x-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.x-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
@@ -12,13 +11,13 @@
 
 ## 🚀 Overview
 
-The interface serves as a telemetry pipeline for MATLAB (`.mat`) flight data files, specifically sourced from the **NASA Dashlink** project. It combines a high-performance Python backend (FastAPI) for data processing with a modern, responsive React/Next.js frontend.
+The interface visualizes compact telemetry payloads preprocessed from MATLAB (`.mat`) flight data sourced from the **NASA Dashlink** project. The deployed React/Next.js application is fully static, so it does not require production server functions.
 
 ### Key Features
 - **File Explorer**: Browse and select from a library of flight recorder data.
 - **Real-time Telemetry Visualization**: Interactive multi-graph suite using Plotly.js.
 - **KPI Monitoring**: Focus on critical parameters like Altitude, Airspeed, Pitch, Roll, and Vertical Acceleration.
-- **Data Downsampling**: Intelligent server-side downsampling for smooth visualization of large datasets.
+- **Data Downsampling**: Preprocessed, compact static payloads for smooth visualization of large datasets.
 - **NASA Dashlink Integration**: Leverages authentic de-identified aggregate flight recorder data.
 
 ---
@@ -32,10 +31,9 @@ The interface serves as a telemetry pipeline for MATLAB (`.mat`) flight data fil
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 
-### Backend
-- **Framework**: [FastAPI](https://fastapi.tiangolo.com/)
-- **Data Processing**: [SciPy](https://scipy.org/), [NumPy](https://numpy.org/)
-- **Runtime**: Python 3.x
+### Data pipeline
+- **Authoring**: [SciPy](https://scipy.org/) and [NumPy](https://numpy.org/)
+- **Delivery**: Preprocessed static JSON (no production server functions)
 
 ---
 
@@ -43,7 +41,6 @@ The interface serves as a telemetry pipeline for MATLAB (`.mat`) flight data fil
 
 ### Prerequisites
 - Node.js (v18+)
-- Python (v3.9+)
 - npm / yarn / pnpm
 
 ### Installation
@@ -54,13 +51,7 @@ The interface serves as a telemetry pipeline for MATLAB (`.mat`) flight data fil
    cd FDR_DATALINK
    ```
 
-2. **Backend Setup**:
-   Install Python dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Frontend Setup**:
+2. **Frontend Setup**:
    Install Node dependencies:
    ```bash
    npm install
@@ -68,22 +59,24 @@ The interface serves as a telemetry pipeline for MATLAB (`.mat`) flight data fil
 
 ### Running the Application
 
-1. **Start the Backend**:
-   The backend runs on port `8000`.
-   ```bash
-   python api/index.py
-   # or
-   uvicorn api.index:app --reload
-   ```
-
-2. **Start the Frontend**:
+1. **Start the frontend**:
    The frontend runs on port `3000`.
    ```bash
    npm run dev
    ```
 
-3. **Open the Dashboard**:
+2. **Open the Dashboard**:
    Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Regenerating telemetry data
+
+The deployed app reads the checked-in files under `public/data`; it does not run
+Python in production. After changing a source `.mat` file, regenerate them locally:
+
+```bash
+pip install -r scripts/requirements.txt
+python scripts/generate_static_data.py
+```
 
 ---
 

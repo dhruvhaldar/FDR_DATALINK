@@ -1,10 +1,15 @@
 import unittest
-from lib.extract_data import extract_data
+from pathlib import Path
+
+from scripts.generate_static_data import convert, trim_trailing_zeros
+
+
+SAMPLE = Path('Tail_666_9/666200402040817.mat')
 
 
 class ExtractDataTests(unittest.TestCase):
     def test_extract_data_returns_expected_keys(self):
-        result = extract_data('Tail_666_9/666200402040817.mat')
+        result = convert(SAMPLE)
         for key in ['ALT', 'CAS', 'PTCH', 'ROLL', 'VRTG']:
             self.assertIn(key, result)
             self.assertIn('data', result[key])
@@ -13,7 +18,7 @@ class ExtractDataTests(unittest.TestCase):
     def test_trimmed_trailing_zeros_for_flight_parameters(self):
         # Regression: CAS/PTCH/ROLL used to display as 0.0 because the source
         # arrays include long trailing zero-padding segments.
-        result = extract_data('Tail_666_9/666200402040817.mat')
+        result = convert(SAMPLE)
 
         self.assertNotEqual(result['CAS']['data'][-1], 0.0)
         self.assertNotEqual(result['PTCH']['data'][-1], 0.0)
@@ -22,10 +27,8 @@ class ExtractDataTests(unittest.TestCase):
     def test_all_zero_series_is_preserved(self):
         # Some segments can legitimately be all-zero (e.g., parked data).
         # Ensure we don't trim everything away.
-        from lib.extract_data import _trim_trailing_zeros
-
         values = [0.0, 0.0, 0.0]
-        trimmed = _trim_trailing_zeros(values)
+        trimmed = trim_trailing_zeros(values)
         self.assertEqual(trimmed, values)
 
 

@@ -227,7 +227,7 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     setStatusMessage(`Loading flight data for ${filename}...`);
-    fetch(`/api/data/${filename}`, { signal: controller.signal })
+    fetch(`/data/${encodeURIComponent(filename)}.json`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load flight data");
         return res.json();
@@ -310,7 +310,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // ⚡ Bolt: Pre-load the optimized plotly gl2d chunk immediately on mount.
-    // Waiting for the sequential API requests (/api/files -> /api/data) to resolve
+    // Waiting for the sequential static requests (files.json -> dataset JSON) to resolve
     // before triggering the dynamic import creates a massive network waterfall,
     // delaying the First Meaningful Paint. By importing the correct factory and subset now,
     // the browser downloads the ~1.6MB chart library in parallel with the JSON data.
@@ -321,7 +321,7 @@ export default function Dashboard() {
     import("plotly.js/dist/plotly-gl2d").catch(() => {});
 
     setStatusMessage("Fetching available datasets...");
-    fetch("/api/files")
+    fetch("/data/files.json")
       .then((res) => res.json())
       .then((data) => {
         if (data.files) {
@@ -331,7 +331,7 @@ export default function Dashboard() {
             setSelectedFile(initialFile);
             fetchFlightData(initialFile);
           } else {
-            setStatusMessage("No datasets available. Please add .mat telemetry files to the server.");
+            setStatusMessage("No datasets available. Regenerate the static telemetry files.");
           }
         }
       })

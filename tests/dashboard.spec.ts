@@ -27,7 +27,7 @@ test.describe('Flight Data Dashboard', () => {
     ];
 
     for (const kpi of kpis) {
-      const element = page.locator(`h3:has-text("${kpi}")`);
+      const element = page.getByRole('heading', { name: new RegExp(kpi) });
       await expect(element).toBeVisible();
     }
   });
@@ -44,12 +44,14 @@ test.describe('Flight Data Dashboard', () => {
     expect(optionCount).toBeGreaterThan(0);
 
     // Attempt to change the dataset
-    if (optionCount > 1) {
-        const optionValue = await options.nth(1).getAttribute('value');
+    if (optionCount > 2) {
+        // Option 0 is the placeholder and option 1 is selected on initial load.
+        // Choose the next dataset so the change handler issues a new request.
+        const optionValue = await options.nth(2).getAttribute('value');
         if (optionValue) {
 
-            // Set up a promise to wait for the API response *before* triggering the event
-            const responsePromise = page.waitForResponse(response => response.url().includes(`/api/data/${optionValue}`) && response.status() === 200);
+            // Set up a promise to wait for the static data response before triggering the event
+            const responsePromise = page.waitForResponse(response => response.url().includes(`/data/${optionValue}.json`) && response.status() === 200);
 
             await datasetSelect.selectOption(optionValue);
 

@@ -35,25 +35,21 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // CI may use Playwright's bundled Chromium; local verification can
+        // reuse an installed Chrome/Edge channel without another download.
+        channel: process.env.PLAYWRIGHT_CHANNEL,
+      },
     },
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: [
-    {
-      command: 'python api/index.py',
-      port: 8000,
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
-      stderr: 'pipe',
-    },
-    {
-      command: 'npm run dev',
-      url: 'http://127.0.0.1:3000',
-      reuseExistingServer: !process.env.CI,
-      stdout: 'ignore',
-      stderr: 'pipe',
-    }
-  ],
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://127.0.0.1:3000',
+    reuseExistingServer: !process.env.CI,
+    stdout: 'ignore',
+    stderr: 'pipe',
+  },
 });
